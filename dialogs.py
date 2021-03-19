@@ -7,6 +7,7 @@ Created on Wed Oct  7 19:13:20 2020
 from PyQt5 import QtWidgets, QtCore, QtGui
 from design_enter_pipe import DnDialog
 from design_enter_pump import PumpDialog
+from design_error_number_list import ErrorListNumberDialog
 from models import MainPumpsTable, SupportPumpsTable, PipeTable
 from design_dialog_graph import GraphDialog
 from design_save_dialog import SaveDialog
@@ -26,10 +27,36 @@ from design_dialog_error_enter_5 import ErrorDialogEnter5
 from design_error_enter_number_data import ErrorEnterNumberDialog
 
 
+def check_value_None(value):
+    if value == '':
+        error_dialog_enter = ErrorDialogEnterWindow()
+        error_dialog_enter.exec()
+        return None
+    else:
+        return True
+
+
+def check_value_number(value):
+    if check_data(value) is None:
+        error_enter_Number = ErrorEnterNumberDialogWindow()
+        error_enter_Number.exec()
+        return None
+    else:
+        return True
+
+
 class ErrorEnterNumberDialogWindow(QtWidgets.QDialog):
     def __init__(self):
         super(ErrorEnterNumberDialogWindow, self).__init__()
         self.ui = ErrorEnterNumberDialog()
+        self.ui.setupUi(self)
+        self.ui.pushButton.clicked.connect(self.close)
+
+
+class ErrorListNumberDialogWindow(QtWidgets.QDialog):
+    def __init__(self):
+        super(ErrorListNumberDialogWindow, self).__init__()
+        self.ui = ErrorListNumberDialog()
         self.ui.setupUi(self)
         self.ui.pushButton.clicked.connect(self.close)
 
@@ -43,14 +70,24 @@ class ChoosePipeDialogWindow(QtWidgets.QDialog):
         self.ui.cancel_2.clicked.connect(self.close)
         self.ui.retry.clicked.connect(self.retry)
         self.list_indexes_column = [1, 2, 3]
-        self.number = None
+        self.information_pipe = None
 
     def enter_pipe(self):
         self.number = self.ui.lineEdit.text()
+        if check_value_None(self.number) is None:
+            return
+        if check_value_number(self.number) is None:
+            return
+        info_pipe = PipeTable.get_or_none(PipeTable.id == self.number)
+        if info_pipe is None:
+            self.error_list_number_window = ErrorListNumberDialogWindow()
+            self.error_list_number_window.exec()
+            return
+        self.information_pipe = [info_pipe.R1n, info_pipe.k1]
         self.close()
 
     def get_number(self):
-        return self.number
+        return self.information_pipe
 
     def retry(self):
         self.ui.lineEdit.setText('')
@@ -66,16 +103,16 @@ class DnDialogWindow(QtWidgets.QDialog):
         self.ui.retry.clicked.connect(self.retry)
         self.ui.cancel.clicked.connect(self.close)
         self.ui.choose.clicked.connect(self.choose_pipe)
-        self.number = None
+        self.information_pipe = None
+        self.decision = None
 
     def choose_pipe(self):
         self.choose_pipe_window = ChoosePipeDialogWindow()
         self.choose_pipe_window.exec()
-        self.number = self.choose_pipe_window.get_number()
-        if self.number is not None:
-            list_characteristics = self.get_characteristics()
-            self.ui.lineEdit.setText(str(list_characteristics[0]))
-            self.ui.lineEdit_2.setText(str(list_characteristics[1]))
+        self.information_pipe = self.choose_pipe_window.get_number()
+        if self.information_pipe is not None:
+            self.ui.lineEdit.setText(str(self.information_pipe[0]))
+            self.ui.lineEdit_2.setText(str(self.information_pipe[1]))
 
     def retry(self):
         self.ui.lineEdit.setText("")
@@ -84,10 +121,6 @@ class DnDialogWindow(QtWidgets.QDialog):
         self.ui.lineEdit_4.setText("")
         self.ui.lineEdit_5.setText("")
         self.ui.lineEdit_6.setText("")
-
-    def get_characteristics(self):
-        info_pipe = PipeTable.get_or_none(PipeTable.id == self.number)
-        return [info_pipe.R1n, info_pipe.k1]
 
     def enter(self):
         R1n = self.ui.lineEdit.text()
@@ -98,6 +131,11 @@ class DnDialogWindow(QtWidgets.QDialog):
         m = self.ui.lineEdit_6.text()
         list_with_value = [['R1n', R1n], ['k1', k1], ['np', np],
                            ['kn', kn], ['k_a', k_a], ['m_kaf', m]]
+        for value in list_with_value:
+            if check_value_None(value[1]) is None:
+                return
+            if check_value_number(value[1]) is None:
+                return
         dict_value = get_source_dict(self.var)
         for name, value in list_with_value:
             if type(value) == str and ',' in value:
@@ -105,7 +143,11 @@ class DnDialogWindow(QtWidgets.QDialog):
             value = float(value)
             dict_value[name] = value
         update_dict_to_db(dict_value, self.var)
+        self.decision = True
         self.close()
+
+    def get_decision(self):
+        return self.decision
 
 
 class PumpDialogWindow(QtWidgets.QDialog):
@@ -140,14 +182,14 @@ class PumpDialogWindow(QtWidgets.QDialog):
         Q_nom = self.ui.lineEdit_3.text()
         a = self.ui.lineEdit_4.text()
         b = self.ui.lineEdit_5.text()
-        if brand_pump == '' or d_work == '' or Q_nom == '' or a == '' or b == '':
-            self.error_dialog_enter = ErrorDialogEnterWindow()
-            self.error_dialog_enter.exec()
-            return
-        if check_data(Q_nom) is None or check_data(a) is None or check_data(b) is None or check_data(d_work) is None:
-            self.error_enter_Number = ErrorEnterNumberDialogWindow()
-            self.error_enter_Number.exec()
-            return
+        list_values = [brand_pump, d_work, Q_nom, a, b]
+        for index, value in enumerate(list_values):
+            if check_value_None(value) is None:
+                return
+            if index == 0:
+                continue
+            if check_value_number(value) is None:
+                return
         list_with_value = [['brand_pump_m', brand_pump], ['d_work_m', d_work], ['Q_nom_m', Q_nom],
                            ['a_m', a], ['b_m', b]]
         dict_value = get_source_dict(self.var)
@@ -222,6 +264,10 @@ class DnDialogWindow_2(QtWidgets.QDialog):
 
     def enter(self):
         Dn = self.ui.lineEdit_7.text()
+        if check_value_None(Dn) is None:
+            return
+        if check_value_number(Dn) is None:
+            return
         dict_value = get_source_dict(self.var)
         if type(Dn) == str and ',' in Dn:
             Dn = Dn.replace(',', '.')

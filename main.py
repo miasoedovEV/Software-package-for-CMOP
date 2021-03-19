@@ -332,6 +332,8 @@ class MainWindow(QtWidgets.QMainWindow):
                 return
             self.dn_dialog = DnDialogWindow(self, self.var)
             self.dn_dialog.exec()
+            if self.dn_dialog.get_decision() is None:
+                return
             self.calculator_5.calculate_third_part()
             self.calculator_5.calculate_fourth_part()
             self.return_result_5(self.var)
