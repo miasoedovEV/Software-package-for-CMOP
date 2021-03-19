@@ -45,7 +45,6 @@ LIST_WITH_TABLE_VALUE_CALC_7 = [
 
 LIST_WITH_NAME_SOURCE_VALUE_8 = ['h_min', 'a_']
 
-from PyQt5 import QtCore
 import re
 
 re_data = re.compile(r'[0-9]*[.,]?[0-9]+')

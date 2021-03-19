@@ -4,13 +4,12 @@ Created on Wed Oct  7 19:13:20 2020
 
 @author: stinc
 """
-from PyQt5 import QtWidgets, QtCore, uic, QtGui
+from PyQt5 import QtWidgets, QtCore, QtGui
 
 from dialogs import DnDialogWindow, PumpDialogWindow, GraphDialogWindow, SaveDialogWindow, DialogDeltaWindow, \
     DnDialogWindow_2, ChooseVarDialog, AddPumpDialogWindow, AddSupPumpDialogWindow, AddPipeDialogWindow, MyFileBrowser, \
-    ErrorDialogEnter5Window, ErrorEnterNumberDialogWindow
-from models import MainPumpsTable, CoordinatesTable, SourceDataTable, ActionVarTable, InformationDeltaTable, \
-    ModeInformationDeltaTable, OptionStateTable
+    ErrorDialogEnterWindow, ErrorEnterNumberDialogWindow
+from models import MainPumpsTable, CoordinatesTable, SourceDataTable, ActionVarTable
 import json
 from calculate_5_class import Calculate5, draw_graph_in_calculate
 from draw_graph import drawing_autocad, drawing_plt
@@ -20,7 +19,6 @@ from settings import get_source_dict, update_dict_to_db, check_update_data_var_7
     load_update_var_state, get_state_var, update_var_table, LIST_WITH_NAME_VALUE_CHARACTIRISTIES, \
     LIST_WITH_NAME_VALUE_OIL_PROPERTIES, LIST_WITH_VALUE, LIST_WITH_NAME, FIRST_NAME_ACTION_VAR, FIRST_NAME_VAR, \
     LIST_WITH_TABLE_VALUE_CALC_7, LIST_WITH_NAME_SOURCE_VALUE_8, check_data
-
 from calculate_8_class import CalculationModesNps
 from tab_ui import MyWindow
 
@@ -210,7 +208,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.table.setRowCount(self.index_table_widget)
 
     def show_error_enter(self):
-        self.error_dialog_enter_5 = ErrorDialogEnter5Window()
+        self.error_dialog_enter_5 = ErrorDialogEnterWindow()
         self.error_dialog_enter_5.exec()
 
     def show_error_enter_number(self):

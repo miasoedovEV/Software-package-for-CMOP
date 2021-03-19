@@ -4,13 +4,13 @@ Created on Wed Oct  7 19:13:20 2020
 
 @author: stinc
 """
-from PyQt5 import QtWidgets, uic, QtCore, QtGui
+from PyQt5 import QtWidgets, QtCore, QtGui
 from design_enter_pipe import DnDialog
 from design_enter_pump import PumpDialog
-from models import MainPumpsTable, CoordinatesTable, SupportPumpsTable, PipeTable
+from models import MainPumpsTable, SupportPumpsTable, PipeTable
 from design_dialog_graph import GraphDialog
 from design_save_dialog import SaveDialog
-from settings import get_source_dict, update_dict_to_db
+from settings import get_source_dict, update_dict_to_db, check_data
 from design_dialog_delta import DialogDelta
 from design_enter_diametre_pipe import PipeDnDialog
 from design_dialog_choose_var import ChooseDialog
@@ -140,6 +140,14 @@ class PumpDialogWindow(QtWidgets.QDialog):
         Q_nom = self.ui.lineEdit_3.text()
         a = self.ui.lineEdit_4.text()
         b = self.ui.lineEdit_5.text()
+        if brand_pump == '' or d_work == '' or Q_nom == '' or a == '' or b == '':
+            self.error_dialog_enter = ErrorDialogEnterWindow()
+            self.error_dialog_enter.exec()
+            return
+        if check_data(Q_nom) is None or check_data(a) is None or check_data(b) is None or check_data(d_work) is None:
+            self.error_enter_Number = ErrorEnterNumberDialogWindow()
+            self.error_enter_Number.exec()
+            return
         list_with_value = [['brand_pump_m', brand_pump], ['d_work_m', d_work], ['Q_nom_m', Q_nom],
                            ['a_m', a], ['b_m', b]]
         dict_value = get_source_dict(self.var)
@@ -416,9 +424,9 @@ class ErrorXlsDialogWindow(QtWidgets.QDialog):
         self.ui.pushButton.clicked.connect(self.close)
 
 
-class ErrorDialogEnter5Window(QtWidgets.QDialog):
+class ErrorDialogEnterWindow(QtWidgets.QDialog):
     def __init__(self):
-        super(ErrorDialogEnter5Window, self).__init__()
+        super(ErrorDialogEnterWindow, self).__init__()
         self.ui = ErrorDialogEnter5()
         self.ui.setupUi(self)
         self.ui.pushButton.clicked.connect(self.close)
