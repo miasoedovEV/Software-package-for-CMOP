@@ -208,9 +208,14 @@ class DnDialogWindow_2(QtWidgets.QDialog):
         self.var = var
         self.ui = PipeDnDialog()
         self.ui.setupUi(self, var)
-        self.ui.next.clicked.connect(self.close)
+        self.ui.next.clicked.connect(self.next)
         self.ui.retry.clicked.connect(self.retry)
         self.ui.enter.clicked.connect(self.enter)
+        self.decision = None
+
+    def next(self):
+        self.decision = True
+        self.close()
 
     def retry(self):
         self.ui.lineEdit_7.setText("")
@@ -223,7 +228,11 @@ class DnDialogWindow_2(QtWidgets.QDialog):
         value = float(Dn)
         dict_value['Dn'] = value
         update_dict_to_db(dict_value, self.var)
+        self.decision = True
         self.close()
+
+    def get_decision(self):
+        return self.decision
 
 
 class ChooseVarDialog(QtWidgets.QDialog):

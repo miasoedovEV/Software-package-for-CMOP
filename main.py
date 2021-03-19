@@ -230,6 +230,7 @@ class MainWindow(QtWidgets.QMainWindow):
             return value
 
     def get_data_in_db_5(self):
+        self.delete_func(FIRST_NAME_VAR)
         dict_with_value = {}
         for i in range(self.ui.tableWidget_charactiristics.rowCount()):
             value_object = self.ui.tableWidget_charactiristics.item(i, 1)
@@ -281,7 +282,6 @@ class MainWindow(QtWidgets.QMainWindow):
                 if not self.dialog_choose_var.get_decision():
                     self.var = FIRST_NAME_VAR
                     self.ui.label.setText(f'Название варианта: {str(self.var)}')
-                    self.delete_func(FIRST_NAME_VAR)
                     create_new_data_var_5(self.var, list_with_coordinates, dict_with_value)
                 else:
                     update_list_coordinates_to_db(list_with_coordinates, self.var)
@@ -328,6 +328,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self.calculator_5.calculate_second_part()
             self.dn_dialog_2 = DnDialogWindow_2(self, self.var)
             self.dn_dialog_2.exec()
+            if self.dn_dialog_2.get_decision() is None:
+                return
             self.dn_dialog = DnDialogWindow(self, self.var)
             self.dn_dialog.exec()
             self.calculator_5.calculate_third_part()
