@@ -209,7 +209,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.index_table_widget += 1
         self.ui.table.setRowCount(self.index_table_widget)
 
-    def show_error_enter_5(self):
+    def show_error_enter(self):
         self.error_dialog_enter_5 = ErrorDialogEnter5Window()
         self.error_dialog_enter_5.exec()
 
@@ -217,16 +217,26 @@ class MainWindow(QtWidgets.QMainWindow):
         self.error_enter_Number = ErrorEnterNumberDialogWindow()
         self.error_enter_Number.exec()
 
+    def check_value_5(self, value_object):
+        if value_object is None:
+            self.show_error_enter()
+            return None
+        value = value_object.text()
+        if value == '':
+            self.show_error_enter()
+            return None
+        if check_data(value) is None:
+            self.show_error_enter_number()
+            return None
+        else:
+            return value
+
     def get_data_in_db_5(self):
         dict_with_value = {}
         for i in range(self.ui.tableWidget_charactiristics.rowCount()):
             value_object = self.ui.tableWidget_charactiristics.item(i, 1)
-            if value_object is None:
-                self.show_error_enter_5()
-                return None
-            value = value_object.text()
-            if check_data(value) is None:
-                self.show_error_enter_number()
+            value = self.check_value_5(value_object)
+            if value is None:
                 return None
             if type(value) == str and ',' in value:
                 value = value.replace(',', '.')
@@ -234,10 +244,9 @@ class MainWindow(QtWidgets.QMainWindow):
             dict_with_value[LIST_WITH_NAME_VALUE_CHARACTIRISTIES[i]] = value_float
         for i in range(self.ui.tableWidget_oil_properties.rowCount()):
             value_object = self.ui.tableWidget_oil_properties.item(i, 1)
-            if value_object is None:
-                self.show_error_enter_5()
+            value = self.check_value_5(value_object)
+            if value is None:
                 return None
-            value = value_object.text()
             if type(value) == str and ',' in value:
                 value = value.replace(',', '.')
             value_float = float(value)
@@ -248,8 +257,12 @@ class MainWindow(QtWidgets.QMainWindow):
             y_object = self.ui.table.item(i, 1)
             if x_object is None or y_object is None:
                 break
-            x = x_object.text()
-            y = y_object.text()
+            x = self.check_value_5(x_object)
+            if x is None:
+                return None
+            y = self.check_value_5(y_object)
+            if y is None:
+                return None
             if type(x) == str and ',' in x:
                 x = x.replace(',', '.')
             elif type(y) == str and ',' in y:
@@ -614,6 +627,7 @@ class MainWindow(QtWidgets.QMainWindow):
                     values_2 = QtWidgets.QTableWidgetItem(str(values[1]))
                     self.ui.tableWidget_8.setItem(index_line, index_column + index_column, values_2)
         self.ui.tableWidget_8.resizeRowsToContents()
+
     def retry_8(self):
         self.ui.lineEdit_a_.setText('')
         self.ui.lineEdit_hmin_8.setText('')
