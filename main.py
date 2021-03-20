@@ -122,6 +122,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.ui.table_date_7.setVerticalHeaderItem(number_count - 0, item)
             index_name = LIST_WITH_TABLE_VALUE_CALC_7[1].index(name)
             name = QtWidgets.QTableWidgetItem(LIST_WITH_TABLE_VALUE_CALC_7[0][index_name])
+            name.setFlags(QtCore.Qt.ItemIsEnabled)
             self.ui.table_date_7.setItem(number_count - 1, 0, name)
             value = QtWidgets.QTableWidgetItem(str(value))
             self.ui.table_date_7.setItem(number_count - 1, 1, value)
@@ -129,8 +130,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.table_date_7.resizeColumnToContents(0)
         self.ui.table_date_7.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
         self.ui.table_category_7.setRowCount(0)
+        self.ui.table_category_7.clearContents()
         self.ui.table_delta_7.setRowCount(0)
+        self.ui.table_delta_7.clearContents()
         self.ui.table_finish_7.setRowCount(0)
+        self.ui.table_finish_7.clearContents()
         self.index_table_category_7 = 0
         self.index_table_delta_7 = 0
         list_with_data_category = get_info_table_list(self.var, LIST_WITH_NAME_DATA_TABLE7[0])
@@ -336,12 +340,12 @@ class MainWindow(QtWidgets.QMainWindow):
                 return
             self.calculator_5.calculate_third_part()
             self.calculator_5.calculate_fourth_part()
-            self.return_result_5(self.var)
             load_update_var_state(self.var, 1)
+        self.return_result_5(self.var)
         self.show_graphs()
         self.add_button_show()
         self.ui.tabWidget.insertTab(1, self.ui.tab_2, 'Перерасчёт толщины стенки трубы')
-        self.insert_values_calculate_7(self.var)
+        self.insert_values(self.var)
 
     def return_result_5(self, var):
         dict_value = get_source_dict(var)
@@ -377,6 +381,7 @@ class MainWindow(QtWidgets.QMainWindow):
                     elif name_value == 'tau2':
                         LIST_WITH_NAME[index] = LIST_WITH_NAME[index].format(n_max=n_max)
                     name_table_to_ui = QtWidgets.QTableWidgetItem(LIST_WITH_NAME[index])
+                    name_table_to_ui.setFlags(QtCore.Qt.ItemIsEnabled)
                     value_table_to_ui = QtWidgets.QTableWidgetItem(str(value))
                     self.ui.tableWidget_2.setItem(index, 0, name_table_to_ui)
                     self.ui.tableWidget_2.setItem(index, 1, value_table_to_ui)
@@ -399,13 +404,16 @@ class MainWindow(QtWidgets.QMainWindow):
         for index, name in enumerate(LIST_WITH_NAME_VALUE_OIL_PROPERTIES):
             value = QtWidgets.QTableWidgetItem('')
             self.ui.tableWidget_oil_properties.setItem(index, 1, value)
-        self.index_table_widget = 0
+        self.index_table_widget = 1
+        self.ui.table.clearContents()
         self.ui.table.setRowCount(self.index_table_widget)
         self.ui.tableWidget_2.setRowCount(0)
+        self.ui.tableWidget_2.clearContents()
         if self.var == FIRST_NAME_VAR:
             self.delete_func(FIRST_NAME_VAR)
         self.var = FIRST_NAME_VAR
         self.ui.label.setText(f'Название варианта: {FIRST_NAME_VAR}')
+        self.clean_all()
 
     def check_var(self, dict_with_value, coordinates_from_ui):
         source = SourceDataTable.get_or_none(SourceDataTable.var == self.var)
@@ -683,13 +691,15 @@ class MainWindow(QtWidgets.QMainWindow):
     def clean_all(self):
         self.ui.tabWidget.removeTab(2)
         self.ui.tabWidget.removeTab(1)
-        self.ui.tableWidget_2.setRowCount(0)
-        self.ui.tableWidget_2.setColumnCount(0)
-        self.ui.table_category_7.setRowCount(0)
-        self.ui.table_delta_7.setRowCount(0)
-        self.ui.table_finish_7.setRowCount(0)
-        self.ui.tableWidget_8.setRowCount(0)
-        self.ui.tableWidget_8.setColumnCount(0)
+        list_table = [self.ui.tableWidget_2, self.ui.table_category_7, self.ui.table_delta_7, self.ui.table_finish_7,
+                      self.ui.tableWidget_8]
+        for index, table in enumerate(list_table):
+            if index == 0 or index == len(list_table) - 1:
+                table.setRowCount(0)
+                table.setColumnCount(0)
+            else:
+                table.setRowCount(1)
+            table.clearContents()
         self.ui.lineEdit_a_.clear()
         self.ui.lineEdit_hmin_8.clear()
 
