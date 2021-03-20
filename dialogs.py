@@ -90,7 +90,7 @@ class ChoosePipeDialogWindow(QtWidgets.QDialog):
         return self.information_pipe
 
     def retry(self):
-        self.ui.lineEdit.setText('')
+        self.ui.lineEdit.clear()
 
 
 class DnDialogWindow(QtWidgets.QDialog):
@@ -115,12 +115,12 @@ class DnDialogWindow(QtWidgets.QDialog):
             self.ui.lineEdit_2.setText(str(self.information_pipe[1]))
 
     def retry(self):
-        self.ui.lineEdit.setText("")
-        self.ui.lineEdit_2.setText("")
-        self.ui.lineEdit_3.setText("")
-        self.ui.lineEdit_4.setText("")
-        self.ui.lineEdit_5.setText("")
-        self.ui.lineEdit_6.setText("")
+        self.ui.lineEdit.clear()
+        self.ui.lineEdit_2.clear()
+        self.ui.lineEdit_3.clear()
+        self.ui.lineEdit_4.clear()
+        self.ui.lineEdit_5.clear()
+        self.ui.lineEdit_6.clear()
 
     def enter(self):
         R1n = self.ui.lineEdit.text()
@@ -167,11 +167,11 @@ class PumpDialogWindow(QtWidgets.QDialog):
         self.close()
 
     def retry(self):
-        self.ui.lineEdit.setText("")
-        self.ui.lineEdit_2.setText("")
-        self.ui.lineEdit_3.setText("")
-        self.ui.lineEdit_4.setText("")
-        self.ui.lineEdit_5.setText("")
+        self.ui.lineEdit.clear()
+        self.ui.lineEdit_2.clear()
+        self.ui.lineEdit_3.clear()
+        self.ui.lineEdit_4.clear()
+        self.ui.lineEdit_5.clear()
 
     def get_decision(self):
         return self.decision
@@ -233,7 +233,7 @@ class SaveDialogWindow(QtWidgets.QDialog):
         return self.name_var
 
     def retry(self):
-        self.ui.lineEdit.setText("")
+        self.ui.lineEdit.clear()
 
 
 class DialogDeltaWindow(QtWidgets.QDialog):
@@ -260,7 +260,7 @@ class DnDialogWindow_2(QtWidgets.QDialog):
         self.close()
 
     def retry(self):
-        self.ui.lineEdit_7.setText("")
+        self.ui.lineEdit_7.clear()
 
     def enter(self):
         Dn = self.ui.lineEdit_7.text()

@@ -215,7 +215,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.error_enter_Number = ErrorEnterNumberDialogWindow()
         self.error_enter_Number.exec()
 
-    def check_value_5(self, value_object):
+    def check_value(self, value_object):
         if value_object is None:
             self.show_error_enter()
             return None
@@ -234,7 +234,7 @@ class MainWindow(QtWidgets.QMainWindow):
         dict_with_value = {}
         for i in range(self.ui.tableWidget_charactiristics.rowCount()):
             value_object = self.ui.tableWidget_charactiristics.item(i, 1)
-            value = self.check_value_5(value_object)
+            value = self.check_value(value_object)
             if value is None:
                 return None
             if type(value) == str and ',' in value:
@@ -243,7 +243,7 @@ class MainWindow(QtWidgets.QMainWindow):
             dict_with_value[LIST_WITH_NAME_VALUE_CHARACTIRISTIES[i]] = value_float
         for i in range(self.ui.tableWidget_oil_properties.rowCount()):
             value_object = self.ui.tableWidget_oil_properties.item(i, 1)
-            value = self.check_value_5(value_object)
+            value = self.check_value(value_object)
             if value is None:
                 return None
             if type(value) == str and ',' in value:
@@ -256,10 +256,10 @@ class MainWindow(QtWidgets.QMainWindow):
             y_object = self.ui.table.item(i, 1)
             if x_object is None or y_object is None:
                 break
-            x = self.check_value_5(x_object)
+            x = self.check_value(x_object)
             if x is None:
                 return None
-            y = self.check_value_5(y_object)
+            y = self.check_value(y_object)
             if y is None:
                 return None
             if type(x) == str and ',' in x:
@@ -270,7 +270,7 @@ class MainWindow(QtWidgets.QMainWindow):
             y_float = float(y)
             list_with_coordinates.append([x_float, y_float])
         if len(list_with_coordinates) < 2:
-            self.show_error_enter_5()
+            self.show_error_enter()
             return None
         delta_z = list_with_coordinates[-1][1] - list_with_coordinates[0][1]
         dict_with_value['delta_z'] = delta_z
@@ -473,29 +473,39 @@ class MainWindow(QtWidgets.QMainWindow):
             number_section_object = self.ui.table_category_7.item(i, 0)
             length_section_object = self.ui.table_category_7.item(i, 1)
             category_section_object = self.ui.table_category_7.item(i, 2)
-            if number_section_object is None or length_section_object is None or category_section_object is None:
-                break
+            if i > 1:
+                if number_section_object is None or length_section_object is None or category_section_object is None:
+                    break
+            length_section = self.check_value(length_section_object)
+            category_section = self.check_value(category_section_object)
+            if length_section is None or category_section is None:
+                return None
+            if number_section_object is None:
+                self.show_error_enter()
+                return None
             number_section = number_section_object.text()
-            length_section = length_section_object.text()
-            category_section = category_section_object.text()
             if type(number_section) == str and ',' in number_section:
                 number_section = number_section.replace(',', '.')
             elif type(length_section) == str and ',' in length_section:
                 length_section = length_section.replace(',', '.')
             elif type(category_section) == str and ',' in category_section:
                 category_section = category_section.replace(',', '.')
-            number_section_int = number_section
+            number_section_str = number_section
             length_section_float = float(length_section)
             category_section_float = float(category_section)
-            list_with_number_section.append(number_section_int)
+            list_with_number_section.append(number_section_str)
             list_with_length_section.append(length_section_float)
             list_with_category_section.append(category_section_float)
+        if len(list_with_number_section) != len(list_with_length_section) or len(list_with_number_section) != len(list_with_category_section):
+            self.show_error_enter()
+            return None
         if list_with_number_section != [] and list_with_length_section != [] and list_with_category_section != []:
             list_with_data_category.append(list_with_number_section)
             list_with_data_category.append(list_with_length_section)
             list_with_data_category.append(list_with_category_section)
         if list_with_data_category:
             check_update_data_var_7(self.var, LIST_WITH_NAME_DATA_TABLE7[0], list_with_data_category)
+        return True
 
     def insert_table_category_to_delta(self):
         list_with_data_category = get_info_table_list(self.var, LIST_WITH_NAME_DATA_TABLE7[0])
@@ -515,32 +525,42 @@ class MainWindow(QtWidgets.QMainWindow):
         self.get_data_to_db_without_delta()
         self.insert_table_category_to_delta()
 
-    def get_data_to_db_with_delta(self):
+    def get_data_to_db_with_delta(self, list_with_category_data):
         list_data_delta = []
         for i in range(self.ui.table_delta_7.rowCount()):
             delta_object = self.ui.table_delta_7.item(i, 1)
-            if delta_object is None:
-                break
-            delta_section = delta_object.text()
+            if i > 1:
+                if delta_object is None:
+                    break
+            delta_section = self.check_value(delta_object)
+            if delta_section is None:
+                return None
             if type(delta_section) == str and ',' in delta_section:
                 delta_section = delta_section.replace(',', '.')
             delta_float = float(delta_section)
             list_data_delta.append(delta_float)
+        if len(list_data_delta) != len(list_with_category_data[0]):
+            self.show_error_enter()
+            return None
         if list_data_delta:
             check_update_data_var_7(self.var, LIST_WITH_NAME_DATA_TABLE7[2], list_data_delta)
+        return True
 
     def calculate_7(self, var_calc):
         if var_calc == MODE_CALCULATE_7[0]:
-            self.get_data_to_db_without_delta()
+            if self.get_data_to_db_without_delta() is None:
+                return
             calculator_7 = Calculate7(self.var, var_calc)
             calculator_7.calculate_without_deltas()
             self.insert_table_category_to_delta()
         elif var_calc == MODE_CALCULATE_7[1]:
-            if self.check_data_categories() is False:
+            list_category_data = self.check_data_categories()
+            if list_category_data is False:
                 self.dialog_delta = DialogDeltaWindow()
                 self.dialog_delta.exec()
                 return
-            self.get_data_to_db_with_delta()
+            if self.get_data_to_db_with_delta(list_category_data) is None:
+                return
             calculator_7 = Calculate7(self.var, var_calc)
             calculator_7.calculate_with_deltas()
         load_update_var_state(self.var, 2)
@@ -558,7 +578,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if result is None:
             return False
         else:
-            return True
+            return result
 
     def return_result_calc_7(self):
         finish_data_list = get_info_table_list(self.var, name_value=LIST_WITH_NAME_DATA_TABLE7[1])
@@ -579,12 +599,19 @@ class MainWindow(QtWidgets.QMainWindow):
             self.ui.table_finish_7.setItem(index, 4, Hps)
             conformity = QtWidgets.QTableWidgetItem(str(conformity))
             self.ui.table_finish_7.setItem(index, 5, conformity)
-        self.ui.table_finish_7.resizeColumnsToContents()
 
     def calculate_8(self):
         dict_value = get_source_dict(self.var)
-        a_ = float(self.ui.lineEdit_a_.text())
-        h_min = float(self.ui.lineEdit_hmin_8.text())
+        a_ = self.ui.lineEdit_a_.text()
+        h_min = self.ui.lineEdit_hmin_8.text()
+        if a_ == '' or h_min == '':
+            self.show_error_enter()
+            return
+        if check_data(a_) is None or check_data(h_min) is None:
+            self.show_error_enter_number()
+            return
+        a_ = float(a_)
+        h_min = float(h_min)
         dict_value['a_'] = a_
         dict_value['h_min'] = h_min
         update_dict_to_db(dict_value, self.var)
@@ -631,8 +658,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.tableWidget_8.resizeRowsToContents()
 
     def retry_8(self):
-        self.ui.lineEdit_a_.setText('')
-        self.ui.lineEdit_hmin_8.setText('')
+        self.ui.lineEdit_a_.clear()
+        self.ui.lineEdit_hmin_8.clear()
 
     def consequence_state(self, var):
         state = get_state_var(var)
@@ -663,8 +690,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.table_finish_7.setRowCount(0)
         self.ui.tableWidget_8.setRowCount(0)
         self.ui.tableWidget_8.setColumnCount(0)
-        self.ui.lineEdit_a_.setText('')
-        self.ui.lineEdit_hmin_8.setText('')
+        self.ui.lineEdit_a_.clear()
+        self.ui.lineEdit_hmin_8.clear()
 
 
 style_sheet = """
