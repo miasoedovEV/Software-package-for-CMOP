@@ -28,7 +28,7 @@ from design_error_enter_number_data import ErrorEnterNumberDialog
 
 
 def check_value_None(value):
-    if value == '':
+    if value == '' or value is None:
         error_dialog_enter = ErrorDialogEnterWindow()
         error_dialog_enter.exec()
         return None
@@ -325,11 +325,16 @@ class AddPumpDialogWindow(QtWidgets.QDialog):
             list_checked_value = []
             for index in range(self.ui.tableWidget_pump_enter_2.columnCount()):
                 value_object = self.ui.tableWidget_pump_enter_2.item(i, index)
-                if value_object is None:
-                    checker = True
-                    break
+                if i > 0:
+                    if value_object is None:
+                        checker = True
+                        break
+                if check_value_None(value_object) is None:
+                    return
                 value = value_object.text()
                 if index in self.list_indexes_column:
+                    if check_value_number(value) is None:
+                        return
                     if type(value) == str and ',' in value:
                         value = value.replace(',', '.')
                     value_float = float(value)
@@ -338,6 +343,10 @@ class AddPumpDialogWindow(QtWidgets.QDialog):
                     list_checked_value.append(value)
             if checker:
                 break
+            if len(list_checked_value) != self.ui.tableWidget_pump_enter_2.columnCount():
+                self.error_dialog_enter = ErrorDialogEnterWindow()
+                self.error_dialog_enter.exec()
+                return
             list_main_pumps_from_bd.append(list_checked_value)
         list_main_pumps_from_bd.sort(key=lambda k: k[5])
         source = MainPumpsTable.delete()
@@ -383,11 +392,16 @@ class AddSupPumpDialogWindow(QtWidgets.QDialog):
             list_checked_value = []
             for index in range(self.ui.tableWidget.columnCount()):
                 value_object = self.ui.tableWidget.item(i, index)
-                if value_object is None:
-                    checker = True
-                    break
+                if i > 0:
+                    if value_object is None:
+                        checker = True
+                        break
+                if check_value_None(value_object) is None:
+                    return
                 value = value_object.text()
                 if index in self.list_indexes_column:
+                    if check_value_number(value) is None:
+                        return
                     if type(value) == str and ',' in value:
                         value = value.replace(',', '.')
                     value_float = float(value)
@@ -396,6 +410,10 @@ class AddSupPumpDialogWindow(QtWidgets.QDialog):
                     list_checked_value.append(value)
             if checker:
                 break
+            if len(list_checked_value) != self.ui.tableWidget.columnCount():
+                self.error_dialog_enter = ErrorDialogEnterWindow()
+                self.error_dialog_enter.exec()
+                return
             list_sup_pumps_from_bd.append(list_checked_value)
         list_sup_pumps_from_bd.sort(key=lambda k: k[4])
         source = SupportPumpsTable.delete()
@@ -439,11 +457,16 @@ class AddPipeDialogWindow(QtWidgets.QDialog):
             list_checked_value = []
             for index in range(self.ui.tableWidget_pipe_enter_2.columnCount()):
                 value_object = self.ui.tableWidget_pipe_enter_2.item(i, index)
-                if value_object is None:
-                    checker = True
-                    break
+                if i > 0:
+                    if value_object is None:
+                        checker = True
+                        break
+                if check_value_None(value_object) is None:
+                    return
                 value = value_object.text()
                 if index in self.list_indexes_column:
+                    if check_value_number(value) is None:
+                        return
                     if type(value) == str and ',' in value:
                         value = value.replace(',', '.')
                     value_float = float(value)
@@ -452,6 +475,10 @@ class AddPipeDialogWindow(QtWidgets.QDialog):
                     list_checked_value.append(value)
             if checker:
                 break
+            if len(list_checked_value) != self.ui.tableWidget_pipe_enter_2.columnCount():
+                self.error_dialog_enter = ErrorDialogEnterWindow()
+                self.error_dialog_enter.exec()
+                return
             list_pipes_from_bd.append(list_checked_value)
         list_pipes_from_bd.sort(key=lambda k: k[1])
         source = PipeTable.delete()
