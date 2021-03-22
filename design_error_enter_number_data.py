@@ -13,6 +13,7 @@ class ErrorEnterNumberDialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(652, 180)
+        Dialog.setMaximumSize(QtCore.QSize(652, 180))
         self.gridLayout = QtWidgets.QGridLayout(Dialog)
         self.gridLayout.setObjectName("gridLayout")
         self.frame = QtWidgets.QFrame(Dialog)

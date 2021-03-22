@@ -14,6 +14,7 @@ class DnDialog(object):
     def setupUi(self, Dialog, var):
         Dialog.setObjectName("Dialog")
         Dialog.resize(508, 280)
+        Dialog.setMaximumSize(QtCore.QSize(508, 280))
         dict_value = get_source_dict(var)
         Dn = int(dict_value['Dn'])
         self.label = QtWidgets.QLabel(Dialog)

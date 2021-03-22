@@ -13,6 +13,7 @@ class AddSupPumpDialog(object):
     def setupUi(self, Dialog, SupportPumpsTable):
         Dialog.setObjectName("Dialog")
         Dialog.resize(760, 929)
+        Dialog.setMaximumSize(QtCore.QSize(760, 929))
         self.label_pump_enter_2 = QtWidgets.QLabel(Dialog)
         self.label_pump_enter_2.setGeometry(QtCore.QRect(270, 0, 281, 41))
         font = QtGui.QFont()

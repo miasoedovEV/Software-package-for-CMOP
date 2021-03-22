@@ -14,6 +14,7 @@ class PipeDnDialog(object):
     def setupUi(self, Dialog, var):
         Dialog.setObjectName("Dialog")
         Dialog.resize(620, 239)
+        Dialog.setMaximumSize(QtCore.QSize(620, 239))
         self.label = QtWidgets.QLabel(Dialog)
         self.label.setGeometry(QtCore.QRect(20, 30, 441, 16))
         font = QtGui.QFont()

@@ -14,6 +14,7 @@ class PumpDialog(object):
     def setupUi(self, Dialog, var):
         Dialog.setObjectName("Dialog")
         Dialog.resize(809, 294)
+        Dialog.setMaximumSize(QtCore.QSize(809, 294))
         self.label = QtWidgets.QLabel(Dialog)
         self.label.setGeometry(QtCore.QRect(10, 30, 431, 21))
         font = QtGui.QFont()
