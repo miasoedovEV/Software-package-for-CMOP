@@ -322,6 +322,7 @@ class MyWindow(object):
         self.tableWidget_2.setObjectName("tableWidget_2")
         self.tableWidget_2.setColumnCount(0)
         self.tableWidget_2.setRowCount(0)
+        self.tableWidget_2.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
         self.verticalLayout_6.addWidget(self.tableWidget_2)
         self.horizontalLayout.addWidget(self.frame_8)
         self.horizontalLayout.setStretch(0, 2)

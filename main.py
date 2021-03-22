@@ -39,7 +39,7 @@ class External(QThread):
             self.main_window.calculator_5.calculate_third_part()
             self.main_window.calculator_5.calculate_fourth_part()
             load_update_var_state(self.main_window.var, 1)
-        self.main_window.insert_values(self.main_window.var)
+            self.main_window.insert_values(self.main_window.var)
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -300,8 +300,8 @@ class MainWindow(QtWidgets.QMainWindow):
             return None
         delta_z = list_with_coordinates[-1][1] - list_with_coordinates[0][1]
         dict_with_value['delta_z'] = delta_z
-        self.clean_all()
         if self.check_var(dict_with_value, list_with_coordinates):
+            self.clean_all()
             if self.var != FIRST_NAME_VAR:
                 self.dialog_choose_var = ChooseVarDialog()
                 self.dialog_choose_var.exec()
@@ -391,7 +391,6 @@ class MainWindow(QtWidgets.QMainWindow):
                     value_table_to_ui = QtWidgets.QTableWidgetItem(str(value))
                     self.ui.tableWidget_2.setItem(index, 0, name_table_to_ui)
                     self.ui.tableWidget_2.setItem(index, 1, value_table_to_ui)
-        self.ui.tableWidget_2.resizeColumnsToContents()
 
     def draw_graph(self, var):
         dict_value = get_source_dict(var)
