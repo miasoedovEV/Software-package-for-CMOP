@@ -924,6 +924,15 @@ class MyWindow(object):
         for var in ActionVarTable.select():
             self.dict_actions[var.name_action] = QtWidgets.QAction(parent=MainWindow, text=var.var)
             self.menu.addAction(self.dict_actions[var.name_action])
+        self.shower = QtWidgets.QPushButton(self.frame_arrangement)
+        self.shower.setMaximumSize(QtCore.QSize(200, 16777215))
+        font = QtGui.QFont()
+        font.setFamily("Times New Roman")
+        font.setPointSize(10)
+        self.shower.setFont(font)
+        self.shower.setObjectName("shower")
+        self.shower.setText("Показать графику")
+        self.gridLayout_10.addWidget(self.shower, 0, 0, 1, 1)
 
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(1)

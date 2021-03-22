@@ -4,8 +4,9 @@ Created on Wed Oct  7 19:13:20 2020
 
 @author: stinc
 """
-from PyQt5 import QtWidgets, QtCore, QtGui
 
+from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt5.QtCore import QThread
 from dialogs import DnDialogWindow, PumpDialogWindow, GraphDialogWindow, SaveDialogWindow, DialogDeltaWindow, \
     DnDialogWindow_2, ChooseVarDialog, AddPumpDialogWindow, AddSupPumpDialogWindow, AddPipeDialogWindow, MyFileBrowser, \
     ErrorDialogEnterWindow, ErrorEnterNumberDialogWindow
@@ -23,6 +24,24 @@ from calculate_8_class import CalculationModesNps
 from tab_ui import MyWindow
 
 
+class External(QThread):
+    """
+    Runs a counter thread.
+    """
+
+    def __init__(self, main_window, decision):
+        super().__init__()
+        self.main_window = main_window
+        self.decision = decision
+
+    def run(self):
+        if self.decision is True:
+            self.main_window.calculator_5.calculate_third_part()
+            self.main_window.calculator_5.calculate_fourth_part()
+            load_update_var_state(self.main_window.var, 1)
+        self.main_window.insert_values(self.main_window.var)
+
+
 class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
@@ -31,6 +50,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.setupUi(self, MainPumpsTable)
         self.ui.pushButton_1.clicked.connect(self.calculate_5)
         self.ui.pushButton_2.clicked.connect(self.erase_data)
+        self.ui.shower.clicked.connect(self.show_graphs)
+        self.ui.shower.setVisible(False)
         self.ui.pushButton_3.clicked.connect(self.add_coordinate_line)
         self.ui.Add_2.clicked.connect(self.add_count_table_category_7)
         self.ui.Add_delta.clicked.connect(self.add_count_table_delta_7)
@@ -47,7 +68,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.action_4.triggered.connect(self.add_sup_pump)
         self.ui.action_7.triggered.connect(self.add_pipes)
         self.ui.action_delet.triggered.connect(self.delete_all_var)
-        self.ui.action_save.triggered.connect(self.save_var_calculate_5)
+        self.ui.action_save.triggered.connect(self.save_var_calculate)
         self.ui.action_xls.triggered.connect(self.save_to_xls)
         for object_action_save in self.ui.dict_actions.values():
             func = self.make_func_insert(object_action_save.text())
@@ -179,7 +200,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.clean_all()
         self.consequence_state(var_name)
 
-    def save_var_calculate_5(self):
+    def save_var_calculate(self):
         self.save_dialog_window = SaveDialogWindow()
         self.save_dialog_window.exec()
         new_name_var = self.save_dialog_window.return_name_var()
@@ -192,11 +213,10 @@ class MainWindow(QtWidgets.QMainWindow):
         update_var_table(self.var, new_name_var)
         self.var = new_name_var
         new_name_action = FIRST_NAME_ACTION_VAR
-        number = int(FIRST_NAME_ACTION_VAR[-1])
-        for var in ActionVarTable.select():
-            name_action = var.name_action
-            if int(name_action[-1]) >= number:
-                number += 1
+        list_numbers_action = [int(var.name_action[-1]) for var in ActionVarTable.select()]
+        list_numbers_action.sort()
+        if list_numbers_action:
+            number = list_numbers_action[-1] + 1
             new_name_action = FIRST_NAME_ACTION_VAR[0:-1] + str(number)
         actions = ActionVarTable(
             var=new_name_var,
@@ -204,6 +224,8 @@ class MainWindow(QtWidgets.QMainWindow):
         )
         actions.save()
         self.ui.dict_actions[new_name_action] = QtWidgets.QAction(parent=self, text=new_name_var)
+        func = self.make_func_insert(self.var)
+        self.ui.dict_actions[new_name_action].triggered.connect(func)
         self.ui.menu.addAction(self.ui.dict_actions[new_name_action])
         self.insert_values(self.var)
 
@@ -291,7 +313,7 @@ class MainWindow(QtWidgets.QMainWindow):
                     update_list_coordinates_to_db(list_with_coordinates, self.var)
                     update_dict_to_db(dict_with_value, self.var)
                     delete_data_7_8(self.var, 2)
-                self.shower.deleteLater()
+                self.ui.shower.setVisible(False)
             else:
                 create_new_data_var_5(self.var, list_with_coordinates, dict_with_value)
             self.ui.tabWidget.removeTab(2)
@@ -305,24 +327,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.draw_graph(self.var)
 
     def add_button_show(self):
-        self.shower = QtWidgets.QPushButton(self.ui.frame_18)
-        self.shower.setMaximumSize(QtCore.QSize(200, 16777215))
-        font = QtGui.QFont()
-        font.setFamily("Times New Roman")
-        font.setPointSize(10)
-        self.shower.setFont(font)
-        self.shower.setObjectName("shower")
-        self.ui.gridLayout_10.addWidget(self.shower, 0, 0, 1, 1)
-        self.shower.setText("Показать графику")
-        self.shower.clicked.connect(self.show_graphs)
-        self.shower.show()
+        self.ui.shower.setVisible(True)
 
     def calculate_5(self):
         result_get_data = self.get_data_in_db_5()
         if result_get_data is None:
             return
         if result_get_data is True:
-            self.calculator_5 = Calculate5(var=self.var)
+            self.calculator_5 = Calculate5(self.var)
             self.calculator_5.calculate_first_part()
             self.pump_dialog = PumpDialogWindow(self.var, self)
             self.pump_dialog.exec()
@@ -338,14 +350,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self.dn_dialog.exec()
             if self.dn_dialog.get_decision() is None:
                 return
-            self.calculator_5.calculate_third_part()
-            self.calculator_5.calculate_fourth_part()
-            load_update_var_state(self.var, 1)
-        self.return_result_5(self.var)
-        self.show_graphs()
-        self.add_button_show()
-        self.ui.tabWidget.insertTab(1, self.ui.tab_2, 'Перерасчёт толщины стенки трубы')
-        self.insert_values(self.var)
+        self.calc = External(self, result_get_data)
+        self.calc.start()
 
     def return_result_5(self, var):
         dict_value = get_source_dict(var)
@@ -504,7 +510,8 @@ class MainWindow(QtWidgets.QMainWindow):
             list_with_number_section.append(number_section_str)
             list_with_length_section.append(length_section_float)
             list_with_category_section.append(category_section_float)
-        if len(list_with_number_section) != len(list_with_length_section) or len(list_with_number_section) != len(list_with_category_section):
+        if len(list_with_number_section) != len(list_with_length_section) or len(list_with_number_section) != len(
+                list_with_category_section):
             self.show_error_enter()
             return None
         if list_with_number_section != [] and list_with_length_section != [] and list_with_category_section != []:
@@ -709,7 +716,26 @@ style_sheet = """
         QPushButton{
             background-color: #4e4e4e;
             color:#ffffff;
+            }
+        
+        QTableView {
+        selection-background-color: qlineargradient(x1: 0, y1: 0, x2: 0.5, y2: 0.5,
+                                stop: 0 black, stop: 1 white);
         }
+               
+        QTabBar::tab {
+        background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                    stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,
+                                    stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);
+        border: 2px solid #C4C4C3;
+        border-bottom-color: #C2C7CB; /* same as the pane color */
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+        min-width: 8ex;
+        padding: 2px;
+        }
+
+            
         """
 
 if __name__ == '__main__':
@@ -718,20 +744,6 @@ if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     app.setStyleSheet(style_sheet)
     palette = QtGui.QPalette()
-    # palette.setColor(QtGui.QPalette.Window, QtGui.QColor(53, 53, 53))
-    # # palette.setColor(QtGui.QPalette.WindowText, QtCore.Qt.white)
-    # palette.setColor(QtGui.QPalette.Background, QtCore.Qt.black)
-    # # palette.setColor(QtGui.QPalette.AlternateBase, QtGui.QColor(53, 53, 53))
-    # # palette.setColor(QtGui.QPalette.ToolTipBase, QtCore.Qt.black)
-    # # palette.setColor(QtGui.QPalette.ToolTipText, QtCore.Qt.white)
-    # palette.setColor(QtGui.QPalette.Text, QtCore.Qt.white)
-    # # palette.setColor(QtGui.QPalette.Button, QtGui.QColor(53, 53, 53))
-    # # palette.setColor(QtGui.QPalette.Background, QtGui.QColor(53, 53, 53))
-    # # palette.setColor(QtGui.QPalette.ButtonText, QtCore.Qt.white)
-    # palette.setColor(QtGui.QPalette.BrightText, QtCore.Qt.red)
-    # palette.setColor(QtGui.QPalette.Link, QtGui.QColor(42, 130, 218))
-    # # palette.setColor(QtGui.QPalette.Highlight, QtGui.QColor(42, 130, 218))
-    # # palette.setColor(QtGui.QPalette.HighlightedText, QtCore.Qt.black)
     app.setPalette(palette)
     window = MainWindow()
     window.show()

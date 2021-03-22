@@ -4,15 +4,16 @@ Created on Wed Oct  7 19:13:20 2020
 
 @author: stinc
 """
-
+import matplotlib.pyplot as plt
 from decimal import getcontext, Decimal, ROUND_HALF_UP
 import numpy as np
-import matplotlib.pyplot as plt
 import math
-from models import MainPumpsTable, CoordinatesTable, SourceDataTable, SupportPumpsTable, GraphW0, DnTable, \
-    CoordinatesTable
+from models import MainPumpsTable, SupportPumpsTable, GraphW0, DnTable
 from settings import get_source_dict, update_dict_to_db, get_list_coordinates
 import json
+from multiprocessing.pool import ThreadPool
+
+pool = ThreadPool(processes=1)
 
 COLORS = ['black', 'red', 'green', 'grey', 'blue']
 Q_LIST = list(range(3500, 11001, 500))
@@ -297,8 +298,9 @@ class Calculate5:
 
         m_max = self.m_pump
         m_min = self.m_pump - 1
-        self.Q2, H2 = self.check_transfer_mode(self.Q_hour, self.n_max, m_max, self.H, num=0.001)
-        self.Q1, H1 = self.check_transfer_mode(self.Q_hour, self.n_max, m_min, self.H, num=-0.001)
+        async_result = pool.apply_async(self.check_transfer_mode, (self.Q_hour, self.n_max, m_min, self.H, -0.001))
+        self.Q2, H2 = self.check_transfer_mode(self.Q_hour, self.n_max, m_max, self.H, 0.001)
+        self.Q1, H1 = async_result.get()
         tau1 = 24 * self.Np * (self.Q2 - self.Q_hour) / (self.Q2 - self.Q1)
 
         tau2 = 24 * self.Np * (self.Q_hour - self.Q1) / (self.Q2 - self.Q1)
