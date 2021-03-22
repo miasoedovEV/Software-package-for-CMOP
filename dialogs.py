@@ -25,6 +25,7 @@ from create_xls import CreatorXlsFile
 from design_save_error_xls import ErrorXlsDialog
 from design_dialog_error_enter_5 import ErrorDialogEnter5
 from design_error_enter_number_data import ErrorEnterNumberDialog
+from design_window_error_saving import ErrorSaveDialog
 
 
 def check_value_None(value):
@@ -43,6 +44,14 @@ def check_value_number(value):
         return None
     else:
         return True
+
+
+class ErrorSaveDialogWindow(QtWidgets.QDialog):
+    def __init__(self):
+        super(ErrorSaveDialogWindow, self).__init__()
+        self.ui = ErrorSaveDialog()
+        self.ui.setupUi(self)
+        self.ui.pushButton.clicked.connect(self.close)
 
 
 class ErrorEnterNumberDialogWindow(QtWidgets.QDialog):

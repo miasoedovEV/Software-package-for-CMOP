@@ -9,7 +9,7 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import QThread
 from dialogs import DnDialogWindow, PumpDialogWindow, GraphDialogWindow, SaveDialogWindow, DialogDeltaWindow, \
     DnDialogWindow_2, ChooseVarDialog, AddPumpDialogWindow, AddSupPumpDialogWindow, AddPipeDialogWindow, MyFileBrowser, \
-    ErrorDialogEnterWindow, ErrorEnterNumberDialogWindow
+    ErrorDialogEnterWindow, ErrorEnterNumberDialogWindow, ErrorSaveDialogWindow
 from models import MainPumpsTable, CoordinatesTable, SourceDataTable, ActionVarTable
 import json
 from calculate_5_class import Calculate5, draw_graph_in_calculate
@@ -201,6 +201,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.consequence_state(var_name)
 
     def save_var_calculate(self):
+        if self.ui.tableWidget_2.rowCount() == 0:
+            self.error_save_window = ErrorSaveDialogWindow()
+            self.error_save_window.exec()
+            return
         self.save_dialog_window = SaveDialogWindow()
         self.save_dialog_window.exec()
         new_name_var = self.save_dialog_window.return_name_var()
