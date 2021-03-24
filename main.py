@@ -4,6 +4,7 @@ Created on Wed Oct  7 19:13:20 2020
 
 @author: stinc
 """
+import time
 
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import QThread
@@ -29,17 +30,32 @@ class External(QThread):
     Runs a counter thread.
     """
 
-    def __init__(self, main_window, decision):
+    def __init__(self, main_window):
         super().__init__()
         self.main_window = main_window
-        self.decision = decision
+        self.list_func = [self.main_window.calculator_5.calculate_third_part,
+                          self.main_window.calculator_5.calculate_fourth_part,
+                          load_update_var_state,
+                          self.main_window.insert_values]
 
     def run(self):
-        if self.decision is True:
-            self.main_window.calculator_5.calculate_third_part()
-            self.main_window.calculator_5.calculate_fourth_part()
-            load_update_var_state(self.main_window.var, 1)
-            self.main_window.insert_values(self.main_window.var)
+        self.main_window.ui.frame_25.show()
+        value = 0
+        for index, func in enumerate(self.list_func):
+            if index == 2:
+                func(self.main_window.var, 1)
+                time.sleep(1)
+                value += 25
+            elif index == 3:
+                func(self.main_window.var)
+                time.sleep(1)
+                value += 24
+            else:
+                func()
+                value += 25
+            self.main_window.ui.progressBar.setValue(value)
+        else:
+            self.main_window.ui.frame_25.close()
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -354,8 +370,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self.dn_dialog.exec()
             if self.dn_dialog.get_decision() is None:
                 return
-        self.calc = External(self, result_get_data)
-        self.calc.start()
+            self.calc = External(self)
+            self.calc.start()
 
     def return_result_5(self, var):
         dict_value = get_source_dict(var)
