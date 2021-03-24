@@ -25,10 +25,68 @@ from calculate_8_class import CalculationModesNps
 from tab_ui import MyWindow
 
 
+class CopySelectedCellsAction(QtWidgets.QAction):
+    def __init__(self, list_table_widget):
+        super(CopySelectedCellsAction, self).__init__()
+        self.setShortcut('Ctrl+C')
+        self.list_table_widget = list_table_widget
+        self.triggered.connect(self.copy_cells_to_clipboard)
+
+    def copy_cells_to_clipboard(self):
+        for table in self.list_table_widget:
+            if len(table.selectionModel().selectedIndexes()) < 1:
+                continue
+                # sort select indexes into rows and columns
+            previous = table.selectionModel().selectedIndexes()[0]
+            columns = []
+            rows = []
+            for index in table.selectionModel().selectedIndexes():
+                if previous.column() != index.column():
+                    columns.append(rows)
+                    rows = []
+                rows.append(index.data())
+                previous = index
+            columns.append(rows)
+            # add rows and columns to clipboard
+            clipboard = ""
+            nrows = len(columns[0])
+            ncols = len(columns)
+            for r in range(nrows):
+                for c in range(ncols):
+                    clipboard += columns[c][r]
+                    if c != (ncols - 1):
+                        clipboard += '\t'
+                clipboard += '\n'
+            # copy to the system clipboard
+            sys_clip = QtWidgets.QApplication.clipboard()
+            sys_clip.setText(clipboard)
+            table.clearSelection()
+
+
+
+class PastSelectedCellsAction(QtWidgets.QAction):
+    def __init__(self, list_table_widget):
+        super(PastSelectedCellsAction, self).__init__()
+        self.setShortcut('Ctrl+V')
+        self.list_table_widget = list_table_widget
+        self.triggered.connect(self.past_cells_to_clipboard)
+
+    def past_cells_to_clipboard(self):
+        sys_clip = QtWidgets.QApplication.clipboard()
+        text = sys_clip.text()
+        elements = text.split('\n')
+        for table in self.list_table_widget:
+            if len(table.selectionModel().selectedIndexes()) < 1:
+                continue
+            for index, index_table in enumerate(table.selectionModel().selectedIndexes()):
+                if len(elements) < index + 1:
+                    return
+                item = QtWidgets.QTableWidgetItem(elements[index])
+                table.setItem(index_table.row(), index_table.column(), item)
+                table.clearSelection()
+
+
 class External(QThread):
-    """
-    Runs a counter thread.
-    """
 
     def __init__(self, main_window):
         super().__init__()
@@ -90,6 +148,17 @@ class MainWindow(QtWidgets.QMainWindow):
             func = self.make_func_insert(object_action_save.text())
             object_action_save.triggered.connect(func)
         self.delete_func(FIRST_NAME_VAR)
+        self.dict_action_table = {}
+        self.add_copy_past_actions()
+
+    def add_copy_past_actions(self):
+        list_table = [self.ui.tableWidget_charactiristics, self.ui.tableWidget_oil_properties, self.ui.table,
+                      self.ui.tableWidget_2, self.ui.tableWidget, self.ui.table_date_7, self.ui.table_category_7,
+                      self.ui.table_delta_7, self.ui.table_finish_7, self.ui.tableWidget_8]
+        self.copy_action = CopySelectedCellsAction(list_table)
+        self.past_action = PastSelectedCellsAction(list_table)
+        self.addAction(self.copy_action)
+        self.addAction(self.past_action)
 
     def save_to_xls(self):
         self.my_file_browser = MyFileBrowser(self.var)
@@ -334,6 +403,8 @@ class MainWindow(QtWidgets.QMainWindow):
                     update_dict_to_db(dict_with_value, self.var)
                     delete_data_7_8(self.var, 2)
                 self.ui.shower.setVisible(False)
+                self.ui.checkBox.setVisible(False)
+                self.ui.checkBox_2.setVisible(False)
             else:
                 create_new_data_var_5(self.var, list_with_coordinates, dict_with_value)
             self.ui.tabWidget.removeTab(2)
@@ -348,6 +419,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def add_button_show(self):
         self.ui.shower.setVisible(True)
+        self.ui.checkBox.setVisible(True)
+        self.ui.checkBox_2.setVisible(True)
 
     def calculate_5(self):
         result_get_data = self.get_data_in_db_5()
@@ -438,6 +511,9 @@ class MainWindow(QtWidgets.QMainWindow):
             self.delete_func(FIRST_NAME_VAR)
         self.var = FIRST_NAME_VAR
         self.ui.label.setText(f'Название варианта: {FIRST_NAME_VAR}')
+        self.ui.shower.setVisible(False)
+        self.ui.checkBox.setVisible(False)
+        self.ui.checkBox_2.setVisible(False)
         self.clean_all()
 
     def check_var(self, dict_with_value, coordinates_from_ui):
