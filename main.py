@@ -5,9 +5,9 @@ Created on Wed Oct  7 19:13:20 2020
 @author: stinc
 """
 import time
-
-from PyQt5 import QtWidgets, QtCore, QtGui
-from PyQt5.QtCore import QThread
+import breeze_resources
+from PyQt5 import QtWidgets, QtCore
+from PyQt5.QtCore import QThread, QFile, QTextStream
 from dialogs import DnDialogWindow, PumpDialogWindow, GraphDialogWindow, SaveDialogWindow, DialogDeltaWindow, \
     DnDialogWindow_2, ChooseVarDialog, AddPumpDialogWindow, AddSupPumpDialogWindow, AddPipeDialogWindow, MyFileBrowser, \
     ErrorDialogEnterWindow, ErrorEnterNumberDialogWindow, ErrorSaveDialogWindow
@@ -815,40 +815,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.lineEdit_hmin_8.clear()
 
 
-style_sheet = """
-
-        QPushButton{
-            background-color: #4e4e4e;
-            color:#ffffff;
-            }
-        
-        QTableView {
-        selection-background-color: qlineargradient(x1: 0, y1: 0, x2: 0.5, y2: 0.5,
-                                stop: 0 black, stop: 1 white);
-        }
-               
-        QTabBar::tab {
-        background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                    stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,
-                                    stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);
-        border: 2px solid #C4C4C3;
-        border-bottom-color: #C2C7CB; /* same as the pane color */
-        border-top-left-radius: 4px;
-        border-top-right-radius: 4px;
-        min-width: 8ex;
-        padding: 2px;
-        }
-
-            
-        """
-
 if __name__ == '__main__':
     import sys
 
     app = QtWidgets.QApplication(sys.argv)
-    app.setStyleSheet(style_sheet)
-    palette = QtGui.QPalette()
-    app.setPalette(palette)
+    file = QFile(":/dark.qss")
+    file.open(QFile.ReadOnly | QFile.Text)
+    stream = QTextStream(file)
+    app.setStyleSheet(stream.readAll())
     window = MainWindow()
     window.show()
     sys.exit(app.exec_())

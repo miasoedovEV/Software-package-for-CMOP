@@ -339,9 +339,9 @@ class Calculate5:
         h_t = lambda_ * (self.L * 10 ** 3 * w ** 2) / (self.Dvn * 10 ** (-3) * 2 * self.G)
         H_tr = 1.02 * h_t + self.delta_z + self.N_a * self.h_ost
         H = Decimal(f'{H}')
-        H = H.quantize(Decimal('1.00'), ROUND_HALF_UP)
+        H = H.quantize(Decimal('1.000'), ROUND_HALF_UP)
         H_tr = Decimal(f'{H_tr}')
-        H_tr = H_tr.quantize(Decimal('1.00'), ROUND_HALF_UP)
+        H_tr = H_tr.quantize(Decimal('1.000'), ROUND_HALF_UP)
         return H, H_tr
 
     def check_transfer_mode(self, Q, n, m_np, H_tr, num):
@@ -354,13 +354,13 @@ class Calculate5:
         Hst = hm * m_np
         H = Hst * n + hp * self.N_a
         if H > H_tr:
-            while H_tr != H:
+            while H > H_tr:
                 Q = Q + num
                 H, H_tr = self.calculate_H_Htr(Q, n, m_np)
             else:
                 return Q, H
         else:
-            while H_tr != H:
+            while H_tr > H:
                 Q = Q - num
                 H, H_tr = self.calculate_H_Htr(Q, n, m_np)
             else:
