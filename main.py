@@ -53,6 +53,8 @@ class CopySelectedCellsAction(QtWidgets.QAction):
             ncols = len(columns)
             for r in range(nrows):
                 for c in range(ncols):
+                    if columns[c][r] is None:
+                        continue
                     clipboard += columns[c][r]
                     if c != (ncols - 1):
                         clipboard += '\t'
@@ -61,7 +63,6 @@ class CopySelectedCellsAction(QtWidgets.QAction):
             sys_clip = QtWidgets.QApplication.clipboard()
             sys_clip.setText(clipboard)
             table.clearSelection()
-
 
 
 class PastSelectedCellsAction(QtWidgets.QAction):
@@ -113,7 +114,7 @@ class External(QThread):
                 value += 25
             self.main_window.ui.progressBar.setValue(value)
         else:
-            self.main_window.ui.frame_25.close()
+            self.main_window.ui.progressBar.setValue(0)
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -209,6 +210,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.index_table_widget += 1
             self.ui.table.setRowCount(self.index_table_widget)
         self.return_result_5(self.var)
+        self.ui.frame_25.close()
         self.add_button_show()
 
     def insert_values_calculate_7(self, var_name):
@@ -463,23 +465,27 @@ class MainWindow(QtWidgets.QMainWindow):
                 if name == name_value:
                     if name_value == 'n_max':
                         n_max = value
+                        name_to_table = LIST_WITH_NAME[index]
                     elif name_value == 'n_min':
                         n_min = value
+                        name_to_table = LIST_WITH_NAME[index]
                     elif name_value == 'Q2':
                         m_pump = dict_value['m_pump']
-                        LIST_WITH_NAME[index] = LIST_WITH_NAME[index].format(n_max=n_max, m_pump=int(m_pump))
+                        name_to_table = LIST_WITH_NAME[index].format(n_max=n_max, m_pump=int(m_pump))
                     elif name_value == 'Q1':
                         m_pump = dict_value['m_pump']
                         m_pump -= 1
-                        LIST_WITH_NAME[index] = LIST_WITH_NAME[index].format(n_max=n_max, m_pump=int(m_pump))
+                        name_to_table = LIST_WITH_NAME[index].format(n_max=n_max, m_pump=int(m_pump))
                     elif name_value == 'H_n_max_m_pump':
                         m_pump = dict_value['m_pump']
-                        LIST_WITH_NAME[index] = LIST_WITH_NAME[index].format(n_max=n_max, m_pump=int(m_pump))
+                        name_to_table = LIST_WITH_NAME[index].format(n_max=n_max, m_pump=int(m_pump))
                     elif name_value == 'tau1':
-                        LIST_WITH_NAME[index] = LIST_WITH_NAME[index].format(n_max=n_min)
+                        name_to_table = LIST_WITH_NAME[index].format(n_max=n_min)
                     elif name_value == 'tau2':
-                        LIST_WITH_NAME[index] = LIST_WITH_NAME[index].format(n_max=n_max)
-                    name_table_to_ui = QtWidgets.QTableWidgetItem(LIST_WITH_NAME[index])
+                        name_to_table = LIST_WITH_NAME[index].format(n_max=n_max)
+                    else:
+                        name_to_table = LIST_WITH_NAME[index]
+                    name_table_to_ui = QtWidgets.QTableWidgetItem(name_to_table)
                     name_table_to_ui.setFlags(QtCore.Qt.ItemIsEnabled)
                     value_table_to_ui = QtWidgets.QTableWidgetItem(str(value))
                     self.ui.tableWidget_2.setItem(index, 0, name_table_to_ui)
@@ -607,6 +613,9 @@ class MainWindow(QtWidgets.QMainWindow):
             list_with_category_section.append(category_section_float)
         if len(list_with_number_section) != len(list_with_length_section) or len(list_with_number_section) != len(
                 list_with_category_section):
+            self.show_error_enter()
+            return None
+        if not list_with_number_section:
             self.show_error_enter()
             return None
         if list_with_number_section != [] and list_with_length_section != [] and list_with_category_section != []:

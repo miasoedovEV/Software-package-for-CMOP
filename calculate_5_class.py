@@ -4,6 +4,8 @@ Created on Wed Oct  7 19:13:20 2020
 
 @author: stinc
 """
+import time
+
 import matplotlib.pyplot as plt
 from decimal import getcontext, Decimal, ROUND_HALF_UP
 import numpy as np
@@ -16,7 +18,6 @@ from multiprocessing.pool import ThreadPool
 pool = ThreadPool(processes=1)
 
 COLORS = ['black', 'red', 'green', 'grey', 'blue']
-Q_LIST = list(range(3500, 11001, 500))
 
 
 def plot_show(x, y, label_x, label_y, plot_title):
@@ -85,16 +86,14 @@ class Calculate5:
         self.density_t = self.density + ksi * (293 - self.Tr)  # расч плотность
         B = np.log10(np.log10(self.vis_2 + 0.8) / np.log10(self.vis_1 + 0.8)) / (
                 np.log10(self.T2) - np.log10(self.T1))
-        A = np.log10(np.log10(self.vis_1 + 0.8)) - B * np.log10(self.T1)
-        At = (self.Tr / self.T1) ** B * np.log10(self.vis_1 + 0.8)
 
-        self.vis_t = 10 ** At - 0.8
-
+        At = ((self.Tr / self.T1) ** B) * np.log10(self.vis_1 + 0.8)
+        self.vis_t = (10 ** At) - 0.8
         # Построение графика
 
         self.T_k = list(range(273, 310, 5))  # данные для построения диаграммы изменений плотности от температуры
 
-        self.vis_T = [10 ** (10 ** (A + B * np.log10(t_k))) - 0.8 for t_k in self.T_k]  # данные для вискограммы
+        self.vis_T = [(10 ** ((t_k / self.T1) ** B * np.log10(self.vis_1 + 0.8))) - 0.8 for t_k in self.T_k]  # данные для вискограммы
         # Оперделение годовой пропускной способности
 
         # Определение часовой и секундной производительности
@@ -210,6 +209,8 @@ class Calculate5:
                 m_kaf = value
             elif name == 'k_a':
                 k_a = value
+            elif name == 'Dn':
+                self.Dn = value
         R1 = R1n * m_kaf / (k1 * kn)
 
         delta = np * self.P * self.Dn / (2 * (R1 + np * self.P))
@@ -267,7 +268,8 @@ class Calculate5:
         self.N6_M2 = []
         self.Hs = []
         self.Hs_with_looping = []
-        for index, q in enumerate(Q_LIST):
+        self.q_list = list(range(int(self.Q_hour - 1000), int(self.Q_hour + 4000), 500))
+        for index, q in enumerate(self.q_list):
             hm = self.a_m - self.b_m * q ** 2
             hp = self.ap - self.bp * (q / 2) ** 2
             n5_m3 = hm * self.m_pump * n_min + 2 * hp
@@ -298,8 +300,9 @@ class Calculate5:
 
         m_max = self.m_pump
         m_min = self.m_pump - 1
-        async_result = pool.apply_async(self.check_transfer_mode, (self.Q_hour, self.n_max, m_min, self.H, -0.001))
+        async_result = pool.apply_async(self.check_transfer_mode, (self.Q_hour, self.n_max, m_min, self.H, 0.001))
         self.Q2, H2 = self.check_transfer_mode(self.Q_hour, self.n_max, m_max, self.H, 0.001)
+        time.sleep(3)
         self.Q1, H1 = async_result.get()
         tau1 = 24 * self.Np * (self.Q2 - self.Q_hour) / (self.Q2 - self.Q1)
 
@@ -311,7 +314,8 @@ class Calculate5:
                            ['Re', self.Re], ['h_tr', self.h_t], ['i', self.i], ['H', self.H], ['n0', n0],
                            ['n_min', n_min], ['n_max', self.n_max], ['Q2', self.Q2], ['Q1', self.Q1],
                            ['H_n_max_m_pump', H_n_max_m_pump], ['n_nps_first_section', n_nps_first_section],
-                           ['tau1', tau1], ['tau2', tau2], ['list_all_h', all_h], ['list_labels', labels]]
+                           ['tau1', tau1], ['tau2', tau2], ['list_all_h', all_h], ['list_labels', labels],
+                           ['q_list', self.q_list]]
 
         for name, value in list_with_value:
             self.dict_value[name] = value
@@ -335,9 +339,9 @@ class Calculate5:
         h_t = lambda_ * (self.L * 10 ** 3 * w ** 2) / (self.Dvn * 10 ** (-3) * 2 * self.G)
         H_tr = 1.02 * h_t + self.delta_z + self.N_a * self.h_ost
         H = Decimal(f'{H}')
-        H = H.quantize(Decimal('1.000'), ROUND_HALF_UP)
+        H = H.quantize(Decimal('1.00'), ROUND_HALF_UP)
         H_tr = Decimal(f'{H_tr}')
-        H_tr = H_tr.quantize(Decimal('1.000'), ROUND_HALF_UP)
+        H_tr = H_tr.quantize(Decimal('1.00'), ROUND_HALF_UP)
         return H, H_tr
 
     def check_transfer_mode(self, Q, n, m_np, H_tr, num):
@@ -349,15 +353,15 @@ class Calculate5:
         hp = self.ap - self.bp * (Q / 2) ** 2
         Hst = hm * m_np
         H = Hst * n + hp * self.N_a
-        if 0 + num > 0:
-            while H_tr != H and H > H_tr:
+        if H > H_tr:
+            while H_tr != H:
                 Q = Q + num
                 H, H_tr = self.calculate_H_Htr(Q, n, m_np)
             else:
                 return Q, H
         else:
-            while H_tr != H and H_tr > H:
-                Q = Q + num
+            while H_tr != H:
+                Q = Q - num
                 H, H_tr = self.calculate_H_Htr(Q, n, m_np)
             else:
                 return Q, H
@@ -511,5 +515,7 @@ def draw_graph_in_calculate(var):
             T_k = value
         elif name == 'vis_T':
             vis_T = value
+        elif name == 'q_list':
+            q_list = value
     plot_show(T_k, vis_T, 'T,K', 'mm2/s', 'Вискограмма')
-    many_plot(Q_LIST, all_h, 'Q, м3/x', 'Н,м', labels, 'Совмещенная характеристика', COLORS)
+    many_plot(q_list, all_h, 'Q, м3/x', 'Н,м', labels, 'Совмещенная характеристика', COLORS)
