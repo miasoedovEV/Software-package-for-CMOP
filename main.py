@@ -141,6 +141,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.action_7.triggered.connect(self.add_pipes)
         self.ui.action_delet.triggered.connect(self.delete_all_var)
         self.ui.action_save.triggered.connect(self.save_var_calculate)
+        self.ui.action_new_var.triggered.connect(self.start_new_var)
         self.ui.action_xls.triggered.connect(self.save_to_xls)
         for object_action_save in self.ui.dict_actions.values():
             func = self.make_func_insert(object_action_save.text())
@@ -148,6 +149,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.delete_func(FIRST_NAME_VAR)
         self.dict_action_table = {}
         self.add_copy_past_actions()
+
+    def start_new_var(self):
+        self.clean_all()
+        self.delete_func(FIRST_NAME_VAR)
+        self.var = FIRST_NAME_VAR
+        self.ui.label.setText(f'Название варианта: {str(self.var)}')
 
     def add_copy_past_actions(self):
         list_table = [self.ui.tableWidget_charactiristics, self.ui.tableWidget_oil_properties, self.ui.table,
