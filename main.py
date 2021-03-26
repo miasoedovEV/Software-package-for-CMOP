@@ -6,7 +6,7 @@ Created on Wed Oct  7 19:13:20 2020
 """
 import time
 import breeze_resources
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import QThread, QFile, QTextStream
 from dialogs import DnDialogWindow, PumpDialogWindow, GraphDialogWindow, SaveDialogWindow, DialogDeltaWindow, \
     DnDialogWindow_2, ChooseVarDialog, AddPumpDialogWindow, AddSupPumpDialogWindow, AddPipeDialogWindow, MyFileBrowser, \
@@ -450,17 +450,24 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def return_result_5(self, var):
         dict_value = get_source_dict(var)
+        font = QtGui.QFont()
+        font.setFamily("Times New Roman")
+        font.setPointSize(12)
         self.ui.tableWidget_2.setColumnCount(2)
         item = QtWidgets.QTableWidgetItem('Значение')
+        item.setFont(font)
         self.ui.tableWidget_2.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem('Результат')
+        item.setFont(font)
         self.ui.tableWidget_2.setHorizontalHeaderItem(1, item)
         n_max = 0
         n_min = 0
+        font.setPointSize(10)
         for index, name_value in enumerate(LIST_WITH_VALUE):
             for name, value in dict_value.items():
                 self.ui.tableWidget_2.setRowCount(index + 1)
                 item = QtWidgets.QTableWidgetItem(f'{index + 1}')
+                item.setFont(font)
                 self.ui.tableWidget_2.setVerticalHeaderItem(index, item)
                 if name == name_value:
                     if name_value == 'n_max':
@@ -487,6 +494,7 @@ class MainWindow(QtWidgets.QMainWindow):
                         name_to_table = LIST_WITH_NAME[index]
                     name_table_to_ui = QtWidgets.QTableWidgetItem(name_to_table)
                     name_table_to_ui.setFlags(QtCore.Qt.ItemIsEnabled)
+                    name_table_to_ui.setFont(font)
                     value_table_to_ui = QtWidgets.QTableWidgetItem(str(value))
                     self.ui.tableWidget_2.setItem(index, 0, name_table_to_ui)
                     self.ui.tableWidget_2.setItem(index, 1, value_table_to_ui)

@@ -44,6 +44,7 @@ LIST_WITH_TABLE_VALUE_CALC_7 = [
     ['Dvn', 'delta', 'R1n', 'k1', 'np', 'kn', 'm_kaf', 'density_t', 'H_for_calc_delta']]
 
 LIST_WITH_NAME_SOURCE_VALUE_8 = ['h_min', 'a_']
+SUP = str.maketrans('nom', '\u2099\u2092\u2098')
 
 import re
 

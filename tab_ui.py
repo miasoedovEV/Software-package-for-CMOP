@@ -8,14 +8,15 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from models import ActionVarTable
+from settings import SUP
 
 TABLE_CHARACTIRISTICS_NAMES = ['Длина трассы, км', 'Длина частка, км', 'Рабочее давление, МПа',
                                'Годовая производительность',
                                'kнп', 'Температура перекачки, К', 'Остаточный напор, м',
                                'Количество насосов на станции',
                                'Число рабочих дней']
-TABLE_OIL_PROPERTIES_NAMES = ['Плотность, км/м3', 'Вязкость при t1, мм2/c', 'Вязкость при t2, мм2/c', 'T1, K',
-                              'T2, K']
+TABLE_OIL_PROPERTIES_NAMES = ['Плотность, км/м\u00B3', 'Вязкость при t\u2081, мм\u00B2/c', 'Вязкость при t\u2082, мм\u00B2/c',
+                              'T\u2081, K', 'T\u2082, K']
 
 
 class MyWindow(object):
@@ -222,7 +223,11 @@ class MyWindow(object):
         self.table.setObjectName("table")
         self.table.setColumnCount(2)
         self.table.setRowCount(1)
+        font = QtGui.QFont()
+        font.setFamily("Times New Roman")
+        font.setPointSize(10)
         item = QtWidgets.QTableWidgetItem()
+        item.setFont(font)
         self.table.setVerticalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
         font = QtGui.QFont()
@@ -261,24 +266,35 @@ class MyWindow(object):
         self.label_36.setAlignment(QtCore.Qt.AlignCenter)
         self.label_36.setObjectName("label_36")
         self.verticalLayout_5.addWidget(self.label_36)
+        font = QtGui.QFont()
+        font.setFamily("Times New Roman")
+        font.setPointSize(10)
         self.tableWidget = QtWidgets.QTableWidget(self.frame_7_5)
         self.tableWidget.setObjectName("tableWidget")
         self.tableWidget.setColumnCount(6)
         item = QtWidgets.QTableWidgetItem('Марка')
+        item.setFont(font)
         self.tableWidget.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem('Ротор')
+        item.setFont(font)
         self.tableWidget.setHorizontalHeaderItem(1, item)
         item = QtWidgets.QTableWidgetItem('Диаметр рабочего колеса')
+        item.setFont(font)
         self.tableWidget.setHorizontalHeaderItem(2, item)
         item = QtWidgets.QTableWidgetItem('a')
+        item.setFont(font)
         self.tableWidget.setHorizontalHeaderItem(3, item)
         item = QtWidgets.QTableWidgetItem('b')
+        item.setFont(font)
         self.tableWidget.setHorizontalHeaderItem(4, item)
-        item = QtWidgets.QTableWidgetItem('Qном, м3')
+        Q_nom = 'Qnom'.translate(SUP)
+        item = QtWidgets.QTableWidgetItem(f'{Q_nom}' + f', м\N{SUPERSCRIPT THREE}')
+        item.setFont(font)
         self.tableWidget.setHorizontalHeaderItem(5, item)
         for index, pump in enumerate(MainPumpsTable.select()):
             self.tableWidget.setRowCount(index + 1)
             item = QtWidgets.QTableWidgetItem(f'{index + 1}')
+            item.setFont(font)
             self.tableWidget.setVerticalHeaderItem(index, item)
             brand = QtWidgets.QTableWidgetItem(str(pump.brand))
             brand.setFlags(QtCore.Qt.ItemIsEnabled)
@@ -532,7 +548,7 @@ class MyWindow(object):
         item = QtWidgets.QTableWidgetItem()
         font = QtGui.QFont()
         font.setFamily("Times New Roman")
-        font.setPointSize(11)
+        font.setPointSize(10)
         item.setFont(font)
         self.table_category_7.setHorizontalHeaderItem(2, item)
         self.table_category_7.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
