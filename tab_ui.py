@@ -8,7 +8,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from models import ActionVarTable
-from settings import SUP
+from settings import SUP, SUP_2, SUP_3
 
 TABLE_CHARACTIRISTICS_NAMES = ['Длина трассы, км', 'Длина частка, км', 'Рабочее давление, МПа',
                                'Годовая производительность',
@@ -536,7 +536,7 @@ class MyWindow(object):
         item = QtWidgets.QTableWidgetItem()
         font = QtGui.QFont()
         font.setFamily("Times New Roman")
-        font.setPointSize(11)
+        font.setPointSize(10)
         item.setFont(font)
         self.table_category_7.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
@@ -1067,11 +1067,13 @@ class MyWindow(object):
         item = self.table_finish_7.horizontalHeaderItem(1)
         item.setText(_translate("MainWindow", "Толщина стенки, мм"))
         item = self.table_finish_7.horizontalHeaderItem(2)
-        item.setText(_translate("MainWindow", "R1, МПа"))
+        item.setText(_translate("MainWindow", "R\u2081, МПа"))
         item = self.table_finish_7.horizontalHeaderItem(3)
-        item.setText(_translate("MainWindow", "Hmax, м"))
+        Hmax = "Hmax, м".translate(SUP_2)
+        item.setText(_translate("MainWindow", Hmax))
         item = self.table_finish_7.horizontalHeaderItem(4)
-        item.setText(_translate("MainWindow", "Hпс,м"))
+        Hps = "Hps,м".translate(SUP_3)
+        item.setText(_translate("MainWindow", Hps))
         item = self.table_finish_7.horizontalHeaderItem(5)
         item.setText(_translate("MainWindow", "Соответствие"))
         self.label_var_8.setText(_translate("MainWindow", "Название варианта: Новый"))

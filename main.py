@@ -20,7 +20,7 @@ from settings import get_source_dict, update_dict_to_db, check_update_data_var_7
     update_list_coordinates_to_db, create_new_data_var_5, delete_data_7_8, check_list_late_source_data_8, delete_func, \
     load_update_var_state, get_state_var, update_var_table, LIST_WITH_NAME_VALUE_CHARACTIRISTIES, \
     LIST_WITH_NAME_VALUE_OIL_PROPERTIES, LIST_WITH_VALUE, LIST_WITH_NAME, FIRST_NAME_ACTION_VAR, FIRST_NAME_VAR, \
-    LIST_WITH_TABLE_VALUE_CALC_7, LIST_WITH_NAME_SOURCE_VALUE_8, check_data
+    LIST_WITH_TABLE_VALUE_CALC_7, LIST_WITH_NAME_SOURCE_VALUE_8, check_data, NUMBER_LOW_INDEX
 from calculate_8_class import CalculationModesNps
 from tab_ui import MyWindow
 
@@ -127,17 +127,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.pushButton_2.clicked.connect(self.erase_data)
         self.ui.shower.clicked.connect(self.show_graphs)
         self.ui.shower.setVisible(False)
-        self.ui.pushButton_3.clicked.connect(self.add_coordinate_line)
-        self.ui.Add_2.clicked.connect(self.add_count_table_category_7)
-        self.ui.Add_delta.clicked.connect(self.add_count_table_delta_7)
+        self.ui.pushButton_3.clicked.connect(self.make_func_add_line_table(self.ui.table))
+        self.ui.Add_2.clicked.connect(self.make_func_add_line_table(self.ui.table_category_7))
+        self.ui.Add_delta.clicked.connect(self.make_func_add_line_table(self.ui.table_delta_7))
         self.ui.calculate_7.clicked.connect(self.make_func_calculate_7(MODE_CALCULATE_7[0]))
         self.ui.calculate_with_delta.clicked.connect(self.make_func_calculate_7(MODE_CALCULATE_7[1]))
         self.ui.enter_categories_8.clicked.connect(self.enter_data_with_categories)
         self.ui.calculate_8.clicked.connect(self.calculate_8)
         self.ui.retry_8.clicked.connect(self.retry_8)
-        self.index_table_widget = 1
-        self.index_table_category_7 = 0
-        self.index_table_delta_7 = 0
         self.var = FIRST_NAME_VAR
         self.ui.action_2.triggered.connect(self.add_pump)
         self.ui.action_4.triggered.connect(self.add_sup_pump)
@@ -184,6 +181,20 @@ class MainWindow(QtWidgets.QMainWindow):
 
         return func_insert
 
+    def make_func_add_line_table(self, table):
+
+        def add_func():
+            index_table_widget = table.rowCount() + 1
+            table.setRowCount(index_table_widget)
+            item = QtWidgets.QTableWidgetItem(f'{index_table_widget}')
+            font = QtGui.QFont()
+            font.setFamily("Times New Roman")
+            font.setPointSize(10)
+            item.setFont(font)
+            table.setVerticalHeaderItem(index_table_widget - 1, item)
+
+        return add_func
+
     def insert_values_calculate_5(self, var_name):
         self.ui.label.setText(f'Название варианта: {str(var_name)}')
         dict_value = get_source_dict(var_name)
@@ -200,15 +211,22 @@ class MainWindow(QtWidgets.QMainWindow):
         source = CoordinatesTable.select().where(CoordinatesTable.var == var_name).get()
         json_coordinates = source.json_coordinates
         coordinates = json.loads(json_coordinates)
-        self.index_table_widget = 1
-        self.ui.table.setRowCount(self.index_table_widget)
+        font = QtGui.QFont()
+        font.setFamily("Times New Roman")
+        font.setPointSize(10)
+        item = QtWidgets.QTableWidgetItem(f'{1}')
+        item.setFont(font)
+        self.ui.table.setRowCount(1)
+        self.ui.table_delta_7.setVerticalHeaderItem(0, item)
         for index, point in enumerate(coordinates):
             x = QtWidgets.QTableWidgetItem(str(point[0]))
             self.ui.table.setItem(index, 0, x)
             y = QtWidgets.QTableWidgetItem(str(point[1]))
             self.ui.table.setItem(index, 1, y)
-            self.index_table_widget += 1
-            self.ui.table.setRowCount(self.index_table_widget)
+            self.ui.table.setRowCount(index + 2)
+            item = QtWidgets.QTableWidgetItem(f'{index + 2}')
+            item.setFont(font)
+            self.ui.table.setVerticalHeaderItem(index + 1, item)
         self.return_result_5(self.var)
         self.ui.frame_25.close()
         self.add_button_show()
@@ -216,21 +234,29 @@ class MainWindow(QtWidgets.QMainWindow):
     def insert_values_calculate_7(self, var_name):
         self.ui.label_calc_var_7.setText(f'Название варианта: {str(var_name)}')
         self.ui.table_date_7.setColumnCount(2)
+        font = QtGui.QFont()
+        font.setFamily("Times New Roman")
+        font.setPointSize(12)
         item = QtWidgets.QTableWidgetItem('Имя')
+        item.setFont(font)
         self.ui.table_date_7.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem('Значение')
+        item.setFont(font)
         self.ui.table_date_7.setHorizontalHeaderItem(1, item)
         number_count = 1
         dict_value = get_source_dict(var_name)
+        font.setPointSize(10)
         for name, value in dict_value.items():
             if name not in LIST_WITH_TABLE_VALUE_CALC_7[1]:
                 continue
             self.ui.table_date_7.setRowCount(number_count)
             item = QtWidgets.QTableWidgetItem(f'{number_count}')
-            self.ui.table_date_7.setVerticalHeaderItem(number_count - 0, item)
+            item.setFont(font)
+            self.ui.table_date_7.setVerticalHeaderItem(number_count - 1, item)
             index_name = LIST_WITH_TABLE_VALUE_CALC_7[1].index(name)
             name = QtWidgets.QTableWidgetItem(LIST_WITH_TABLE_VALUE_CALC_7[0][index_name])
             name.setFlags(QtCore.Qt.ItemIsEnabled)
+            name.setFont(font)
             self.ui.table_date_7.setItem(number_count - 1, 0, name)
             value = QtWidgets.QTableWidgetItem(str(value))
             self.ui.table_date_7.setItem(number_count - 1, 1, value)
@@ -243,8 +269,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.table_delta_7.clearContents()
         self.ui.table_finish_7.setRowCount(0)
         self.ui.table_finish_7.clearContents()
-        self.index_table_category_7 = 0
-        self.index_table_delta_7 = 0
         list_with_data_category = get_info_table_list(self.var, LIST_WITH_NAME_DATA_TABLE7[0])
         if list_with_data_category is None:
             return
@@ -253,12 +277,14 @@ class MainWindow(QtWidgets.QMainWindow):
                 if index_list == 0:
                     self.ui.table_category_7.setRowCount(index + 1)
                     item = QtWidgets.QTableWidgetItem(f'{index + 1}')
+                    item.setFont(font)
                     self.ui.table_category_7.setVerticalHeaderItem(index, item)
                 value = QtWidgets.QTableWidgetItem(str(value))
                 self.ui.table_category_7.setItem(index, index_list, value)
         for index, category in enumerate(list_with_data_category[0]):
             self.ui.table_delta_7.setRowCount(index + 1)
             item = QtWidgets.QTableWidgetItem(f'{index + 1}')
+            item.setFont(font)
             self.ui.table_delta_7.setVerticalHeaderItem(index, item)
             category = QtWidgets.QTableWidgetItem(str(category))
             self.ui.table_delta_7.setItem(index, 0, category)
@@ -319,10 +345,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.dict_actions[new_name_action].triggered.connect(func)
         self.ui.menu.addAction(self.ui.dict_actions[new_name_action])
         self.insert_values(self.var)
-
-    def add_coordinate_line(self):
-        self.index_table_widget += 1
-        self.ui.table.setRowCount(self.index_table_widget)
 
     def show_error_enter(self):
         self.error_dialog_enter_5 = ErrorDialogEnterWindow()
@@ -404,9 +426,6 @@ class MainWindow(QtWidgets.QMainWindow):
                     update_list_coordinates_to_db(list_with_coordinates, self.var)
                     update_dict_to_db(dict_with_value, self.var)
                     delete_data_7_8(self.var, 2)
-                self.ui.shower.setVisible(False)
-                self.ui.checkBox.setVisible(False)
-                self.ui.checkBox_2.setVisible(False)
             else:
                 create_new_data_var_5(self.var, list_with_coordinates, dict_with_value)
             self.ui.tabWidget.removeTab(2)
@@ -516,9 +535,8 @@ class MainWindow(QtWidgets.QMainWindow):
         for index, name in enumerate(LIST_WITH_NAME_VALUE_OIL_PROPERTIES):
             value = QtWidgets.QTableWidgetItem('')
             self.ui.tableWidget_oil_properties.setItem(index, 1, value)
-        self.index_table_widget = 1
         self.ui.table.clearContents()
-        self.ui.table.setRowCount(self.index_table_widget)
+        self.ui.table.setRowCount(1)
         self.ui.tableWidget_2.setRowCount(0)
         self.ui.tableWidget_2.clearContents()
         if self.var == FIRST_NAME_VAR:
@@ -571,14 +589,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.clean_all()
         self.var = FIRST_NAME_VAR
         self.ui.label.setText(f'Название варианта: {str(self.var)}')
-
-    def add_count_table_category_7(self):
-        self.index_table_category_7 += 1
-        self.ui.table_category_7.setRowCount(self.index_table_category_7)
-
-    def add_count_table_delta_7(self):
-        self.index_table_delta_7 += 1
-        self.ui.table_delta_7.setRowCount(self.index_table_delta_7)
 
     def make_func_calculate_7(self, var_calc):
 
@@ -709,10 +719,14 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def return_result_calc_7(self):
         finish_data_list = get_info_table_list(self.var, name_value=LIST_WITH_NAME_DATA_TABLE7[1])
+        font = QtGui.QFont()
+        font.setFamily("Times New Roman")
+        font.setPointSize(10)
         for index, list_data in enumerate(finish_data_list):
             number, delta, R1, Hmax, Hps, conformity = list_data
             self.ui.table_finish_7.setRowCount(index + 1)
             item = QtWidgets.QTableWidgetItem(f'{index + 1}')
+            item.setFont(font)
             self.ui.table_finish_7.setVerticalHeaderItem(index, item)
             number = QtWidgets.QTableWidgetItem(str(number))
             self.ui.table_finish_7.setItem(index, 0, number)
@@ -751,6 +765,9 @@ class MainWindow(QtWidgets.QMainWindow):
         table_8 = get_table_list_8(var)
         if table_8 is None:
             return
+        font = QtGui.QFont()
+        font.setFamily("Times New Roman")
+        font.setPointSize(10)
         for index_column, list_column in enumerate(table_8):
             if index_column == 0:
                 self.ui.tableWidget_8.setColumnCount(1)
@@ -762,14 +779,19 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.ui.tableWidget_8.setHorizontalHeaderItem(index_column + index_column - 1, item_1)
             else:
                 self.ui.tableWidget_8.setColumnCount(index_column + index_column + 2)
-                item_1 = QtWidgets.QTableWidgetItem(f'Δh{index_column}, м')
-                item_2 = QtWidgets.QTableWidgetItem(f'H{index_column}, м')
+                delta_h = f'Δh{index_column}, м'.translate(NUMBER_LOW_INDEX)
+                H = f'H{index_column}, м'.translate(NUMBER_LOW_INDEX)
+                item_1 = QtWidgets.QTableWidgetItem(delta_h)
+                item_2 = QtWidgets.QTableWidgetItem(H)
+                item_2.setFont(font)
                 self.ui.tableWidget_8.setHorizontalHeaderItem(index_column + index_column - 1, item_1)
                 self.ui.tableWidget_8.setHorizontalHeaderItem(index_column + index_column, item_2)
+            item_1.setFont(font)
             for index_line, values in enumerate(list_column):
                 if index_column == 0:
                     self.ui.tableWidget_8.setRowCount(index_line + 1)
                     item = QtWidgets.QTableWidgetItem(f'{index_line + 1}')
+                    item.setFont(font)
                     self.ui.tableWidget_8.setVerticalHeaderItem(index_line, item)
                     value_1 = QtWidgets.QTableWidgetItem(str(values))
                     self.ui.tableWidget_8.setItem(index_line, index_column, value_1)
@@ -810,6 +832,9 @@ class MainWindow(QtWidgets.QMainWindow):
     def clean_all(self):
         self.ui.tabWidget.removeTab(2)
         self.ui.tabWidget.removeTab(1)
+        self.ui.shower.setVisible(False)
+        self.ui.checkBox.setVisible(False)
+        self.ui.checkBox_2.setVisible(False)
         list_table = [self.ui.tableWidget_2, self.ui.table_category_7, self.ui.table_delta_7, self.ui.table_finish_7,
                       self.ui.tableWidget_8]
         for index, table in enumerate(list_table):

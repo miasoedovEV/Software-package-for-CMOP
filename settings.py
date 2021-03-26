@@ -8,6 +8,7 @@ Created on Thu Oct  8 21:35:52 2020
 from json import dumps, loads
 from models import SourceDataTable, InformationDeltaTable, ModeInformationDeltaTable, CoordinatesTable, \
     CheckInformationDeltaTable, OptionStateTable, ActionVarTable, MainPumpsTable, SupportPumpsTable, PipeTable
+import re
 
 LIST_NAME_DATA_TABLE7 = ['finish_data_list', 'list_with_data_category']
 LIST_DELETE = [SourceDataTable, CoordinatesTable, InformationDeltaTable, ModeInformationDeltaTable, ActionVarTable,
@@ -21,15 +22,16 @@ LIST_WITH_NAME_VALUE_OIL_PROPERTIES = ['density', 'vis_1', 'vis_2', 'T1', 'T2']
 LIST_WITH_VALUE = ['density_t', 'vis_t', 'Q_hour', 'brand_pump_m', 'd_work_m', 'brand_pump_s', 'd_work_s', 'Dn',
                    'delta', 'Dvn', 'Re1', 'Re2', 'Re', 'h_tr', 'i', 'H', 'n0', 'n_max', 'n_min', 'Q2', 'Q1',
                    'H_n_max_m_pump', 'tau1', 'tau2']
-LIST_WITH_NAME = ['Расчётная плотность, кг/м3', 'Расчётная вязкость, мм/с2', 'Часовая производительность, м3/',
+LIST_WITH_NAME = ['Расчётная плотность, кг/м\u00B3', 'Расчётная вязкость, мм/с\u00B2',
+                  'Часовая производительность, м\u00B3/ч',
                   'Марка магистрального насоса', 'Диаметр рабочего колеса магистрального насоса',
                   'Марка подпорного насоса', 'Диаметр рабочего колеса подпорного насоса',
                   'Наружный диаметр, мм',
-                  'Толщина стенки, мм', 'Внутренний диаметр, мм', 'Re1', 'Re2', 'Re', 'Потери на трение, м',
+                  'Толщина стенки, мм', 'Внутренний диаметр, мм', 'Re\u2081', 'Re\u2082', 'Re', 'Потери на трение, м',
                   'Гидравлический уклон', 'Полные потери на трение, м', 'Расчётное количество станций',
                   'Станций при округлении в большую сторону', 'Станций при округлении в меньшую сторону',
-                  'Расход при {n_max} станций и {m_pump} насосов, м3/ч',
-                  'Расход при {n_max} станций и {m_pump} насосов, м3/ч',
+                  'Расход при {n_max} станций и {m_pump} насосов, м\u00B3/ч',
+                  'Расход при {n_max} станций и {m_pump} насосов, м\u00B3/ч',
                   'Напор станции при {n_max} станций и {m_pump} насосов, м',
                   'Время работы с {n_max} НПС', 'Время работы с {n_max} НПС']
 
@@ -38,15 +40,16 @@ FIRST_NAME_VAR = 'Новый'
 
 LIST_WITH_TABLE_VALUE_CALC_7 = [
     ['Внутренний диаметр, мм', 'Толщина стенки трубы, мм', 'Временное сопротивление стали, МПа',
-     'Коэффициент надежности по материалу, k1', 'Коэффициентов надежности по нагрузке, np',
+     'Коэффициент надежности по материалу, k\u2081', 'Коэффициентов надежности по нагрузке, np',
      'Коэффициент надежности по назначению, kн',
-     'Коэффициент условий работы, m', 'Плотность, м3/кг', 'Напор станции, м'],
+     'Коэффициент условий работы, m', 'Плотность, м\u00B3/кг', 'Напор станции, м'],
     ['Dvn', 'delta', 'R1n', 'k1', 'np', 'kn', 'm_kaf', 'density_t', 'H_for_calc_delta']]
 
 LIST_WITH_NAME_SOURCE_VALUE_8 = ['h_min', 'a_']
 SUP = str.maketrans('nom', '\u2099\u2092\u2098')
-
-import re
+SUP_2 = str.maketrans('max', '\u2098\u2090\u2093')
+SUP_3 = str.maketrans('ps', '\u209A\u209B')
+NUMBER_LOW_INDEX = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
 
 re_data = re.compile(r'[0-9]*[.,]?[0-9]+')
 
