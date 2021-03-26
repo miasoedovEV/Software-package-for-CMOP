@@ -46,6 +46,11 @@ def check_value_number(value):
         return True
 
 
+def delete_string_from_db(db, index):
+    source = db.delete().where(db.id == index + 1)
+    source.execute()
+
+
 class ErrorSaveDialogWindow(QtWidgets.QDialog):
     def __init__(self):
         super(ErrorSaveDialogWindow, self).__init__()
@@ -322,6 +327,8 @@ class AddPumpDialogWindow(QtWidgets.QDialog):
         self.ui.add.clicked.connect(self.add_row)
         self.index_tableWidget_pump_enter_2 = 1
         self.list_indexes_column = [3, 4, 5, 6]
+        self.ui.tableWidget_pump_enter.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.ui.tableWidget_pump_enter.customContextMenuRequested.connect(self.context_menu)
 
     def add_row(self):
         self.index_tableWidget_pump_enter_2 += 1
@@ -377,6 +384,18 @@ class AddPumpDialogWindow(QtWidgets.QDialog):
         self.index_tableWidget_pump_enter_2 = 0
         self.ui.tableWidget_pump_enter_2.setRowCount(self.index_tableWidget_pump_enter_2)
 
+    def context_menu(self):
+        menu = QtWidgets.QMenu()
+        open = menu.addAction('Удалить')
+        open.triggered.connect(self.delete_pump)
+        cursor = QtGui.QCursor()
+        menu.exec_(cursor.pos())
+
+    def delete_pump(self):
+        index = self.ui.tableWidget_pump_enter.currentIndex()
+        delete_string_from_db(MainPumpsTable, index.row())
+        self.ui.tableWidget_pump_enter.removeRow(index.row())
+
 
 class AddSupPumpDialogWindow(QtWidgets.QDialog):
     def __init__(self):
@@ -389,6 +408,8 @@ class AddSupPumpDialogWindow(QtWidgets.QDialog):
         self.ui.add.clicked.connect(self.add_row)
         self.index_tableWidget = 1
         self.list_indexes_column = [2, 3, 4]
+        self.ui.tableWidget_pump_enter.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.ui.tableWidget_pump_enter.customContextMenuRequested.connect(self.context_menu)
 
     def add_row(self):
         self.index_tableWidget += 1
@@ -442,6 +463,18 @@ class AddSupPumpDialogWindow(QtWidgets.QDialog):
         self.index_tableWidget = 0
         self.ui.tableWidget.setRowCount(self.index_tableWidget)
 
+    def context_menu(self):
+        menu = QtWidgets.QMenu()
+        open = menu.addAction('Удалить')
+        open.triggered.connect(self.delete_sup_pump)
+        cursor = QtGui.QCursor()
+        menu.exec_(cursor.pos())
+
+    def delete_sup_pump(self):
+        index = self.ui.tableWidget_pump_enter.currentIndex()
+        delete_string_from_db(SupportPumpsTable, index.row())
+        self.ui.tableWidget_pump_enter.removeRow(index.row())
+
 
 class AddPipeDialogWindow(QtWidgets.QDialog):
     def __init__(self):
@@ -454,6 +487,8 @@ class AddPipeDialogWindow(QtWidgets.QDialog):
         self.ui.add.clicked.connect(self.add_row)
         self.index_tableWidget_pipe_enter_2 = 1
         self.list_indexes_column = [1, 2, 3]
+        self.ui.tableWidget_pipe.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.ui.tableWidget_pipe.customContextMenuRequested.connect(self.context_menu)
 
     def add_row(self):
         self.index_tableWidget_pipe_enter_2 += 1
@@ -505,6 +540,18 @@ class AddPipeDialogWindow(QtWidgets.QDialog):
     def retry(self):
         self.index_tableWidget_pipe_enter_2 = 0
         self.ui.tableWidget_pipe_enter_2.setRowCount(self.index_tableWidget_pipe_enter_2)
+
+    def context_menu(self):
+        menu = QtWidgets.QMenu()
+        open = menu.addAction('Удалить')
+        open.triggered.connect(self.delete_pipe)
+        cursor = QtGui.QCursor()
+        menu.exec_(cursor.pos())
+
+    def delete_pipe(self):
+        index = self.ui.tableWidget_pipe.currentIndex()
+        delete_string_from_db(PipeTable, index.row())
+        self.ui.tableWidget_pipe.removeRow(index.row())
 
 
 class ErrorXlsDialogWindow(QtWidgets.QDialog):
