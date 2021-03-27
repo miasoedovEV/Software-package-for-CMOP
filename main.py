@@ -248,6 +248,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self.ui.table.setVerticalHeaderItem(index + 1, item)
         self.return_result_5(self.var)
         self.ui.frame_25.close()
+        self.ui.pushButton_1.setVisible(True)
+        self.ui.pushButton_2.setVisible(True)
         if get_state_var(self.var) != 0:
             self.add_button_show()
 
@@ -455,6 +457,8 @@ class MainWindow(QtWidgets.QMainWindow):
                 create_new_data_var_5(self.var, list_with_coordinates, dict_with_value)
             self.ui.tabWidget.removeTab(2)
             self.ui.tabWidget.removeTab(1)
+            self.ui.pushButton_1.setVisible(False)
+            self.ui.pushButton_2.setVisible(False)
             return True
         else:
             return False
