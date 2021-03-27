@@ -143,9 +143,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.action_save.triggered.connect(self.save_var_calculate)
         self.ui.action_new_var.triggered.connect(self.start_new_var)
         self.ui.action_xls.triggered.connect(self.save_to_xls)
-        for object_action_save in self.ui.dict_actions.values():
-            func = self.make_func_insert(object_action_save.text())
-            object_action_save.triggered.connect(func)
+        for list_objects in self.ui.dict_menu_var.values():
+            for index, object_ui in enumerate(list_objects):
+                if index == 1:
+                    func = self.make_func_insert(list_objects[0].title())
+                    object_ui.triggered.connect(func)
+                elif index == 2:
+                    func = self.make_func_delete_var(list_objects[0].title())
+                    object_ui.triggered.connect(func)
         self.delete_func(FIRST_NAME_VAR)
         self.dict_action_table = {}
         self.add_copy_past_actions()
@@ -187,6 +192,13 @@ class MainWindow(QtWidgets.QMainWindow):
             self.insert_values(var)
 
         return func_insert
+
+    def make_func_delete_var(self, var):
+
+        def func_delete():
+            self.delete_func(var)
+
+        return func_delete
 
     def make_func_add_line_table(self, table):
 
@@ -348,10 +360,14 @@ class MainWindow(QtWidgets.QMainWindow):
             name_action=new_name_action
         )
         actions.save()
-        self.ui.dict_actions[new_name_action] = QtWidgets.QAction(parent=self, text=new_name_var)
-        func = self.make_func_insert(self.var)
-        self.ui.dict_actions[new_name_action].triggered.connect(func)
-        self.ui.menu.addAction(self.ui.dict_actions[new_name_action])
+        self.ui.dict_menu_var[new_name_action] = []
+        self.ui.dict_menu_var[new_name_action].append(QtWidgets.QMenu(parent=self, title=new_name_var))
+        self.ui.dict_menu_var[new_name_action].append(QtWidgets.QAction(parent=self, text='Открыть'))
+        self.ui.dict_menu_var[new_name_action].append(QtWidgets.QAction(parent=self, text='Удалить'))
+        self.ui.dict_menu_var[new_name_action][0].addAction(self.ui.dict_menu_var[new_name_action][1])
+        self.ui.dict_menu_var[new_name_action][0].addAction(self.ui.dict_menu_var[new_name_action][2])
+        self.ui.menu.addMenu(self.ui.dict_menu_var[new_name_action][0])
+
         self.insert_values(self.var)
 
     def show_error_enter(self):
@@ -582,7 +598,10 @@ class MainWindow(QtWidgets.QMainWindow):
         source_var = ActionVarTable.get_or_none(ActionVarTable.var == var)
         if source_var is not None:
             action_name = source_var.name_action
-            self.ui.menu.removeAction(self.ui.dict_actions[action_name])
+            self.ui.dict_menu_var[action_name][0].removeAction(self.ui.dict_menu_var[action_name][1])
+            self.ui.dict_menu_var[action_name][0].removeAction(self.ui.dict_menu_var[action_name][2])
+            self.ui.dict_menu_var[action_name][0].deleteLater()
+            del self.ui.dict_menu_var[action_name]
         delete_func(var)
 
     def delete_all_var(self):

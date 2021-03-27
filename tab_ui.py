@@ -15,7 +15,8 @@ TABLE_CHARACTIRISTICS_NAMES = ['Длина трассы, км', 'Длина ча
                                'kнп', 'Температура перекачки, К', 'Остаточный напор, м',
                                'Количество насосов на станции',
                                'Число рабочих дней']
-TABLE_OIL_PROPERTIES_NAMES = ['Плотность, км/м\u00B3', 'Вязкость при t\u2081, мм\u00B2/c', 'Вязкость при t\u2082, мм\u00B2/c',
+TABLE_OIL_PROPERTIES_NAMES = ['Плотность, км/м\u00B3', 'Вязкость при t\u2081, мм\u00B2/c',
+                              'Вязкость при t\u2082, мм\u00B2/c',
                               'T\u2081, K', 'T\u2082, K']
 
 
@@ -964,10 +965,18 @@ class MyWindow(object):
         self.menubar.addAction(self.menu_5.menuAction())
         self.menubar.addAction(self.menu.menuAction())
         self.menubar.addAction(self.menu_3.menuAction())
-        self.dict_actions = {}
+        self.dict_menu_var = {}
+        open = 'Открыть'
+        delete = 'Удалить'
         for var in ActionVarTable.select():
-            self.dict_actions[var.name_action] = QtWidgets.QAction(parent=MainWindow, text=var.var)
-            self.menu.addAction(self.dict_actions[var.name_action])
+            self.dict_menu_var[var.name_action] = []
+            self.dict_menu_var[var.name_action].append(QtWidgets.QMenu(parent=self.menu, title=var.var))
+            self.dict_menu_var[var.name_action].append(QtWidgets.QAction(parent=MainWindow, text=open))
+            self.dict_menu_var[var.name_action].append(QtWidgets.QAction(parent=MainWindow, text=delete))
+            self.dict_menu_var[var.name_action][0].addAction(self.dict_menu_var[var.name_action][1])
+            self.dict_menu_var[var.name_action][0].addAction(self.dict_menu_var[var.name_action][2])
+            self.menu.addMenu(self.dict_menu_var[var.name_action][0])
+
         self.shower = QtWidgets.QPushButton(self.frame_arrangement)
         self.shower.setMaximumSize(QtCore.QSize(200, 16777215))
         font = QtGui.QFont()
