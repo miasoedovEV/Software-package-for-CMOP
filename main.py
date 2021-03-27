@@ -236,7 +236,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self.ui.table.setVerticalHeaderItem(index + 1, item)
         self.return_result_5(self.var)
         self.ui.frame_25.close()
-        self.add_button_show()
+        if get_state_var(self.var) != 0:
+            self.add_button_show()
 
     def insert_values_calculate_7(self, var_name):
         self.ui.label_calc_var_7.setText(f'Название варианта: {str(var_name)}')
@@ -420,7 +421,7 @@ class MainWindow(QtWidgets.QMainWindow):
             return None
         delta_z = list_with_coordinates[-1][1] - list_with_coordinates[0][1]
         dict_with_value['delta_z'] = delta_z
-        if self.check_var(dict_with_value, list_with_coordinates):
+        if self.check_var(dict_with_value, list_with_coordinates) or get_state_var(self.var) == 0:
             self.clean_all()
             if self.var != FIRST_NAME_VAR:
                 self.dialog_choose_var = ChooseVarDialog()
@@ -432,6 +433,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 else:
                     update_list_coordinates_to_db(list_with_coordinates, self.var)
                     update_dict_to_db(dict_with_value, self.var)
+                    load_update_var_state(self.var, 0)
                     delete_data_7_8(self.var, 2)
             else:
                 create_new_data_var_5(self.var, list_with_coordinates, dict_with_value)
@@ -460,7 +462,6 @@ class MainWindow(QtWidgets.QMainWindow):
             self.pump_dialog = PumpDialogWindow(self.var, self)
             self.pump_dialog.exec()
             if self.pump_dialog.get_decision() is None:
-                self.delete_func(self.var)
                 return
             self.calculator_5.calculate_second_part()
             self.dn_dialog_2 = DnDialogWindow_2(self, self.var)
