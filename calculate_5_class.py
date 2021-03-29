@@ -256,7 +256,11 @@ class Calculate5:
         n0 = (self.H - self.N_a * self.hp) / self.Hst
 
         n_min = math.floor(n0)
+
         self.n_max = math.ceil(n0)
+
+        if self.n_max == 1:
+            self.N_a = 1
 
         # Расчёт длины лупинга
         kaf_w = 1 / 2 ** (2 - m)
@@ -353,18 +357,20 @@ class Calculate5:
         hp = self.ap - self.bp * (Q / 2) ** 2
         Hst = hm * m_np
         H = Hst * n + hp * self.N_a
-        if H > H_tr:
-            while H > H_tr:
-                Q = Q + num
-                H, H_tr = self.calculate_H_Htr(Q, n, m_np)
+        while H != H_tr:
+            if H > H_tr:
+                while H > H_tr:
+                    Q = Q + num
+                    H, H_tr = self.calculate_H_Htr(Q, n, m_np)
             else:
-                return Q, H
+                while H_tr > H:
+                    Q = Q - num
+                    H, H_tr = self.calculate_H_Htr(Q, n, m_np)
+            H = H.quantize(Decimal('1.00'), ROUND_HALF_UP)
+            H_tr = H_tr.quantize(Decimal('1.00'), ROUND_HALF_UP)
         else:
-            while H_tr > H:
-                Q = Q - num
-                H, H_tr = self.calculate_H_Htr(Q, n, m_np)
-            else:
-                return Q, H
+            print(H, H_tr)
+            return Q, H
 
     def calculate_fourth_part(self):
         # Данные для растановки НПС
@@ -454,7 +460,7 @@ class Calculate5:
         number = math.ceil(self.n_max / self.N_a)
         list_numbers_nps = [number + 1 for number in range(self.n_max)]
         for index, number_nps in enumerate(list_numbers_nps):
-            if number_nps % number == 0 or number_nps == list_numbers_nps[-1]:
+            if number_nps % number == 0 or number_nps == list_numbers_nps[-1] or number == 1:
                 p1 = [x1, z1]
                 z2 = z1 + Hst + hp - self.h_ost
                 p2 = [x1, z2]
