@@ -695,7 +695,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self.ui.table_delta_7.setItem(index, 0, category)
 
     def enter_data_with_categories(self):
-        self.get_data_to_db_without_delta()
+        if self.get_data_to_db_without_delta() is None:
+            return
         self.insert_table_category_to_delta()
 
     def get_data_to_db_with_delta(self, list_with_category_data):
