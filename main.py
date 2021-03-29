@@ -363,12 +363,17 @@ class MainWindow(QtWidgets.QMainWindow):
             name_action=new_name_action
         )
         actions.save()
+        font = QtGui.QFont()
+        font.setFamily("Times New Roman")
+        font.setPointSize(10)
         self.ui.dict_menu_var[new_name_action] = []
         self.ui.dict_menu_var[new_name_action].append(QtWidgets.QMenu(parent=self, title=new_name_var))
         self.ui.dict_menu_var[new_name_action].append(QtWidgets.QAction(parent=self, text='Открыть'))
         self.ui.dict_menu_var[new_name_action].append(QtWidgets.QAction(parent=self, text='Удалить'))
         self.ui.dict_menu_var[new_name_action][0].addAction(self.ui.dict_menu_var[new_name_action][1])
         self.ui.dict_menu_var[new_name_action][0].addAction(self.ui.dict_menu_var[new_name_action][2])
+        self.ui.dict_menu_var[new_name_action][1].setFont(font)
+        self.ui.dict_menu_var[new_name_action][2].setFont(font)
         self.ui.menu.addMenu(self.ui.dict_menu_var[new_name_action][0])
 
         self.insert_values(self.var)
