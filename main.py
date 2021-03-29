@@ -121,6 +121,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
         super(MainWindow, self).__init__()
+        self.setWindowIcon(QtGui.QIcon('2truba.ico'))
         self.ui = MyWindow()
         self.ui.setupUi(self, MainPumpsTable)
         self.ui.pushButton_1.clicked.connect(self.calculate_5)

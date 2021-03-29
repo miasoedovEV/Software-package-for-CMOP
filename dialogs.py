@@ -55,6 +55,7 @@ def delete_string_from_db(db, index):
 class ErrorExportDialogWindow(QtWidgets.QDialog):
     def __init__(self):
         super(ErrorExportDialogWindow, self).__init__()
+        self.setWindowIcon(QtGui.QIcon('2truba.ico'))
         self.ui = ErrorExportDialog()
         self.ui.setupUi(self)
         self.ui.pushButton.clicked.connect(self.close)
@@ -63,6 +64,7 @@ class ErrorExportDialogWindow(QtWidgets.QDialog):
 class ErrorSaveDialogWindow(QtWidgets.QDialog):
     def __init__(self):
         super(ErrorSaveDialogWindow, self).__init__()
+        self.setWindowIcon(QtGui.QIcon('2truba.ico'))
         self.ui = ErrorSaveDialog()
         self.ui.setupUi(self)
         self.ui.pushButton.clicked.connect(self.close)
@@ -71,6 +73,7 @@ class ErrorSaveDialogWindow(QtWidgets.QDialog):
 class ErrorEnterNumberDialogWindow(QtWidgets.QDialog):
     def __init__(self):
         super(ErrorEnterNumberDialogWindow, self).__init__()
+        self.setWindowIcon(QtGui.QIcon('2truba.ico'))
         self.ui = ErrorEnterNumberDialog()
         self.ui.setupUi(self)
         self.ui.pushButton.clicked.connect(self.close)
@@ -79,6 +82,7 @@ class ErrorEnterNumberDialogWindow(QtWidgets.QDialog):
 class ErrorListNumberDialogWindow(QtWidgets.QDialog):
     def __init__(self):
         super(ErrorListNumberDialogWindow, self).__init__()
+        self.setWindowIcon(QtGui.QIcon('2truba.ico'))
         self.ui = ErrorListNumberDialog()
         self.ui.setupUi(self)
         self.ui.pushButton.clicked.connect(self.close)
@@ -87,6 +91,7 @@ class ErrorListNumberDialogWindow(QtWidgets.QDialog):
 class ChoosePipeDialogWindow(QtWidgets.QDialog):
     def __init__(self):
         super(ChoosePipeDialogWindow, self).__init__()
+        self.setWindowIcon(QtGui.QIcon('2truba.ico'))
         self.ui = ChoosePipeDialog()
         self.ui.setupUi(self, PipeTable)
         self.ui.enter.clicked.connect(self.enter_pipe)
@@ -119,6 +124,7 @@ class ChoosePipeDialogWindow(QtWidgets.QDialog):
 class DnDialogWindow(QtWidgets.QDialog):
     def __init__(self, parent, var):
         super(DnDialogWindow, self).__init__(parent=parent)
+        self.setWindowIcon(QtGui.QIcon('2truba.ico'))
         self.var = var
         self.ui = DnDialog()
         self.ui.setupUi(self, var)
@@ -176,6 +182,7 @@ class DnDialogWindow(QtWidgets.QDialog):
 class PumpDialogWindow(QtWidgets.QDialog):
     def __init__(self, var, parent):
         super(PumpDialogWindow, self).__init__(parent=parent)
+        self.setWindowIcon(QtGui.QIcon('2truba.ico'))
         self.var = var
         self.ui = PumpDialog()
         self.ui.setupUi(self, self.var)
@@ -230,6 +237,7 @@ class PumpDialogWindow(QtWidgets.QDialog):
 class GraphDialogWindow(QtWidgets.QDialog):
     def __init__(self):
         super(GraphDialogWindow, self).__init__()
+        self.setWindowIcon(QtGui.QIcon('2truba.ico'))
         self.ui = GraphDialog()
         self.ui.setupUi(self)
         self.ui.next.clicked.connect(self.close)
@@ -242,6 +250,7 @@ class GraphDialogWindow(QtWidgets.QDialog):
 class SaveDialogWindow(QtWidgets.QDialog):
     def __init__(self):
         super(SaveDialogWindow, self).__init__()
+        self.setWindowIcon(QtGui.QIcon('2truba.ico'))
         self.ui = SaveDialog()
         self.ui.setupUi(self)
         self.ui.pushButton.clicked.connect(self.save)
@@ -262,6 +271,7 @@ class SaveDialogWindow(QtWidgets.QDialog):
 class DialogDeltaWindow(QtWidgets.QDialog):
     def __init__(self):
         super(DialogDeltaWindow, self).__init__()
+        self.setWindowIcon(QtGui.QIcon('2truba.ico'))
         self.ui = DialogDelta()
         self.ui.setupUi(self)
         self.ui.pushButton.clicked.connect(self.close)
@@ -270,6 +280,7 @@ class DialogDeltaWindow(QtWidgets.QDialog):
 class DnDialogWindow_2(QtWidgets.QDialog):
     def __init__(self, parent, var):
         super(DnDialogWindow_2, self).__init__(parent=parent)
+        self.setWindowIcon(QtGui.QIcon('2truba.ico'))
         self.var = var
         self.ui = PipeDnDialog()
         self.ui.setupUi(self, var)
@@ -307,6 +318,7 @@ class DnDialogWindow_2(QtWidgets.QDialog):
 class ChooseVarDialog(QtWidgets.QDialog):
     def __init__(self):
         super(ChooseVarDialog, self).__init__()
+        self.setWindowIcon(QtGui.QIcon('2truba.ico'))
         self.ui = ChooseDialog()
         self.ui.setupUi(self)
         self.ui.pushButton.clicked.connect(self.stay)
@@ -328,6 +340,7 @@ class ChooseVarDialog(QtWidgets.QDialog):
 class AddPumpDialogWindow(QtWidgets.QDialog):
     def __init__(self):
         super(AddPumpDialogWindow, self).__init__()
+        self.setWindowIcon(QtGui.QIcon('2truba.ico'))
         self.ui = AddPumpDialog()
         self.ui.setupUi(self, MainPumpsTable)
         self.ui.enter.clicked.connect(self.enter_pump)
@@ -409,6 +422,7 @@ class AddPumpDialogWindow(QtWidgets.QDialog):
 class AddSupPumpDialogWindow(QtWidgets.QDialog):
     def __init__(self):
         super(AddSupPumpDialogWindow, self).__init__()
+        self.setWindowIcon(QtGui.QIcon('2truba.ico'))
         self.ui = AddSupPumpDialog()
         self.ui.setupUi(self, SupportPumpsTable)
         self.ui.enter.clicked.connect(self.enter_pump)
@@ -488,6 +502,7 @@ class AddSupPumpDialogWindow(QtWidgets.QDialog):
 class AddPipeDialogWindow(QtWidgets.QDialog):
     def __init__(self):
         super(AddPipeDialogWindow, self).__init__()
+        self.setWindowIcon(QtGui.QIcon('2truba.ico'))
         self.ui = AddPipeDialog()
         self.ui.setupUi(self, PipeTable)
         self.ui.enter.clicked.connect(self.enter_pipe)
@@ -566,6 +581,7 @@ class AddPipeDialogWindow(QtWidgets.QDialog):
 class ErrorXlsDialogWindow(QtWidgets.QDialog):
     def __init__(self):
         super(ErrorXlsDialogWindow, self).__init__()
+        self.setWindowIcon(QtGui.QIcon('2truba.ico'))
         self.ui = ErrorXlsDialog()
         self.ui.setupUi(self)
         self.ui.pushButton.clicked.connect(self.close)
@@ -574,6 +590,7 @@ class ErrorXlsDialogWindow(QtWidgets.QDialog):
 class ErrorDialogEnterWindow(QtWidgets.QDialog):
     def __init__(self):
         super(ErrorDialogEnterWindow, self).__init__()
+        self.setWindowIcon(QtGui.QIcon('2truba.ico'))
         self.ui = ErrorDialogEnter5()
         self.ui.setupUi(self)
         self.ui.pushButton.clicked.connect(self.close)
@@ -582,6 +599,7 @@ class ErrorDialogEnterWindow(QtWidgets.QDialog):
 class MyFileBrowser(Ui_MainWindow, QtWidgets.QMainWindow):
     def __init__(self, var):
         super(MyFileBrowser, self).__init__()
+        self.setWindowIcon(QtGui.QIcon('2truba.ico'))
         self.setupUi(self)
         self.treeView.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.treeView.customContextMenuRequested.connect(self.context_menu)

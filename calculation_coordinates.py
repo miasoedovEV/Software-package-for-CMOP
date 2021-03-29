@@ -4,16 +4,9 @@ Created on Thu Oct  8 21:35:52 2020
 
 @author: stinc
 """
-# from calculate_5 import hp, hm, Hst, tag, zes, xes, N_a, n_max, h_ost
+from support_files.calculate_5 import hp, Hst, tag, zes, xes, N_a, n_max, h_ost
 from decimal import getcontext
-hp = 87.28510500450601
-Hst = 573.8063148549916
-tag = 0.3507248563742432
-zes = [106.0, 126.5, 131.4, 140.0, 154.0, 150.0, 163.0, 175.0, 170.0, 184.0, 187.0]
-xes = [0.0, 100.0, 200.0, 300.0, 400.0, 500.0, 600.0, 700.0, 800.0, 900.0, 1011.0]
-N_a = 2
-n_max = 5
-h_ost = 40.0
+
 getcontext().prec = 50
 list_with_coordinates_for_drawing = []
 list_with_coordinates_nps = []
@@ -110,5 +103,3 @@ try:
                     break
 except Exception as exc:
     print(exc)
-
-print(list_with_coordinates_for_drawing)
