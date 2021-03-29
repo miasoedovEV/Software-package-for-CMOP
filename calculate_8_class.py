@@ -38,6 +38,14 @@ class CalculationModesNps:
             self.list_with_lenth_between_nps.append(lenth_between_npc)
             self.list_with_height_between_nps.append(height_between_npc)
 
+    def create_list_lenth_height_for_1_ps(self, dict_value):
+        self.list_with_lenth_between_nps = []
+        self.list_with_height_between_nps = []
+        self.section_length = float(dict_value['L'])
+        self.height_difference = float(dict_value['delta_z'])
+        self.list_with_lenth_between_nps.append(float(dict_value['L']))
+        self.list_with_height_between_nps.append(float(dict_value['delta_z']))
+
     def find_hmax_nps(self, list_coordinates_nps):
         list_with_lenth_sections = get_info_table_list(self.var, LIST_WITH_NAME_DATA_TABLE7[0])[1]
         list_with_data_7 = get_info_table_list(self.var, LIST_WITH_NAME_DATA_TABLE7[1])
@@ -54,13 +62,15 @@ class CalculationModesNps:
                     self.list_with_hmax_nps.append(list_with_hmax_sections[index])
             x1 = x2
         self.list_with_hmax_sections = [float(hmax) for hmax in self.list_with_hmax_nps]
-        print(self.list_with_hmax_sections)
 
     def preparation_initial_data(self):
         number_nps, number_pump, dict_value = find_number_nps_number_pump(self.var)
         self.modes = calculate_mode_transportation(number_nps, number_pump)
         list_coordinates_nps = dict_value['list_coordinates_nps']
-        self.calc_all_data_coordinates(dict_value['list_coordinates_nps'], number_nps)
+        if number_nps > 1:
+            self.calc_all_data_coordinates(dict_value['list_coordinates_nps'], number_nps)
+        else:
+            self.create_list_lenth_height_for_1_ps(dict_value)
         self.find_hmax_nps(list_coordinates_nps)
         self.Dvn = dict_value['Dvn'] * 10 ** (-3)
         self.density = dict_value['density_t']
@@ -150,7 +160,10 @@ class CalculationModesNps:
         for number in numbers_n:
             number += 1
             Q = ((self.Na * self.Ap + number * self.Am - self.height_difference - self.Na * self.host) /
-                 (self.Na * self.Bp + self.f * self.section_length * 1000 + number * self.Bm)) ** (1 / (2 - self.m2))
+                 (self.Na * self.Bp + self.f * self.section_length * 1000 + number * self.Bm))
+            if Q < 0:
+                Q = 0
+            Q = Q ** (1 / (2 - self.m2))
             w = Q * 4 / (mt.pi * self.Dvn)
             re = w * self.Dvn / self.vis
             self.list_with_Re_first.append(re)
@@ -237,7 +250,6 @@ class CalculationModesNps:
             if index == 0:
                 self.table.append([])
             self.table[len(mode) + 1].append(conformity)
-        pprint(self.table)
         check_update_table_list_8_to_db(self.table, self.var)
 
     def run(self):
