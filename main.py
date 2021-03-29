@@ -682,9 +682,13 @@ class MainWindow(QtWidgets.QMainWindow):
             self.dialog_delta.exec()
             return
         self.ui.table_delta_7.setRowCount(0)
+        font = QtGui.QFont()
+        font.setFamily("Times New Roman")
+        font.setPointSize(10)
         for index, category in enumerate(list_with_data_category[0]):
             self.ui.table_delta_7.setRowCount(index + 1)
             item = QtWidgets.QTableWidgetItem(f'{index + 1}')
+            item.setFont(font)
             self.ui.table_delta_7.setVerticalHeaderItem(index, item)
             category = QtWidgets.QTableWidgetItem(str(category))
             self.ui.table_delta_7.setItem(index, 0, category)

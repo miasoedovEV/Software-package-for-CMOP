@@ -26,6 +26,7 @@ from design_save_error_xls import ErrorXlsDialog
 from design_dialog_error_enter_5 import ErrorDialogEnter5
 from design_error_enter_number_data import ErrorEnterNumberDialog
 from design_window_error_saving import ErrorSaveDialog
+from design_error_export_xsl import ErrorExportDialog
 
 
 def check_value_None(value):
@@ -49,6 +50,14 @@ def check_value_number(value):
 def delete_string_from_db(db, index):
     source = db.delete().where(db.id == index + 1)
     source.execute()
+
+
+class ErrorExportDialogWindow(QtWidgets.QDialog):
+    def __init__(self):
+        super(ErrorExportDialogWindow, self).__init__()
+        self.ui = ErrorExportDialog()
+        self.ui.setupUi(self)
+        self.ui.pushButton.clicked.connect(self.close)
 
 
 class ErrorSaveDialogWindow(QtWidgets.QDialog):
@@ -580,7 +589,6 @@ class MyFileBrowser(Ui_MainWindow, QtWidgets.QMainWindow):
         self.cancel_2.clicked.connect(self.close)
         self.save_2.clicked.connect(self.save_data_xls)
         self.file_type = False
-        self.lineEdit_2.setText('C:/')
         self.var = var
 
     def save_data_xls(self):
@@ -588,16 +596,23 @@ class MyFileBrowser(Ui_MainWindow, QtWidgets.QMainWindow):
             self.error_xls_window = ErrorXlsDialogWindow()
             self.error_xls_window.exec()
             return
+        if self.lineEdit_2.text() is None or self.lineEdit_2.text() == '':
+            return
         file_name = self.lineEdit.text()
         if file_name == '':
             file_name = self.var
         if ' ' in file_name:
             file_name = file_name.replace(' ', '_')
-        file_path = self.lineEdit_2.text()
         file_name += '.xls'
+        file_path = self.lineEdit_2.text()
         creator_xls_file = CreatorXlsFile(file_path, file_name, self.var)
-        creator_xls_file.save()
-        self.close()
+        try:
+            creator_xls_file.save()
+        except PermissionError:
+            self.error_export_window = ErrorExportDialogWindow()
+            self.error_export_window.exec()
+        else:
+            self.close()
 
     def populate(self):
         self.model = QtWidgets.QFileSystemModel()
