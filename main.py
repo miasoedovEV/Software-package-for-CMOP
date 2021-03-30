@@ -282,6 +282,8 @@ class MainWindow(QtWidgets.QMainWindow):
             name.setFont(font)
             self.ui.table_date_7.setItem(number_count - 1, 0, name)
             value = QtWidgets.QTableWidgetItem(str(value))
+            value.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
+            value.setFlags(QtCore.Qt.ItemIsEnabled)
             self.ui.table_date_7.setItem(number_count - 1, 1, value)
             number_count += 1
         self.ui.table_date_7.resizeColumnToContents(0)
@@ -549,6 +551,7 @@ class MainWindow(QtWidgets.QMainWindow):
                     name_table_to_ui.setFlags(QtCore.Qt.ItemIsEnabled)
                     name_table_to_ui.setFont(font)
                     value_table_to_ui = QtWidgets.QTableWidgetItem(str(value))
+                    value_table_to_ui.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
                     self.ui.tableWidget_2.setItem(index, 0, name_table_to_ui)
                     self.ui.tableWidget_2.setItem(index, 1, value_table_to_ui)
 
@@ -771,16 +774,22 @@ class MainWindow(QtWidgets.QMainWindow):
             item.setFont(font)
             self.ui.table_finish_7.setVerticalHeaderItem(index, item)
             number = QtWidgets.QTableWidgetItem(str(number))
+            number.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
             self.ui.table_finish_7.setItem(index, 0, number)
             delta = QtWidgets.QTableWidgetItem(str(delta))
+            delta.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
             self.ui.table_finish_7.setItem(index, 1, delta)
             R1 = QtWidgets.QTableWidgetItem(str(R1))
+            R1.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
             self.ui.table_finish_7.setItem(index, 2, R1)
             Hmax = QtWidgets.QTableWidgetItem(str(Hmax))
+            Hmax.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
             self.ui.table_finish_7.setItem(index, 3, Hmax)
             Hps = QtWidgets.QTableWidgetItem(str(Hps))
+            Hps.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
             self.ui.table_finish_7.setItem(index, 4, Hps)
             conformity = QtWidgets.QTableWidgetItem(str(conformity))
+            conformity.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
             self.ui.table_finish_7.setItem(index, 5, conformity)
 
     def calculate_8(self):
@@ -836,15 +845,19 @@ class MainWindow(QtWidgets.QMainWindow):
                     item.setFont(font)
                     self.ui.tableWidget_8.setVerticalHeaderItem(index_line, item)
                     value_1 = QtWidgets.QTableWidgetItem(str(values))
+                    value_1.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
                     self.ui.tableWidget_8.setItem(index_line, index_column, value_1)
                     continue
                 if index_column == len(table_8) - 1:
                     value_1 = QtWidgets.QTableWidgetItem(str(values))
+                    value_1.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
                     self.ui.tableWidget_8.setItem(index_line, index_column + index_column - 1, value_1)
                 else:
                     value_1 = QtWidgets.QTableWidgetItem(str(values[0]))
+                    value_1.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
                     self.ui.tableWidget_8.setItem(index_line, index_column + index_column - 1, value_1)
                     values_2 = QtWidgets.QTableWidgetItem(str(values[1]))
+                    values_2.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
                     self.ui.tableWidget_8.setItem(index_line, index_column + index_column, values_2)
         self.ui.tableWidget_8.resizeRowsToContents()
 
