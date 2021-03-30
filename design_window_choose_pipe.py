@@ -82,7 +82,7 @@ class ChoosePipeDialog(object):
         font.setFamily("Times New Roman")
         font.setPointSize(10)
         self.tableWidget_pipe.setColumnCount(4)
-        item = QtWidgets.QTableWidgetItem('Марка трубы')
+        item = QtWidgets.QTableWidgetItem('Марка стали')
         item.setFont(font)
         self.tableWidget_pipe.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem('Dн, мм')
