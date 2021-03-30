@@ -10,14 +10,19 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from models import ActionVarTable
 from settings import SUP, SUP_2, SUP_3
 
-TABLE_CHARACTIRISTICS_NAMES = ['Длина трассы, км', 'Длина частка, км', 'Рабочее давление, МПа',
-                               'Годовая производительность',
-                               'kнп', 'Температура перекачки, К', 'Остаточный напор, м',
+TABLE_CHARACTIRISTICS_NAMES = ['Длина трассы, км', 'Длина участка, км', 'Рабочее давление, МПа',
+                               'G, м\u00B3', 'kнп', 'Температура перекачки, К', 'Остаточный напор, м',
                                'Количество насосов на станции',
                                'Число рабочих дней']
+LIST_TIPS_TABLE_CHARACTIRISTICS = ['Годовая производительность',
+                                   '1,05 - трубопроводов, идущих параллельно с другими нефтепроводами и образующими систему\n'
+                                   '1,1 - однониточных нефтепроводов, подающих нефть от пунктов добычи к системе трубопроводов\n'
+                                   '1,07 - однониточных нефтепроводов, по которым нефть от системы нефтепроводов подается к нефтеперерабатывающему заводу,\n'
+                                   'а также однониточных нефтепроводов, соединяющих систему']
 TABLE_OIL_PROPERTIES_NAMES = ['Плотность, км/м\u00B3', 'Вязкость при t\u2081, мм\u00B2/c',
                               'Вязкость при t\u2082, мм\u00B2/c',
                               'T\u2081, K', 'T\u2082, K']
+NUMBER_WORKING_DAYS = '350'
 
 
 class MyWindow(object):
@@ -139,7 +144,12 @@ class MyWindow(object):
             name = QtWidgets.QTableWidgetItem(name)
             name.setFlags(QtCore.Qt.ItemIsEnabled)
             name.setFont(font)
+            if index == 8:
+                value = QtWidgets.QTableWidgetItem(NUMBER_WORKING_DAYS)
+                self.tableWidget_charactiristics.setItem(index, 1, value)
             self.tableWidget_charactiristics.setItem(index, 0, name)
+        self.tableWidget_charactiristics.verticalHeaderItem(3).setToolTip(LIST_TIPS_TABLE_CHARACTIRISTICS[0])
+        self.tableWidget_charactiristics.verticalHeaderItem(4).setToolTip(LIST_TIPS_TABLE_CHARACTIRISTICS[1])
         self.tableWidget_charactiristics.resizeRowsToContents()
         self.verticalLayout_3.addWidget(self.tableWidget_charactiristics)
         self.verticalLayout.addWidget(self.frame_5)
@@ -1015,7 +1025,7 @@ class MyWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Главное окно"))
         self.label.setText(_translate("MainWindow", "Название варианта: Новый"))
         self.label_2.setText(_translate("MainWindow", "Характеристика трассы"))
         item = self.tableWidget_charactiristics.verticalHeaderItem(0)
