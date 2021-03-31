@@ -79,3 +79,9 @@ class CheckInformationDeltaTable(BaseTable):
 class OptionStateTable(BaseTable):
     var = peewee.CharField()
     option = peewee.IntegerField()
+
+
+class DataOddsTable(BaseTable):
+    name = peewee.CharField()
+    cause = peewee.CharField()
+    value = peewee.FloatField()

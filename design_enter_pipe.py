@@ -7,7 +7,8 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from  settings import get_source_dict
+from settings import get_source_dict
+
 
 class DnDialog(object):
     def setupUi(self, Dialog, var):
@@ -139,4 +140,3 @@ class DnDialog(object):
         self.label.setText(_translate("Dialog", "Наружный диаметр трубы составил:"))
         self.choose.setText(_translate("Dialog", "Выбрать трубу "))
         self.choose_k.setText(_translate("Dialog", "Выбрать коэффициенты"))
-

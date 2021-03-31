@@ -7,7 +7,8 @@ Created on Thu Oct  8 21:35:52 2020
 
 from json import dumps, loads
 from models import SourceDataTable, InformationDeltaTable, ModeInformationDeltaTable, CoordinatesTable, \
-    CheckInformationDeltaTable, OptionStateTable, ActionVarTable, MainPumpsTable, SupportPumpsTable, PipeTable
+    CheckInformationDeltaTable, OptionStateTable, ActionVarTable, MainPumpsTable, SupportPumpsTable, PipeTable, \
+    DataOddsTable
 import re
 
 LIST_NAME_DATA_TABLE7 = ['finish_data_list', 'list_with_data_category']
@@ -257,6 +258,21 @@ def get_list_pipe():
 
 
 def update_var_table(last_var, new_var):
+    for table in LIST_UPDATE:
+        if find_var(table, last_var) is True:
+            source = (table.update({table.var: new_var})).where(table.var == last_var)
+            source.execute()
+
+
+def get_value_kaf(index):
+    data = DataOddsTable.get_or_none(DataOddsTable.id == index)
+    if data is None:
+        return ''
+    value = str(data.value)
+    return value
+
+
+def update_(last_var, new_var):
     for table in LIST_UPDATE:
         if find_var(table, last_var) is True:
             source = (table.update({table.var: new_var})).where(table.var == last_var)

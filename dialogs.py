@@ -8,7 +8,7 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 from design_enter_pipe import DnDialog
 from design_enter_pump import PumpDialog
 from design_error_number_list import ErrorListNumberDialog
-from models import MainPumpsTable, SupportPumpsTable, PipeTable
+from models import MainPumpsTable, SupportPumpsTable, PipeTable, DataOddsTable
 from design_dialog_graph import GraphDialog
 from design_save_dialog import SaveDialog
 from settings import get_source_dict, update_dict_to_db, check_data
@@ -27,6 +27,7 @@ from design_dialog_error_enter_5 import ErrorDialogEnter5
 from design_error_enter_number_data import ErrorEnterNumberDialog
 from design_window_error_saving import ErrorSaveDialog
 from design_error_export_xsl import ErrorExportDialog
+from designer_window_list_kaf import WindowKafList
 
 
 def check_value_None(value):
@@ -121,6 +122,95 @@ class ChoosePipeDialogWindow(QtWidgets.QDialog):
         self.ui.lineEdit.clear()
 
 
+class WindowChooseKaf(QtWidgets.QMainWindow):
+    def __init__(self, parent, np, kn, m):
+        super(WindowChooseKaf, self).__init__(parent=parent)
+        self.setWindowIcon(QtGui.QIcon('2truba.ico'))
+        self.ui = WindowKafList()
+        self.ui.setupUi(self, DataOddsTable)
+        self.ui.cancel.clicked.connect(self.close)
+        self.ui.add.clicked.connect(self.add_row_list)
+        self.ui.tableWidget.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.ui.tableWidget.customContextMenuRequested.connect(self.context_menu)
+        self.np = np
+        self.kn = kn
+        self.m = m
+        self.ui.enter.clicked.connect(self.update_table_kaf)
+
+    def add_row_list(self):
+        index_table_widget = self.ui.tableWidget.rowCount() + 1
+        self.ui.tableWidget.setRowCount(index_table_widget)
+        item = QtWidgets.QTableWidgetItem(f'{index_table_widget}')
+        font = QtGui.QFont()
+        font.setFamily("Times New Roman")
+        font.setPointSize(10)
+        item.setFont(font)
+        self.ui.tableWidget.setVerticalHeaderItem(index_table_widget - 1, item)
+
+    def context_menu(self):
+        menu = QtWidgets.QMenu()
+        open = menu.addAction('Выбрать')
+        open.triggered.connect(self.enter_kaf)
+        cursor = QtGui.QCursor()
+        menu.exec_(cursor.pos())
+
+    def enter_kaf(self):
+        index = self.ui.tableWidget.currentIndex()
+        self.value = self.ui.tableWidget.item(index.row(), 2).text()
+        self.name = self.ui.tableWidget.item(index.row(), 0).text()
+        if self.name == 'np':
+            self.np.setText(self.value)
+        elif self.name == 'kн':
+            self.kn.setText(self.value)
+        elif self.name == 'm':
+            self.m.setText(self.value)
+
+    def update_table_kaf(self):
+        source = DataOddsTable.delete()
+        source.execute()
+        for i in range(self.ui.tableWidget.rowCount()):
+            name_object = self.ui.tableWidget.item(i, 0)
+            cause_object = self.ui.tableWidget.item(i, 1)
+            value_object = self.ui.tableWidget.item(i, 2)
+            name = self.check_value(name_object)
+            cause = self.check_value(cause_object)
+            value = self.check_value(value_object)
+            if name is None or cause is None or value is None:
+                continue
+            value = check_value_number(value)
+            if value is None:
+                return
+            data = DataOddsTable(
+                name=name,
+                cause=cause,
+                value=value
+            )
+            data.save()
+
+    def check_value(self, value_object):
+        if value_object is None:
+            return None
+        value = value_object.text()
+        if value == '':
+            return None
+        return value
+
+    def check_number(self, value):
+        if check_data(value) is None:
+            self.show_error_enter_number()
+            return None
+        else:
+            return value
+
+    def show_error_enter(self):
+        self.error_dialog_enter_5 = ErrorDialogEnterWindow()
+        self.error_dialog_enter_5.exec()
+
+    def show_error_enter_number(self):
+        self.error_enter_Number = ErrorEnterNumberDialogWindow()
+        self.error_enter_Number.exec()
+
+
 class DnDialogWindow(QtWidgets.QDialog):
     def __init__(self, parent, var):
         super(DnDialogWindow, self).__init__(parent=parent)
@@ -132,8 +222,14 @@ class DnDialogWindow(QtWidgets.QDialog):
         self.ui.retry.clicked.connect(self.retry)
         self.ui.cancel.clicked.connect(self.close)
         self.ui.choose.clicked.connect(self.choose_pipe)
+        self.ui.choose_k.clicked.connect(self.choose_kaf)
         self.information_pipe = None
         self.decision = None
+
+    def choose_kaf(self):
+        self.windpw_list_kaf = WindowChooseKaf(self, np=self.ui.lineEdit_3, kn=self.ui.lineEdit_4,
+                                               m=self.ui.lineEdit_6)
+        self.windpw_list_kaf.show()
 
     def choose_pipe(self):
         self.choose_pipe_window = ChoosePipeDialogWindow()
@@ -650,7 +746,3 @@ class MyFileBrowser(Ui_MainWindow, QtWidgets.QMainWindow):
         self.file_path = self.model.filePath(index)
         self.file_type = self.model.fileInfo(index).isFile()
         self.lineEdit_2.setText(self.file_path)
-
-# dict_value = get_source_dict(var)
-# Dn = int(dict_value['Dn'])
-# self.label.setText(f'Наружный диаметр трубы составляет: {Dn} мм')
