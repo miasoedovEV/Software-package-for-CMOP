@@ -146,11 +146,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.action_xls.triggered.connect(self.save_to_xls)
         for list_objects in self.ui.dict_menu_var.values():
             for index, object_ui in enumerate(list_objects):
-                if index == 1:
+                if index != 0:
                     func = self.make_func_insert(list_objects[0].title())
-                    object_ui.triggered.connect(func)
-                elif index == 2:
-                    func = self.make_func_delete_var(list_objects[0].title())
                     object_ui.triggered.connect(func)
         self.delete_func(FIRST_NAME_VAR)
         self.dict_action_table = {}
@@ -249,8 +246,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.ui.table.setVerticalHeaderItem(index + 1, item)
         self.return_result_5(self.var)
         self.ui.frame_25.close()
-        self.ui.pushButton_1.setVisible(True)
-        self.ui.pushButton_2.setVisible(True)
+        self.show_buttons_calc(True)
         if get_state_var(self.var) != 0:
             self.add_button_show()
 
@@ -376,6 +372,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.dict_menu_var[new_name_action][0].addAction(self.ui.dict_menu_var[new_name_action][2])
         self.ui.dict_menu_var[new_name_action][1].setFont(font)
         self.ui.dict_menu_var[new_name_action][2].setFont(font)
+        self.ui.dict_menu_var[new_name_action][1].triggered.connect(self.make_func_insert(new_name_var))
+        self.ui.dict_menu_var[new_name_action][2].triggered.connect(self.make_func_insert(new_name_var))
+
         self.ui.menu.addMenu(self.ui.dict_menu_var[new_name_action][0])
 
         self.insert_values(self.var)
@@ -465,8 +464,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 create_new_data_var_5(self.var, list_with_coordinates, dict_with_value)
             self.ui.tabWidget.removeTab(2)
             self.ui.tabWidget.removeTab(1)
-            self.ui.pushButton_1.setVisible(False)
-            self.ui.pushButton_2.setVisible(False)
+            self.show_buttons_calc(False)
             return True
         else:
             return False
@@ -480,6 +478,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.checkBox.setVisible(True)
         self.ui.checkBox_2.setVisible(True)
 
+    def show_buttons_calc(self, turn):
+        self.ui.pushButton_1.setVisible(turn)
+        self.ui.pushButton_2.setVisible(turn)
+
     def calculate_5(self):
         result_get_data = self.get_data_in_db_5()
         if result_get_data is None:
@@ -490,15 +492,18 @@ class MainWindow(QtWidgets.QMainWindow):
             self.pump_dialog = PumpDialogWindow(self.var, self)
             self.pump_dialog.exec()
             if self.pump_dialog.get_decision() is None:
+                self.show_buttons_calc(True)
                 return
             self.calculator_5.calculate_second_part()
             self.dn_dialog_2 = DnDialogWindow_2(self, self.var)
             self.dn_dialog_2.exec()
             if self.dn_dialog_2.get_decision() is None:
+                self.show_buttons_calc(True)
                 return
             self.dn_dialog = DnDialogWindow(self, self.var)
             self.dn_dialog.exec()
             if self.dn_dialog.get_decision() is None:
+                self.show_buttons_calc(True)
                 return
             self.calc = External(self)
             self.calc.start()
