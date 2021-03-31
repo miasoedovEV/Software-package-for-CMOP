@@ -650,3 +650,7 @@ class MyFileBrowser(Ui_MainWindow, QtWidgets.QMainWindow):
         self.file_path = self.model.filePath(index)
         self.file_type = self.model.fileInfo(index).isFile()
         self.lineEdit_2.setText(self.file_path)
+
+# dict_value = get_source_dict(var)
+# Dn = int(dict_value['Dn'])
+# self.label.setText(f'Наружный диаметр трубы составляет: {Dn} мм')
