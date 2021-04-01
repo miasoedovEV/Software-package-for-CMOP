@@ -30,6 +30,7 @@ from design_error_export_xsl import ErrorExportDialog
 from designer_window_list_kaf import WindowKafList
 
 HELPING = 'Кликните правой кнопкой кнопкой мыши по строчке, которую хотите удалить.'
+HELPING_FOR_KAF = 'Кликните правой кнопкой кнопкой мыши по строчке коэффициента, который хотите выбрать. '
 
 
 def check_value_None(value):
@@ -142,11 +143,11 @@ class ChoosePipeDialogWindow(QtWidgets.QDialog):
 
 
 class WindowChooseKaf(QtWidgets.QMainWindow):
-    def __init__(self, parent, np, kn, m):
+    def __init__(self, parent, np, kn, m, help):
         super(WindowChooseKaf, self).__init__(parent=parent)
         self.setWindowIcon(QtGui.QIcon('2truba.ico'))
         self.ui = WindowKafList()
-        self.ui.setupUi(self, DataOddsTable)
+        self.ui.setupUi(self, DataOddsTable, help)
         self.ui.cancel.clicked.connect(self.close)
         self.ui.add.clicked.connect(self.add_row_list)
         self.ui.tableWidget.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
@@ -246,7 +247,7 @@ class DnDialogWindow(QtWidgets.QDialog):
 
     def choose_kaf(self):
         self.windpw_list_kaf = WindowChooseKaf(self, np=self.ui.lineEdit_3, kn=self.ui.lineEdit_4,
-                                               m=self.ui.lineEdit_6)
+                                               m=self.ui.lineEdit_6, help=HELPING_FOR_KAF)
         self.windpw_list_kaf.show()
 
     def choose_pipe(self):

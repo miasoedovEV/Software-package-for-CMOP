@@ -53,6 +53,7 @@ SUP_3 = str.maketrans('ps', '\u209A\u209B')
 NUMBER_LOW_INDEX = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
 
 re_data = re.compile(r'[0-9]*[.,]?[0-9]+')
+HELP = 'Добавте строку и внесите новые данные или измените имеющиеся и нажмите кнопку "Внести изменения".'
 
 
 def check_data(string):

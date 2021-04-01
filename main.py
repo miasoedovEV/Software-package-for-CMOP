@@ -10,7 +10,7 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import QThread, QFile, QTextStream
 from dialogs import DnDialogWindow, PumpDialogWindow, GraphDialogWindow, SaveDialogWindow, DialogDeltaWindow, \
     DnDialogWindow_2, ChooseVarDialog, AddPumpDialogWindow, AddSupPumpDialogWindow, AddPipeDialogWindow, MyFileBrowser, \
-    ErrorDialogEnterWindow, ErrorEnterNumberDialogWindow, ErrorSaveDialogWindow
+    ErrorDialogEnterWindow, ErrorEnterNumberDialogWindow, ErrorSaveDialogWindow, WindowChooseKaf
 from models import MainPumpsTable, CoordinatesTable, SourceDataTable, ActionVarTable
 import json
 from calculate_5_class import Calculate5, draw_graph_in_calculate
@@ -20,7 +20,7 @@ from settings import get_source_dict, update_dict_to_db, check_update_data_var_7
     update_list_coordinates_to_db, create_new_data_var_5, delete_data_7_8, check_list_late_source_data_8, delete_func, \
     load_update_var_state, get_state_var, update_var_table, LIST_WITH_NAME_VALUE_CHARACTIRISTIES, \
     LIST_WITH_NAME_VALUE_OIL_PROPERTIES, LIST_WITH_VALUE, LIST_WITH_NAME, FIRST_NAME_ACTION_VAR, FIRST_NAME_VAR, \
-    LIST_WITH_TABLE_VALUE_CALC_7, LIST_WITH_NAME_SOURCE_VALUE_8, check_data, NUMBER_LOW_INDEX
+    LIST_WITH_TABLE_VALUE_CALC_7, LIST_WITH_NAME_SOURCE_VALUE_8, check_data, NUMBER_LOW_INDEX, HELP
 from calculate_8_class import CalculationModesNps
 from tab_ui import MyWindow
 
@@ -140,6 +140,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.action_2.triggered.connect(self.add_pump)
         self.ui.action_4.triggered.connect(self.add_sup_pump)
         self.ui.action_7.triggered.connect(self.add_pipes)
+        self.ui.action_kaf.triggered.connect(self.add_kaf)
         self.ui.action_delet.triggered.connect(self.delete_all_var)
         self.ui.action_save.triggered.connect(self.save_var_calculate)
         self.ui.action_new_var.triggered.connect(self.start_new_var)
@@ -170,6 +171,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.past_action = PastSelectedCellsAction(list_table)
         self.addAction(self.copy_action)
         self.addAction(self.past_action)
+
+    def add_kaf(self):
+        self.window_kafs = WindowChooseKaf(self, None, None, None, HELP)
+        self.window_kafs.ui.tableWidget.setContextMenuPolicy(QtCore.Qt.NoContextMenu)
+        self.window_kafs.show()
 
     def save_to_xls(self):
         self.my_file_browser = MyFileBrowser(self.var)
@@ -281,7 +287,7 @@ class MainWindow(QtWidgets.QMainWindow):
             name.setFont(font)
             self.ui.table_date_7.setItem(number_count - 1, 0, name)
             value = QtWidgets.QTableWidgetItem(str(value))
-            value.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
+            value.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
             value.setFlags(QtCore.Qt.ItemIsEnabled)
             self.ui.table_date_7.setItem(number_count - 1, 1, value)
             number_count += 1
@@ -559,7 +565,7 @@ class MainWindow(QtWidgets.QMainWindow):
                     name_table_to_ui.setFlags(QtCore.Qt.ItemIsEnabled)
                     name_table_to_ui.setFont(font)
                     value_table_to_ui = QtWidgets.QTableWidgetItem(str(value))
-                    value_table_to_ui.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
+                    value_table_to_ui.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
                     self.ui.tableWidget_2.setItem(index, 0, name_table_to_ui)
                     self.ui.tableWidget_2.setItem(index, 1, value_table_to_ui)
 
@@ -782,22 +788,22 @@ class MainWindow(QtWidgets.QMainWindow):
             item.setFont(font)
             self.ui.table_finish_7.setVerticalHeaderItem(index, item)
             number = QtWidgets.QTableWidgetItem(str(number))
-            number.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
+            number.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
             self.ui.table_finish_7.setItem(index, 0, number)
             delta = QtWidgets.QTableWidgetItem(str(delta))
-            delta.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
+            delta.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
             self.ui.table_finish_7.setItem(index, 1, delta)
             R1 = QtWidgets.QTableWidgetItem(str(R1))
-            R1.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
+            R1.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
             self.ui.table_finish_7.setItem(index, 2, R1)
             Hmax = QtWidgets.QTableWidgetItem(str(Hmax))
-            Hmax.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
+            Hmax.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
             self.ui.table_finish_7.setItem(index, 3, Hmax)
             Hps = QtWidgets.QTableWidgetItem(str(Hps))
-            Hps.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
+            Hps.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
             self.ui.table_finish_7.setItem(index, 4, Hps)
             conformity = QtWidgets.QTableWidgetItem(str(conformity))
-            conformity.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
+            conformity.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
             self.ui.table_finish_7.setItem(index, 5, conformity)
 
     def calculate_8(self):
@@ -853,19 +859,19 @@ class MainWindow(QtWidgets.QMainWindow):
                     item.setFont(font)
                     self.ui.tableWidget_8.setVerticalHeaderItem(index_line, item)
                     value_1 = QtWidgets.QTableWidgetItem(str(values))
-                    value_1.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
+                    value_1.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
                     self.ui.tableWidget_8.setItem(index_line, index_column, value_1)
                     continue
                 if index_column == len(table_8) - 1:
                     value_1 = QtWidgets.QTableWidgetItem(str(values))
-                    value_1.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
+                    value_1.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
                     self.ui.tableWidget_8.setItem(index_line, index_column + index_column - 1, value_1)
                 else:
                     value_1 = QtWidgets.QTableWidgetItem(str(values[0]))
-                    value_1.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
+                    value_1.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
                     self.ui.tableWidget_8.setItem(index_line, index_column + index_column - 1, value_1)
                     values_2 = QtWidgets.QTableWidgetItem(str(values[1]))
-                    values_2.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
+                    values_2.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
                     self.ui.tableWidget_8.setItem(index_line, index_column + index_column, values_2)
         self.ui.tableWidget_8.resizeRowsToContents()
 

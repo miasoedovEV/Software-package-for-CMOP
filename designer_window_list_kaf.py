@@ -8,11 +8,9 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-HELPING = 'Кликните правой кнопкой кнопкой мыши по строчке коэффициента, который хотите выбрать. '
-
 
 class WindowKafList(object):
-    def setupUi(self, MainWindow, DataOddsTable):
+    def setupUi(self, MainWindow, DataOddsTable, HELPING):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(699, 763)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
