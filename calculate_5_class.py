@@ -369,7 +369,6 @@ class Calculate5:
             H = H.quantize(Decimal('1.00'), ROUND_HALF_UP)
             H_tr = H_tr.quantize(Decimal('1.00'), ROUND_HALF_UP)
         else:
-            print(H, H_tr)
             return Q, H
 
     def calculate_fourth_part(self):

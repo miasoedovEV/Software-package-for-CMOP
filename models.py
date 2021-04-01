@@ -58,7 +58,6 @@ class SourceDataTable(BaseTable):
 
 class ActionVarTable(BaseTable):
     var = peewee.CharField()
-    name_action = peewee.CharField()
 
 
 class InformationDeltaTable(BaseTable):

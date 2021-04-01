@@ -19,7 +19,7 @@ from calculate_7_class import Calculate7, LIST_WITH_NAME_DATA_TABLE7, MODE_CALCU
 from settings import get_source_dict, update_dict_to_db, check_update_data_var_7, get_info_table_list, get_table_list_8, \
     update_list_coordinates_to_db, create_new_data_var_5, delete_data_7_8, check_list_late_source_data_8, delete_func, \
     load_update_var_state, get_state_var, update_var_table, LIST_WITH_NAME_VALUE_CHARACTIRISTIES, \
-    LIST_WITH_NAME_VALUE_OIL_PROPERTIES, LIST_WITH_VALUE, LIST_WITH_NAME, FIRST_NAME_ACTION_VAR, FIRST_NAME_VAR, \
+    LIST_WITH_NAME_VALUE_OIL_PROPERTIES, LIST_WITH_VALUE, LIST_WITH_NAME, FIRST_NAME_VAR, \
     LIST_WITH_TABLE_VALUE_CALC_7, LIST_WITH_NAME_SOURCE_VALUE_8, check_data, NUMBER_LOW_INDEX, HELP
 from calculate_8_class import CalculationModesNps
 from tab_ui import MyWindow
@@ -146,13 +146,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.action_new_var.triggered.connect(self.start_new_var)
         self.ui.action_xls.triggered.connect(self.save_to_xls)
         for list_objects in self.ui.dict_menu_var.values():
-            for index, object_ui in enumerate(list_objects):
+            for index, object in enumerate(list_objects):
                 if index == 1:
                     func = self.make_func_insert(list_objects[0].title())
-                    object_ui.triggered.connect(func)
-                elif index == 2:
+                    object[0].triggered.connect(func)
                     func = self.make_func_delete_var(list_objects[0].title())
-                    object_ui.triggered.connect(func)
+                    object[1].triggered.connect(func)
         self.delete_func(FIRST_NAME_VAR)
         self.dict_action_table = {}
         self.add_copy_past_actions()
@@ -359,32 +358,28 @@ class MainWindow(QtWidgets.QMainWindow):
                 break
         update_var_table(self.var, new_name_var)
         self.var = new_name_var
-        new_name_action = FIRST_NAME_ACTION_VAR
-        list_numbers_action = [int(var.name_action[-1]) for var in ActionVarTable.select()]
-        list_numbers_action.sort()
-        if list_numbers_action:
-            number = list_numbers_action[-1] + 1
-            new_name_action = FIRST_NAME_ACTION_VAR[0:-1] + str(number)
         actions = ActionVarTable(
             var=new_name_var,
-            name_action=new_name_action
         )
         actions.save()
         font = QtGui.QFont()
         font.setFamily("Times New Roman")
         font.setPointSize(10)
-        self.ui.dict_menu_var[new_name_action] = []
-        self.ui.dict_menu_var[new_name_action].append(QtWidgets.QMenu(parent=self, title=new_name_var))
-        self.ui.dict_menu_var[new_name_action].append(QtWidgets.QAction(parent=self, text='Открыть'))
-        self.ui.dict_menu_var[new_name_action].append(QtWidgets.QAction(parent=self, text='Удалить'))
-        self.ui.dict_menu_var[new_name_action][0].addAction(self.ui.dict_menu_var[new_name_action][1])
-        self.ui.dict_menu_var[new_name_action][0].addAction(self.ui.dict_menu_var[new_name_action][2])
-        self.ui.dict_menu_var[new_name_action][1].setFont(font)
-        self.ui.dict_menu_var[new_name_action][2].setFont(font)
-        self.ui.dict_menu_var[new_name_action][1].triggered.connect(self.make_func_insert(new_name_var))
-        self.ui.dict_menu_var[new_name_action][2].triggered.connect(self.make_func_delete_var(new_name_var))
 
-        self.ui.menu.addMenu(self.ui.dict_menu_var[new_name_action][0])
+        self.ui.dict_menu_var[new_name_var] = []
+        self.ui.dict_menu_var[new_name_var].append(QtWidgets.QMenu(parent=self.ui.menu, title=new_name_var))
+        list_action = [QtWidgets.QAction(parent=self, text='Открыть'),
+                       QtWidgets.QAction(parent=self, text='Удалить')]
+        list_action[0].setFont(font)
+        list_action[1].setFont(font)
+        self.ui.dict_menu_var[new_name_var].append(list_action)
+        self.ui.dict_menu_var[new_name_var][0].addAction(list_action[0])
+        self.ui.dict_menu_var[new_name_var][0].addAction(list_action[1])
+        self.ui.menu.addMenu(self.ui.dict_menu_var[new_name_var][0])
+        self.ui.dict_menu_var[new_name_var][1][0].triggered.connect(self.make_func_insert(new_name_var))
+        self.ui.dict_menu_var[new_name_var][1][1].triggered.connect(self.make_func_delete_var(new_name_var))
+
+        self.ui.menu.addMenu(self.ui.dict_menu_var[new_name_var][0])
 
         self.insert_values(self.var)
 
@@ -624,11 +619,10 @@ class MainWindow(QtWidgets.QMainWindow):
     def delete_func(self, var):
         source_var = ActionVarTable.get_or_none(ActionVarTable.var == var)
         if source_var is not None:
-            action_name = source_var.name_action
-            self.ui.dict_menu_var[action_name][0].removeAction(self.ui.dict_menu_var[action_name][1])
-            self.ui.dict_menu_var[action_name][0].removeAction(self.ui.dict_menu_var[action_name][2])
-            self.ui.dict_menu_var[action_name][0].deleteLater()
-            del self.ui.dict_menu_var[action_name]
+            self.ui.dict_menu_var[var][0].removeAction(self.ui.dict_menu_var[var][1][0])
+            self.ui.dict_menu_var[var][0].removeAction(self.ui.dict_menu_var[var][1][1])
+            self.ui.dict_menu_var[var][0].deleteLater()
+            del self.ui.dict_menu_var[var]
         delete_func(var)
 
     def delete_all_var(self):

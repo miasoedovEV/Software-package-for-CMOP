@@ -5,10 +5,12 @@
 # Created by: PyQt5 UI code generator 5.9.2
 #
 # WARNING! All changes made in this file will be lost!
+import json
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from models import ActionVarTable
 from settings import SUP, SUP_2, SUP_3
+from json import loads
 
 TABLE_CHARACTIRISTICS_NAMES = ['Длина трассы, км', 'Длина участка, км', 'Рабочее давление, МПа',
                                'G, м\u00B3', 'kнп', 'Температура перекачки, К', 'Остаточный напор, м',
@@ -313,23 +315,23 @@ class MyWindow(object):
             self.tableWidget.setItem(index, 0, brand)
             rotor = QtWidgets.QTableWidgetItem(str(pump.rotor))
             rotor.setFlags(QtCore.Qt.ItemIsEnabled)
-            rotor.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
+            rotor.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
             self.tableWidget.setItem(index, 1, rotor)
             impeller_diameter = QtWidgets.QTableWidgetItem(str(pump.impeller_diameter))
-            impeller_diameter.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
+            impeller_diameter.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
             impeller_diameter.setFlags(QtCore.Qt.ItemIsEnabled)
             self.tableWidget.setItem(index, 2, impeller_diameter)
             a = QtWidgets.QTableWidgetItem(str(pump.a))
             a.setFlags(QtCore.Qt.ItemIsEnabled)
-            a.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
+            a.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
             self.tableWidget.setItem(index, 3, a)
             b = QtWidgets.QTableWidgetItem(str(pump.b))
             b.setFlags(QtCore.Qt.ItemIsEnabled)
-            b.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
+            b.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
             self.tableWidget.setItem(index, 4, b)
             Qnom = QtWidgets.QTableWidgetItem(str(pump.Q_nom))
             Qnom.setFlags(QtCore.Qt.ItemIsEnabled)
-            Qnom.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
+            Qnom.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
             self.tableWidget.setItem(index, 5, Qnom)
         self.tableWidget.resizeColumnsToContents()
         self.tableWidget.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)
@@ -1002,15 +1004,15 @@ class MyWindow(object):
         open = 'Открыть'
         delete = 'Удалить'
         for var in ActionVarTable.select():
-            self.dict_menu_var[var.name_action] = []
-            self.dict_menu_var[var.name_action].append(QtWidgets.QMenu(parent=self.menu, title=var.var))
-            self.dict_menu_var[var.name_action].append(QtWidgets.QAction(parent=MainWindow, text=open))
-            self.dict_menu_var[var.name_action].append(QtWidgets.QAction(parent=MainWindow, text=delete))
-            self.dict_menu_var[var.name_action][0].addAction(self.dict_menu_var[var.name_action][1])
-            self.dict_menu_var[var.name_action][0].addAction(self.dict_menu_var[var.name_action][2])
-            self.dict_menu_var[var.name_action][1].setFont(font)
-            self.dict_menu_var[var.name_action][2].setFont(font)
-            self.menu.addMenu(self.dict_menu_var[var.name_action][0])
+            self.dict_menu_var[var.var] = []
+            self.dict_menu_var[var.var].append(QtWidgets.QMenu(parent=self.menu, title=var.var))
+            list_action = [QtWidgets.QAction(parent=MainWindow, text=open), QtWidgets.QAction(parent=MainWindow, text=delete)]
+            list_action[0].setFont(font)
+            list_action[1].setFont(font)
+            self.dict_menu_var[var.var].append(list_action)
+            self.dict_menu_var[var.var][0].addAction(list_action[0])
+            self.dict_menu_var[var.var][0].addAction(list_action[1])
+            self.menu.addMenu(self.dict_menu_var[var.var][0])
 
         self.shower = QtWidgets.QPushButton(self.frame_arrangement)
         self.shower.setMaximumSize(QtCore.QSize(200, 16777215))
