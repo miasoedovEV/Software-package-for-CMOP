@@ -146,8 +146,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.action_xls.triggered.connect(self.save_to_xls)
         for list_objects in self.ui.dict_menu_var.values():
             for index, object_ui in enumerate(list_objects):
-                if index != 0:
+                if index == 1:
                     func = self.make_func_insert(list_objects[0].title())
+                    object_ui.triggered.connect(func)
+                elif index == 2:
+                    func = self.make_func_delete_var(list_objects[0].title())
                     object_ui.triggered.connect(func)
         self.delete_func(FIRST_NAME_VAR)
         self.dict_action_table = {}
@@ -373,7 +376,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.dict_menu_var[new_name_action][1].setFont(font)
         self.ui.dict_menu_var[new_name_action][2].setFont(font)
         self.ui.dict_menu_var[new_name_action][1].triggered.connect(self.make_func_insert(new_name_var))
-        self.ui.dict_menu_var[new_name_action][2].triggered.connect(self.make_func_insert(new_name_var))
+        self.ui.dict_menu_var[new_name_action][2].triggered.connect(self.make_func_delete_var(new_name_var))
 
         self.ui.menu.addMenu(self.ui.dict_menu_var[new_name_action][0])
 
