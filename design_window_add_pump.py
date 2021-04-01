@@ -94,7 +94,10 @@ class AddPumpDialog(object):
         item = QtWidgets.QTableWidgetItem('k')
         item.setFont(font)
         self.tableWidget_pump_enter_2.setHorizontalHeaderItem(6, item)
+        item = QtWidgets.QTableWidgetItem('1')
+        item.setFont(font)
         self.tableWidget_pump_enter_2.setRowCount(1)
+        self.tableWidget_pump_enter_2.setVerticalHeaderItem(0, item)
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)

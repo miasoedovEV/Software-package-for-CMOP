@@ -461,14 +461,19 @@ class AddPumpDialogWindow(QtWidgets.QDialog):
         self.ui.cancel.clicked.connect(self.close)
         self.ui.retry.clicked.connect(self.retry)
         self.ui.add.clicked.connect(self.add_row)
-        self.index_tableWidget_pump_enter_2 = 1
         self.list_indexes_column = [3, 4, 5, 6]
         self.ui.tableWidget_pump_enter.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.ui.tableWidget_pump_enter.customContextMenuRequested.connect(self.context_menu)
 
     def add_row(self):
-        self.index_tableWidget_pump_enter_2 += 1
-        self.ui.tableWidget_pump_enter_2.setRowCount(self.index_tableWidget_pump_enter_2)
+        index_tableWidget_pump_enter_2 = self.ui.tableWidget_pump_enter_2.rowCount() + 1
+        self.ui.tableWidget_pump_enter_2.setRowCount(index_tableWidget_pump_enter_2)
+        item = QtWidgets.QTableWidgetItem(f'{index_tableWidget_pump_enter_2}')
+        font = QtGui.QFont()
+        font.setFamily("Times New Roman")
+        font.setPointSize(10)
+        item.setFont(font)
+        self.ui.tableWidget_pump_enter_2.setVerticalHeaderItem(index_tableWidget_pump_enter_2 - 1, item)
 
     def enter_pump(self):
         list_main_pumps_from_bd = get_list_main_pumps()
@@ -514,7 +519,7 @@ class AddPumpDialogWindow(QtWidgets.QDialog):
                 kaf=kaf
             )
             main_pump.save()
-        self.ui.enter_data_from_db(MainPumpsTable)
+        self.ui.enter_data_from_db(MainPumpsTable, HELPING)
 
     def retry(self):
         self.index_tableWidget_pump_enter_2 = 0
@@ -543,14 +548,19 @@ class AddSupPumpDialogWindow(QtWidgets.QDialog):
         self.ui.cancel_2.clicked.connect(self.close)
         self.ui.retry.clicked.connect(self.retry)
         self.ui.add.clicked.connect(self.add_row)
-        self.index_tableWidget = 1
         self.list_indexes_column = [2, 3, 4]
         self.ui.tableWidget_pump_enter.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.ui.tableWidget_pump_enter.customContextMenuRequested.connect(self.context_menu)
 
     def add_row(self):
-        self.index_tableWidget += 1
-        self.ui.tableWidget.setRowCount(self.index_tableWidget)
+        index_tableWidget = self.ui.tableWidget.rowCount() + 1
+        self.ui.tableWidget.setRowCount(index_tableWidget)
+        item = QtWidgets.QTableWidgetItem(f'{index_tableWidget}')
+        font = QtGui.QFont()
+        font.setFamily("Times New Roman")
+        font.setPointSize(10)
+        item.setFont(font)
+        self.ui.tableWidget.setVerticalHeaderItem(index_tableWidget - 1, item)
 
     def enter_pump(self):
         list_sup_pumps_from_bd = get_list_sup_pumps()
@@ -594,7 +604,7 @@ class AddSupPumpDialogWindow(QtWidgets.QDialog):
                 Q_nom=Q_nom,
             )
             sup_pump.save()
-        self.ui.enter_table_data(SupportPumpsTable)
+        self.ui.enter_table_data(SupportPumpsTable, HELPING)
 
     def retry(self):
         self.index_tableWidget = 0
@@ -623,14 +633,19 @@ class AddPipeDialogWindow(QtWidgets.QDialog):
         self.ui.cancel_2.clicked.connect(self.close)
         self.ui.retry.clicked.connect(self.retry)
         self.ui.add.clicked.connect(self.add_row)
-        self.index_tableWidget_pipe_enter_2 = 1
         self.list_indexes_column = [1, 2, 3]
         self.ui.tableWidget_pipe.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.ui.tableWidget_pipe.customContextMenuRequested.connect(self.context_menu)
 
     def add_row(self):
-        self.index_tableWidget_pipe_enter_2 += 1
-        self.ui.tableWidget_pipe_enter_2.setRowCount(self.index_tableWidget_pipe_enter_2)
+        index_tableWidget_pipe_enter_2 = self.ui.tableWidget_pipe_enter_2.rowCount() + 1
+        self.ui.tableWidget_pipe_enter_2.setRowCount(index_tableWidget_pipe_enter_2)
+        item = QtWidgets.QTableWidgetItem(f'{index_tableWidget_pipe_enter_2}')
+        font = QtGui.QFont()
+        font.setFamily("Times New Roman")
+        font.setPointSize(10)
+        item.setFont(font)
+        self.ui.tableWidget_pipe_enter_2.setVerticalHeaderItem(index_tableWidget_pipe_enter_2 - 1, item)
 
     def enter_pipe(self):
         list_pipes_from_bd = get_list_pipe()
@@ -673,7 +688,7 @@ class AddPipeDialogWindow(QtWidgets.QDialog):
                 k1=k1
             )
             pipe.save()
-        self.ui.enter_data_table(PipeTable)
+        self.ui.enter_data_table(PipeTable, HELPING)
 
     def retry(self):
         self.index_tableWidget_pipe_enter_2 = 0
