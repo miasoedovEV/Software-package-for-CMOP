@@ -136,6 +136,8 @@ class ChoosePipeDialogWindow(QtWidgets.QDialog):
 
     def choose_pipe(self):
         index = self.ui.tableWidget_pipe.currentIndex()
+        if index.row() == -1:
+            return
         R1_from_table = self.ui.tableWidget_pipe.item(index.row(), 2).text()
         k1_from_table = self.ui.tableWidget_pipe.item(index.row(), 3).text()
         self.R1.setText(R1_from_table)
@@ -176,6 +178,8 @@ class WindowChooseKaf(QtWidgets.QMainWindow):
 
     def enter_kaf(self):
         index = self.ui.tableWidget.currentIndex()
+        if index.row() == -1:
+            return
         self.value = self.ui.tableWidget.item(index.row(), 2).text()
         self.name = self.ui.tableWidget.item(index.row(), 0).text()
         if self.name == 'np':
@@ -535,6 +539,8 @@ class AddPumpDialogWindow(QtWidgets.QDialog):
 
     def delete_pump(self):
         index = self.ui.tableWidget_pump_enter.currentIndex()
+        if index.row() == -1:
+            return
         delete_string_from_db(MainPumpsTable, index.row())
         self.ui.tableWidget_pump_enter.removeRow(index.row())
 
@@ -620,6 +626,8 @@ class AddSupPumpDialogWindow(QtWidgets.QDialog):
 
     def delete_sup_pump(self):
         index = self.ui.tableWidget_pump_enter.currentIndex()
+        if index.row() == -1:
+            return
         delete_string_from_db(SupportPumpsTable, index.row())
         self.ui.tableWidget_pump_enter.removeRow(index.row())
 
@@ -704,6 +712,8 @@ class AddPipeDialogWindow(QtWidgets.QDialog):
 
     def delete_pipe(self):
         index = self.ui.tableWidget_pipe.currentIndex()
+        if index.row() == -1:
+            return
         delete_string_from_db(PipeTable, index.row())
         self.ui.tableWidget_pipe.removeRow(index.row())
 
