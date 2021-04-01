@@ -10,7 +10,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class AddSupPumpDialog(object):
-    def setupUi(self, Dialog, SupportPumpsTable):
+    def setupUi(self, Dialog, SupportPumpsTable, HELPING):
         Dialog.setObjectName("Dialog")
         Dialog.resize(760, 929)
         Dialog.setMaximumSize(QtCore.QSize(760, 929))
@@ -59,7 +59,7 @@ class AddSupPumpDialog(object):
         self.tableWidget_pump_enter = QtWidgets.QTableWidget(Dialog)
         self.tableWidget_pump_enter.setGeometry(QtCore.QRect(55, 330, 677, 591))
         self.tableWidget_pump_enter.setObjectName("tableWidget_pump_enter")
-        self.enter_table_data(SupportPumpsTable)
+        self.enter_table_data(SupportPumpsTable, HELPING)
         self.tableWidget = QtWidgets.QTableWidget(Dialog)
         self.tableWidget.setGeometry(QtCore.QRect(66, 60, 645, 171))
         self.tableWidget.setObjectName("tableWidget")
@@ -90,7 +90,7 @@ class AddSupPumpDialog(object):
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
-    def enter_table_data(self, SupportPumpsTable):
+    def enter_table_data(self, SupportPumpsTable, HELPING):
         self.tableWidget_pump_enter.setRowCount(0)
         font = QtGui.QFont()
         font.setFamily("Times New Roman")
@@ -115,6 +115,7 @@ class AddSupPumpDialog(object):
             self.tableWidget_pump_enter.setRowCount(index + 1)
             item = QtWidgets.QTableWidgetItem(f'{index + 1}')
             item.setFont(font)
+            item.setToolTip(HELPING)
             self.tableWidget_pump_enter.setVerticalHeaderItem(index, item)
             brand = QtWidgets.QTableWidgetItem(str(pump.brand))
             brand.setFont(font)

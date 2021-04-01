@@ -29,6 +29,8 @@ from design_window_error_saving import ErrorSaveDialog
 from design_error_export_xsl import ErrorExportDialog
 from designer_window_list_kaf import WindowKafList
 
+HELPING = 'Кликните правой кнопкой кнопкой мыши по строчке, которую хотите удалить.'
+
 
 def check_value_None(value):
     if value == '' or value is None:
@@ -454,7 +456,7 @@ class AddPumpDialogWindow(QtWidgets.QDialog):
         super(AddPumpDialogWindow, self).__init__()
         self.setWindowIcon(QtGui.QIcon('2truba.ico'))
         self.ui = AddPumpDialog()
-        self.ui.setupUi(self, MainPumpsTable)
+        self.ui.setupUi(self, MainPumpsTable, HELPING)
         self.ui.enter.clicked.connect(self.enter_pump)
         self.ui.cancel.clicked.connect(self.close)
         self.ui.retry.clicked.connect(self.retry)
@@ -536,7 +538,7 @@ class AddSupPumpDialogWindow(QtWidgets.QDialog):
         super(AddSupPumpDialogWindow, self).__init__()
         self.setWindowIcon(QtGui.QIcon('2truba.ico'))
         self.ui = AddSupPumpDialog()
-        self.ui.setupUi(self, SupportPumpsTable)
+        self.ui.setupUi(self, SupportPumpsTable, HELPING)
         self.ui.enter.clicked.connect(self.enter_pump)
         self.ui.cancel_2.clicked.connect(self.close)
         self.ui.retry.clicked.connect(self.retry)
@@ -616,7 +618,7 @@ class AddPipeDialogWindow(QtWidgets.QDialog):
         super(AddPipeDialogWindow, self).__init__()
         self.setWindowIcon(QtGui.QIcon('2truba.ico'))
         self.ui = AddPipeDialog()
-        self.ui.setupUi(self, PipeTable)
+        self.ui.setupUi(self, PipeTable, HELPING)
         self.ui.enter.clicked.connect(self.enter_pipe)
         self.ui.cancel_2.clicked.connect(self.close)
         self.ui.retry.clicked.connect(self.retry)

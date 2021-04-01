@@ -10,14 +10,14 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class AddPumpDialog(object):
-    def setupUi(self, Dialog, MainPumpsTable):
+    def setupUi(self, Dialog, MainPumpsTable, HELPING):
         Dialog.setObjectName("Dialog")
         Dialog.resize(760, 929)
         Dialog.setMaximumSize(QtCore.QSize(760, 929))
         self.tableWidget_pump_enter = QtWidgets.QTableWidget(Dialog)
         self.tableWidget_pump_enter.setGeometry(QtCore.QRect(40, 320, 695, 591))
         self.tableWidget_pump_enter.setObjectName("tableWidget_pump_enter")
-        self.enter_data_from_db(MainPumpsTable)
+        self.enter_data_from_db(MainPumpsTable, HELPING)
         self.label_pump_enter = QtWidgets.QLabel(Dialog)
         self.label_pump_enter.setGeometry(QtCore.QRect(270, 270, 281, 41))
         font = QtGui.QFont()
@@ -99,7 +99,7 @@ class AddPumpDialog(object):
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
-    def enter_data_from_db(self, MainPumpsTable):
+    def enter_data_from_db(self, MainPumpsTable, HELPING):
         self.tableWidget_pump_enter.setRowCount(0)
         font = QtGui.QFont()
         font.setFamily("Times New Roman")
@@ -130,6 +130,7 @@ class AddPumpDialog(object):
             self.tableWidget_pump_enter.setRowCount(index + 1)
             item = QtWidgets.QTableWidgetItem(f'{index + 1}')
             item.setFont(font)
+            item.setToolTip(HELPING)
             self.tableWidget_pump_enter.setVerticalHeaderItem(index, item)
             brand = QtWidgets.QTableWidgetItem(str(pump.brand))
             brand.setFont(font)

@@ -10,7 +10,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class AddPipeDialog(object):
-    def setupUi(self, Dialog, PipeTable):
+    def setupUi(self, Dialog, PipeTable, HELPING):
         Dialog.setObjectName("Dialog")
         Dialog.resize(519, 929)
         Dialog.setMaximumSize(QtCore.QSize(519, 929))
@@ -83,11 +83,11 @@ class AddPipeDialog(object):
         self.label_pump_enter.setFont(font)
         self.label_pump_enter.setObjectName("label_pump_enter")
         self.tableWidget_pipe = QtWidgets.QTableWidget(Dialog)
-        self.enter_data_table(PipeTable)
+        self.enter_data_table(PipeTable, HELPING)
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
-    def enter_data_table(self, PipeTable):
+    def enter_data_table(self, PipeTable, HELPING):
         self.tableWidget_pipe.setGeometry(QtCore.QRect(10, 270, 501, 641))
         self.tableWidget_pipe.setObjectName("tableWidget_pipe")
         self.tableWidget_pipe.setRowCount(0)
@@ -111,6 +111,7 @@ class AddPipeDialog(object):
             self.tableWidget_pipe.setRowCount(index + 1)
             item = QtWidgets.QTableWidgetItem(f'{index + 1}')
             item.setFont(font)
+            item.setToolTip(HELPING)
             self.tableWidget_pipe.setVerticalHeaderItem(index, item)
             brand = QtWidgets.QTableWidgetItem(str(pipe.brand))
             brand.setFont(font)
