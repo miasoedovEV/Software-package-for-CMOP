@@ -90,7 +90,7 @@ class ErrorListNumberDialogWindow(QtWidgets.QDialog):
 
 
 class ChoosePipeDialogWindow(QtWidgets.QDialog):
-    def __init__(self):
+    def __init__(self, R1, k1):
         super(ChoosePipeDialogWindow, self).__init__()
         self.setWindowIcon(QtGui.QIcon('2truba.ico'))
         self.ui = ChoosePipeDialog()
@@ -98,8 +98,11 @@ class ChoosePipeDialogWindow(QtWidgets.QDialog):
         self.ui.enter.clicked.connect(self.enter_pipe)
         self.ui.cancel_2.clicked.connect(self.close)
         self.ui.retry.clicked.connect(self.retry)
-        self.list_indexes_column = [1, 2, 3]
         self.information_pipe = None
+        self.ui.tableWidget_pipe.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.ui.tableWidget_pipe.customContextMenuRequested.connect(self.context_menu)
+        self.R1 = R1
+        self.k1 = k1
 
     def enter_pipe(self):
         self.number = self.ui.lineEdit.text()
@@ -120,6 +123,20 @@ class ChoosePipeDialogWindow(QtWidgets.QDialog):
 
     def retry(self):
         self.ui.lineEdit.clear()
+
+    def context_menu(self):
+        menu = QtWidgets.QMenu()
+        open = menu.addAction('Выбрать')
+        open.triggered.connect(self.choose_pipe)
+        cursor = QtGui.QCursor()
+        menu.exec_(cursor.pos())
+
+    def choose_pipe(self):
+        index = self.ui.tableWidget_pipe.currentIndex()
+        R1_from_table = self.ui.tableWidget_pipe.item(index.row(), 2).text()
+        k1_from_table = self.ui.tableWidget_pipe.item(index.row(), 3).text()
+        self.R1.setText(R1_from_table)
+        self.k1.setText(k1_from_table)
 
 
 class WindowChooseKaf(QtWidgets.QMainWindow):
@@ -231,7 +248,7 @@ class DnDialogWindow(QtWidgets.QDialog):
         self.windpw_list_kaf.show()
 
     def choose_pipe(self):
-        self.choose_pipe_window = ChoosePipeDialogWindow()
+        self.choose_pipe_window = ChoosePipeDialogWindow(self.ui.lineEdit, self.ui.lineEdit_2)
         self.choose_pipe_window.exec()
         self.information_pipe = self.choose_pipe_window.get_number()
         if self.information_pipe is not None:

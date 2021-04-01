@@ -8,6 +8,8 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+HELPING = 'Кликните правой кнопкой кнопкой мыши по строчке коэффициента, который хотите выбрать. '
+
 
 class ChoosePipeDialog(object):
     def setupUi(self, Dialog, PipeTable):
@@ -98,6 +100,7 @@ class ChoosePipeDialog(object):
             self.tableWidget_pipe.setRowCount(index + 1)
             item = QtWidgets.QTableWidgetItem(f'{index + 1}')
             item.setFont(font)
+            item.setToolTip(HELPING)
             self.tableWidget_pipe.setVerticalHeaderItem(index, item)
             brand = QtWidgets.QTableWidgetItem(str(pipe.brand))
             brand.setFont(font)
