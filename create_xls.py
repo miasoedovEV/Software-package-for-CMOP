@@ -62,6 +62,14 @@ class CreatorXlsFile:
                         LIST_WITH_NAME[index] = LIST_WITH_NAME[index].format(n_max=n_max)
                     self.sheet_1.write(index_line, 0, LIST_WITH_NAME[index], self.font)
                     self.sheet_1.write(index_line, 1, value, self.font)
+        self.sheet_1.write(0, 2, 'Координаты ПС', self.font)
+        self.sheet_1.write(0, 3, 'x', self.font)
+        self.sheet_1.write(0, 4, 'y', self.font)
+        if 'list_coordinates_nps' not in self.dict_values.keys():
+            return
+        for index, coordinates in enumerate(self.dict_values['list_coordinates_nps']):
+            self.sheet_1.write(index + 1, 3, coordinates[0], self.font)
+            self.sheet_1.write(index + 1, 4, coordinates[1], self.font)
 
     def enter_2(self):
         for index in range(len(self.finish_list_7)):
