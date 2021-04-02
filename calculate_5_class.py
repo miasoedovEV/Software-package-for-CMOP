@@ -93,7 +93,8 @@ class Calculate5:
 
         self.T_k = list(range(273, 310, 5))  # данные для построения диаграммы изменений плотности от температуры
 
-        self.vis_T = [(10 ** ((t_k / self.T1) ** B * np.log10(self.vis_1 + 0.8))) - 0.8 for t_k in self.T_k]  # данные для вискограммы
+        self.vis_T = [(10 ** ((t_k / self.T1) ** B * np.log10(self.vis_1 + 0.8))) - 0.8 for t_k in
+                      self.T_k]  # данные для вискограммы
         # Оперделение годовой пропускной способности
 
         # Определение часовой и секундной производительности
@@ -400,12 +401,14 @@ class Calculate5:
         for x, y in coordinates:
             xes.append(x)
             zes.append(y)
-        list_with_coordinates_for_drawing, list_with_coordinates_nps = self.calculate_draw_coordinates(hp, Hst, tag,
-                                                                                                       xes, zes)
+        list_with_coordinates_for_drawing, list_with_coordinates_nps, list_index_main_nps = self.calculate_draw_coordinates(
+            hp, Hst, tag,
+            xes, zes)
 
         list_with_value = [['list_coordinates_for_drawing', list_with_coordinates_for_drawing],
                            ['list_coordinates_nps', list_with_coordinates_nps],
-                           ['H_for_calc_delta', H_for_calc_delta]]
+                           ['H_for_calc_delta', H_for_calc_delta],
+                           ['list_index_main_nps', list_index_main_nps]]
 
         for name, value in list_with_value:
             self.dict_value[name] = value
@@ -458,8 +461,10 @@ class Calculate5:
         z1 = zes[0]
         number = math.ceil(self.n_max / self.N_a)
         list_numbers_nps = [number + 1 for number in range(self.n_max)]
+        list_index_main_nps = [0]
         for index, number_nps in enumerate(list_numbers_nps):
             if number_nps % number == 0 or number_nps == list_numbers_nps[-1] or number == 1:
+                list_index_main_nps.append(index)
                 p1 = [x1, z1]
                 z2 = z1 + Hst + hp - self.h_ost
                 p2 = [x1, z2]
@@ -467,6 +472,7 @@ class Calculate5:
                 list_with_coordinates_for_drawing.append([p1, p2])
                 p1 = p2
                 x1 += tag * (Hst + hp - self.h_ost)
+                p1_hp_line = [p1[0], p1[1] + self.h_ost]
                 for i, x2 in enumerate(xes):
                     if x2 == xes[-1]:
                         break
@@ -475,13 +481,17 @@ class Calculate5:
                         x1 = p[0]
                         z1 = p[1]
                         p2 = [x1, z1]
+                        p2_hp_line = [p2[0], p2[1] + self.h_ost]
                         list_with_coordinates_for_drawing.append([p1, p2])
+                        list_with_coordinates_for_drawing.append([p1_hp_line, p2_hp_line])
                         break
                     elif p is None and x2 == xes[-2]:
                         x1 = xes[-1]
                         z1 = zes[-1]
                         p2 = [x1, z1]
+                        p2_hp_line = [p2[0], p2[1] + self.h_ost]
                         list_with_coordinates_for_drawing.append([p1, p2])
+                        list_with_coordinates_for_drawing.append([p1_hp_line, p2_hp_line])
 
             else:
                 p1 = [x1, z1]
@@ -491,6 +501,7 @@ class Calculate5:
                 list_with_coordinates_for_drawing.append([p1, p2])
                 p1 = p2
                 x1 += tag * Hst
+                p1_hp_line = [p1[0], p1[1] + hp]
                 for i, x2 in enumerate(xes):
                     if x2 == xes[-1]:
                         break
@@ -499,14 +510,18 @@ class Calculate5:
                         x1 = p[0]
                         z1 = p[1]
                         p2 = [x1, z1]
+                        p2_hp_line = [p2[0], p2[1] + hp]
                         list_with_coordinates_for_drawing.append([p1, p2])
+                        list_with_coordinates_for_drawing.append([p1_hp_line, p2_hp_line])
                         break
                     elif p is None and x2 == xes[-2]:
                         x1 = xes[-1]
                         z1 = zes[-1]
                         p2 = [x1, z1]
+                        p2_hp_line = [p2[0], p2[1] + hp]
                         list_with_coordinates_for_drawing.append([p1, p2])
-        return list_with_coordinates_for_drawing, list_with_coordinates_nps
+                        list_with_coordinates_for_drawing.append([p1_hp_line, p2_hp_line])
+        return list_with_coordinates_for_drawing, list_with_coordinates_nps, list_index_main_nps
 
 
 def draw_graph_in_calculate(var):
