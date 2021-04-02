@@ -61,6 +61,8 @@ class ErrorDialogEnter5(object):
         self.gridLayout_3.setObjectName("gridLayout_3")
         self.pushButton = QtWidgets.QPushButton(self.frame_2)
         self.pushButton.setObjectName("pushButton")
+        font.setPointSize(10)
+        self.pushButton.setFont(font)
         self.gridLayout_3.addWidget(self.pushButton, 0, 0, 1, 1)
         self.gridLayout_2.addLayout(self.gridLayout_3, 0, 0, 1, 1)
         self.verticalLayout.addWidget(self.frame_2)

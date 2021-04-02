@@ -371,6 +371,8 @@ class MainWindow(QtWidgets.QMainWindow):
             y_object = self.ui.table.item(i, 1)
             if x_object is None or y_object is None:
                 break
+            elif x_object.text() == '' or x_object.text() == '':
+                break
             x = self.check_value(x_object)
             if x is None:
                 return None
