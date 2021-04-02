@@ -10,7 +10,8 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import QThread, QFile, QTextStream
 from dialogs import DnDialogWindow, PumpDialogWindow, GraphDialogWindow, SaveDialogWindow, DialogDeltaWindow, \
     DnDialogWindow_2, ChooseVarDialog, AddPumpDialogWindow, AddSupPumpDialogWindow, AddPipeDialogWindow, MyFileBrowser, \
-    ErrorDialogEnterWindow, ErrorEnterNumberDialogWindow, ErrorSaveDialogWindow, WindowChooseKaf
+    ErrorDialogEnterWindow, ErrorEnterNumberDialogWindow, ErrorSaveDialogWindow, WindowChooseKaf, CopySelectedCellsAction, \
+    PastSelectedCellsAction
 from models import MainPumpsTable, CoordinatesTable, SourceDataTable, ActionVarTable
 import json
 from calculate_5_class import Calculate5, draw_graph_in_calculate
@@ -23,68 +24,6 @@ from settings import get_source_dict, update_dict_to_db, check_update_data_var_7
     LIST_WITH_TABLE_VALUE_CALC_7, LIST_WITH_NAME_SOURCE_VALUE_8, check_data, NUMBER_LOW_INDEX, HELP
 from calculate_8_class import CalculationModesNps
 from tab_ui import MyWindow
-
-
-class CopySelectedCellsAction(QtWidgets.QAction):
-    def __init__(self, list_table_widget):
-        super(CopySelectedCellsAction, self).__init__()
-        self.setShortcut('Ctrl+C')
-        self.list_table_widget = list_table_widget
-        self.triggered.connect(self.copy_cells_to_clipboard)
-
-    def copy_cells_to_clipboard(self):
-        for table in self.list_table_widget:
-            if len(table.selectionModel().selectedIndexes()) < 1:
-                continue
-                # sort select indexes into rows and columns
-            previous = table.selectionModel().selectedIndexes()[0]
-            columns = []
-            rows = []
-            for index in table.selectionModel().selectedIndexes():
-                if previous.column() != index.column():
-                    columns.append(rows)
-                    rows = []
-                rows.append(index.data())
-                previous = index
-            columns.append(rows)
-            # add rows and columns to clipboard
-            clipboard = ""
-            nrows = len(columns[0])
-            ncols = len(columns)
-            for r in range(nrows):
-                for c in range(ncols):
-                    if columns[c][r] is None:
-                        continue
-                    clipboard += columns[c][r]
-                    if c != (ncols - 1):
-                        clipboard += '\t'
-                clipboard += '\n'
-            # copy to the system clipboard
-            sys_clip = QtWidgets.QApplication.clipboard()
-            sys_clip.setText(clipboard)
-            table.clearSelection()
-
-
-class PastSelectedCellsAction(QtWidgets.QAction):
-    def __init__(self, list_table_widget):
-        super(PastSelectedCellsAction, self).__init__()
-        self.setShortcut('Ctrl+V')
-        self.list_table_widget = list_table_widget
-        self.triggered.connect(self.past_cells_to_clipboard)
-
-    def past_cells_to_clipboard(self):
-        sys_clip = QtWidgets.QApplication.clipboard()
-        text = sys_clip.text()
-        elements = text.split('\n')
-        for table in self.list_table_widget:
-            if len(table.selectionModel().selectedIndexes()) < 1:
-                continue
-            for index, index_table in enumerate(table.selectionModel().selectedIndexes()):
-                if len(elements) < index + 1:
-                    return
-                item = QtWidgets.QTableWidgetItem(elements[index])
-                table.setItem(index_table.row(), index_table.column(), item)
-                table.clearSelection()
 
 
 class External(QThread):

@@ -33,6 +33,68 @@ HELPING = 'Кликните правой кнопкой кнопкой мыши 
 HELPING_FOR_KAF = 'Кликните правой кнопкой кнопкой мыши по строчке коэффициента, который хотите выбрать. '
 
 
+class CopySelectedCellsAction(QtWidgets.QAction):
+    def __init__(self, list_table_widget):
+        super(CopySelectedCellsAction, self).__init__()
+        self.setShortcut('Ctrl+C')
+        self.list_table_widget = list_table_widget
+        self.triggered.connect(self.copy_cells_to_clipboard)
+
+    def copy_cells_to_clipboard(self):
+        for table in self.list_table_widget:
+            if len(table.selectionModel().selectedIndexes()) < 1:
+                continue
+                # sort select indexes into rows and columns
+            previous = table.selectionModel().selectedIndexes()[0]
+            columns = []
+            rows = []
+            for index in table.selectionModel().selectedIndexes():
+                if previous.column() != index.column():
+                    columns.append(rows)
+                    rows = []
+                rows.append(index.data())
+                previous = index
+            columns.append(rows)
+            # add rows and columns to clipboard
+            clipboard = ""
+            nrows = len(columns[0])
+            ncols = len(columns)
+            for r in range(nrows):
+                for c in range(ncols):
+                    if columns[c][r] is None:
+                        continue
+                    clipboard += columns[c][r]
+                    if c != (ncols - 1):
+                        clipboard += '\t'
+                clipboard += '\n'
+            # copy to the system clipboard
+            sys_clip = QtWidgets.QApplication.clipboard()
+            sys_clip.setText(clipboard)
+            table.clearSelection()
+
+
+class PastSelectedCellsAction(QtWidgets.QAction):
+    def __init__(self, list_table_widget):
+        super(PastSelectedCellsAction, self).__init__()
+        self.setShortcut('Ctrl+V')
+        self.list_table_widget = list_table_widget
+        self.triggered.connect(self.past_cells_to_clipboard)
+
+    def past_cells_to_clipboard(self):
+        sys_clip = QtWidgets.QApplication.clipboard()
+        text = sys_clip.text()
+        elements = text.split('\n')
+        for table in self.list_table_widget:
+            if len(table.selectionModel().selectedIndexes()) < 1:
+                continue
+            for index, index_table in enumerate(table.selectionModel().selectedIndexes()):
+                if len(elements) < index + 1:
+                    return
+                item = QtWidgets.QTableWidgetItem(elements[index])
+                table.setItem(index_table.row(), index_table.column(), item)
+                table.clearSelection()
+
+
 def check_value_None(value):
     if value == '' or value is None:
         error_dialog_enter = ErrorDialogEnterWindow()
@@ -158,6 +220,7 @@ class WindowChooseKaf(QtWidgets.QMainWindow):
         self.kn = kn
         self.m = m
         self.ui.enter.clicked.connect(self.update_table_kaf)
+        self.add_copy_past_actions()
 
     def add_row_list(self):
         index_table_widget = self.ui.tableWidget.rowCount() + 1
@@ -232,6 +295,13 @@ class WindowChooseKaf(QtWidgets.QMainWindow):
     def show_error_enter_number(self):
         self.error_enter_Number = ErrorEnterNumberDialogWindow()
         self.error_enter_Number.exec()
+
+    def add_copy_past_actions(self):
+        list_table = [self.ui.tableWidget]
+        self.copy_action = CopySelectedCellsAction(list_table)
+        self.past_action = PastSelectedCellsAction(list_table)
+        self.addAction(self.copy_action)
+        self.addAction(self.past_action)
 
 
 class DnDialogWindow(QtWidgets.QDialog):
@@ -469,6 +539,7 @@ class AddPumpDialogWindow(QtWidgets.QDialog):
         self.list_indexes_column = [3, 4, 5, 6]
         self.ui.tableWidget_pump_enter.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.ui.tableWidget_pump_enter.customContextMenuRequested.connect(self.context_menu)
+        self.add_copy_past_actions()
 
     def add_row(self):
         index_tableWidget_pump_enter_2 = self.ui.tableWidget_pump_enter_2.rowCount() + 1
@@ -544,6 +615,13 @@ class AddPumpDialogWindow(QtWidgets.QDialog):
         delete_string_from_db(MainPumpsTable, index.row())
         self.ui.tableWidget_pump_enter.removeRow(index.row())
 
+    def add_copy_past_actions(self):
+        list_table = [self.ui.tableWidget_pump_enter, self.ui.tableWidget_pump_enter_2]
+        self.copy_action = CopySelectedCellsAction(list_table)
+        self.past_action = PastSelectedCellsAction(list_table)
+        self.addAction(self.copy_action)
+        self.addAction(self.past_action)
+
 
 class AddSupPumpDialogWindow(QtWidgets.QDialog):
     def __init__(self):
@@ -558,6 +636,7 @@ class AddSupPumpDialogWindow(QtWidgets.QDialog):
         self.list_indexes_column = [2, 3, 4]
         self.ui.tableWidget_pump_enter.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.ui.tableWidget_pump_enter.customContextMenuRequested.connect(self.context_menu)
+        self.add_copy_past_actions()
 
     def add_row(self):
         index_tableWidget = self.ui.tableWidget.rowCount() + 1
@@ -631,6 +710,13 @@ class AddSupPumpDialogWindow(QtWidgets.QDialog):
         delete_string_from_db(SupportPumpsTable, index.row())
         self.ui.tableWidget_pump_enter.removeRow(index.row())
 
+    def add_copy_past_actions(self):
+        list_table = [self.ui.tableWidget, self.ui.tableWidget_pump_enter]
+        self.copy_action = CopySelectedCellsAction(list_table)
+        self.past_action = PastSelectedCellsAction(list_table)
+        self.addAction(self.copy_action)
+        self.addAction(self.past_action)
+
 
 class AddPipeDialogWindow(QtWidgets.QDialog):
     def __init__(self):
@@ -645,6 +731,7 @@ class AddPipeDialogWindow(QtWidgets.QDialog):
         self.list_indexes_column = [1, 2, 3]
         self.ui.tableWidget_pipe.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.ui.tableWidget_pipe.customContextMenuRequested.connect(self.context_menu)
+        self.add_copy_past_actions()
 
     def add_row(self):
         index_tableWidget_pipe_enter_2 = self.ui.tableWidget_pipe_enter_2.rowCount() + 1
@@ -716,6 +803,13 @@ class AddPipeDialogWindow(QtWidgets.QDialog):
             return
         delete_string_from_db(PipeTable, index.row())
         self.ui.tableWidget_pipe.removeRow(index.row())
+
+    def add_copy_past_actions(self):
+        list_table = [self.ui.tableWidget_pipe, self.ui.tableWidget_pipe_enter_2]
+        self.copy_action = CopySelectedCellsAction(list_table)
+        self.past_action = PastSelectedCellsAction(list_table)
+        self.addAction(self.copy_action)
+        self.addAction(self.past_action)
 
 
 class ErrorXlsDialogWindow(QtWidgets.QDialog):
