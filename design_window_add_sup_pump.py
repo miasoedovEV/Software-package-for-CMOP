@@ -139,7 +139,7 @@ class AddSupPumpDialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        Dialog.setWindowTitle(_translate("Dialog", "Добавление подпорного насоса"))
         self.label_pump_enter_2.setText(_translate("Dialog", "Добавление подпорного насоса"))
         self.add.setText(_translate("Dialog", "Добавить"))
         self.retry.setText(_translate("Dialog", "Сбросить"))

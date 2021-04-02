@@ -117,7 +117,7 @@ class ChoosePipeDialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        Dialog.setWindowTitle(_translate("Dialog", "Окно выбора труб"))
         self.label_pump_enter.setText(_translate("Dialog", "Список используемых труб"))
         self.label_pump_enter_2.setText(_translate("Dialog", "Введите номер трубы в поле ввода:"))
         self.label_pump_enter_3.setText(_translate("Dialog", "Характеристики выбранной трубы, будут вставлены в поля"))

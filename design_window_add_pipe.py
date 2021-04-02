@@ -131,7 +131,7 @@ class AddPipeDialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        Dialog.setWindowTitle(_translate("Dialog", "Добавление трубы"))
         self.label_pump_enter_2.setText(_translate("Dialog", "Добавление марки трубы"))
         self.cancel_2.setText(_translate("Dialog", "Отмена"))
         self.add.setText(_translate("Dialog", "Добавить"))

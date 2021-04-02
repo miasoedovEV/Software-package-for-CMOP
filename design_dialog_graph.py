@@ -65,7 +65,7 @@ class GraphDialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        Dialog.setWindowTitle(_translate("Dialog", "Оповещательное окно"))
         self.cancel.setText(_translate("Dialog", "Отмена"))
         self.next.setText(_translate("Dialog", "Продолжить"))
         self.label.setText(_translate("Dialog", "Вы выбрали прорисовку эпюры в среде AutoCAD. Для этого необходимо "))

@@ -157,7 +157,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Вывод в xls"))
         self.label.setText(_translate("MainWindow", "Имя файла:"))
         self.label_2.setText(_translate("MainWindow", "Путь к файлу:"))
         self.save_2.setText(_translate("MainWindow", "Сохранить"))

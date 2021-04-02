@@ -136,7 +136,7 @@ class PumpDialog(object):
 
     def retranslateUi(self, Dialog, var):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        Dialog.setWindowTitle(_translate("Dialog", "Окно ввода магистрального насоса"))
         self.label.setText(_translate("Dialog", "Часовая производительность трубопровода, кг/м3 = "))
         dict_value = get_source_dict(var)
         self.label_2.setText(_translate("Dialog", f"{dict_value['Q_hour']} "))

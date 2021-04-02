@@ -80,7 +80,7 @@ class PipeDnDialog(object):
 
     def retranslateUi(self, Dialog, var):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        Dialog.setWindowTitle(_translate("Dialog", "Окно ввода пользовательского диаметра"))
         dict_value = get_source_dict(var)
         self.label.setText(_translate("Dialog", f"Расчётный наружный диаметр трубы составил: {int(dict_value['Dn'])} мм."))
         self.label_2.setText(

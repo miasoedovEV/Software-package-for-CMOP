@@ -42,7 +42,7 @@ class ChooseDialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        Dialog.setWindowTitle(_translate("Dialog", "Выбор пути расчёта"))
         self.label.setText(
             _translate("Dialog", "Вы хотите сделать перерасчёт этого варианта или расчитать новый вариант?"))
         self.pushButton.setText(_translate("Dialog", "Остаться в этом варианте"))

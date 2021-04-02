@@ -70,7 +70,7 @@ class ErrorXlsDialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        Dialog.setWindowTitle(_translate("Dialog", "Ошибка вывода в xls"))
         self.label_3.setText(_translate("Dialog", "Ошибка"))
         self.label_4.setText(_translate("Dialog", "Выбранный объект не является папкой."))
         self.label_5.setText(_translate("Dialog", "Выберете другой объект, являющийся папкой."))

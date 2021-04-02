@@ -78,7 +78,7 @@ class ErrorEnterNumberDialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        Dialog.setWindowTitle(_translate("Dialog", "Ошибка!"))
         self.label.setText(_translate("Dialog", "Ошибка!"))
         self.label_2.setText(
             _translate("Dialog", "В веденных данных присутствуют элементы, отличные от цифр, \",\" и  \".\""))

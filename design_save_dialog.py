@@ -43,7 +43,7 @@ class SaveDialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        Dialog.setWindowTitle(_translate("Dialog", "Сохранение"))
         self.label.setText(_translate("Dialog", "Введите название варианта."))
         self.pushButton.setText(_translate("Dialog", "Сохранить"))
         self.pushButton_2.setText(_translate("Dialog", "Сбросить"))

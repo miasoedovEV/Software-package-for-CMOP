@@ -20,7 +20,7 @@ def draw_line(p1, p2, acad):
 
 def add_text(p, acad, size, text):
     p = APoint(p[0], p[1])
-    acad.model.AddText(text, p, size, vertical=True)
+    acad.model.AddText(text, p, size)
 
 
 def drawing_autocad(list_with_coordinates_for_drawing, list_coordinates_nps, H_for_calc_delta, list_index_main_nps, L,

@@ -73,7 +73,7 @@ class ErrorSaveDialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        Dialog.setWindowTitle(_translate("Dialog", "Ошибка!"))
         self.label.setText(_translate("Dialog", "Ошибка!"))
         self.label_2.setText(_translate("Dialog", "Вы еще ничего не посчитали!"))
         self.label_3.setText(_translate("Dialog", "Остановитесь!!!"))

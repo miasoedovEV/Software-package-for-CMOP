@@ -42,7 +42,7 @@ class DialogDelta(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        Dialog.setWindowTitle(_translate("Dialog", "Оповещательное окно"))
         self.label.setText(_translate("Dialog", "Отсутствует информация о категориях участков трубопровода."))
         self.label_2.setText(
             _translate("Dialog", "Введите информацию о участках трубопровода и нажмите кнопку \"Ввод\"."))

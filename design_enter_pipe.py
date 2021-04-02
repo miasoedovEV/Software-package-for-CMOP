@@ -127,7 +127,7 @@ class DnDialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        Dialog.setWindowTitle(_translate("Dialog", "Окно ввода характеристик трубы"))
         self.R1n.setText(_translate("Dialog", "Временное сопротивление стали, R1н"))
         self.k1.setText(_translate("Dialog", "Коэффициент надёжности по материалу, k1"))
         self.np.setText(_translate("Dialog", "Коэффициент надёжности по нагрузке, np"))
