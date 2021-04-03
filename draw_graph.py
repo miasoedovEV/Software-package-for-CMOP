@@ -159,7 +159,6 @@ def drawing_autocad(list_with_coordinates_for_drawing, list_coordinates_nps, H_f
             text.Rotation = ANGLE
 
 
-
 def drawing_plt(list_for_drawing):
     plt.figure()
     for p1, p2 in list_for_drawing:

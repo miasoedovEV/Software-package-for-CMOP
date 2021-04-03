@@ -474,6 +474,7 @@ class Calculate5:
                 p1 = p2
                 x1 += tag * (Hst + hp - self.h_ost)
                 p1_hp_line = [p1[0], p1[1] + self.h_ost]
+                list_with_coordinates_for_drawing.append([p1, p1_hp_line])
                 for i, x2 in enumerate(xes):
                     if x2 == xes[-1]:
                         break
@@ -503,6 +504,7 @@ class Calculate5:
                 p1 = p2
                 x1 += tag * Hst
                 p1_hp_line = [p1[0], p1[1] + hp]
+                list_with_coordinates_for_drawing.append([p1, p1_hp_line])
                 for i, x2 in enumerate(xes):
                     if x2 == xes[-1]:
                         break
