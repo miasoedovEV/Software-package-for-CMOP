@@ -408,7 +408,8 @@ class Calculate5:
         list_with_value = [['list_coordinates_for_drawing', list_with_coordinates_for_drawing],
                            ['list_coordinates_nps', list_with_coordinates_nps],
                            ['H_for_calc_delta', H_for_calc_delta],
-                           ['list_index_main_nps', list_index_main_nps]]
+                           ['list_index_main_nps', list_index_main_nps],
+                           ['second_kat', second_kat]]
 
         for name, value in list_with_value:
             self.dict_value[name] = value

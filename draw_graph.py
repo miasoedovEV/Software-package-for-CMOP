@@ -10,6 +10,7 @@ from pyautocad import Autocad, APoint
 import matplotlib.pyplot as plt
 
 LINE_ELSE = 140
+ANGLE = 1.57
 
 
 def draw_line(p1, p2, acad):
@@ -24,7 +25,7 @@ def add_text(p, acad, size, text):
 
 
 def drawing_autocad(list_with_coordinates_for_drawing, list_coordinates_nps, H_for_calc_delta, list_index_main_nps, L,
-                    delta_z):
+                    delta_z, second_kat):
     acad = Autocad(create_if_not_exists=True)
     H_plus = H_for_calc_delta + LINE_ELSE
 
@@ -118,7 +119,7 @@ def drawing_autocad(list_with_coordinates_for_drawing, list_coordinates_nps, H_f
         draw_line(p1, p2, acad)
     z_start = math.ceil(z_start)
     z_start_H_plus = math.ceil(z_start + H_plus + 50)
-    x_start -= 300
+    x_start -= 200
     x_start = math.ceil(x_start)
     p1 = [x_start, z_start]
     for z in range(z_start, z_start_H_plus, 50):
@@ -129,18 +130,34 @@ def drawing_autocad(list_with_coordinates_for_drawing, list_coordinates_nps, H_f
         p3 = [x_start + 50, z]
         add_text(p3, acad, 20, f'{z} м')
         p1 = p2
-    x_start += 300
-    z_start -= 100
+    x_start += 200
+    z_start -= 155
     p1 = [x_start, z_start]
-    x_finish = math.ceil(L + 200)
+    x_finish = math.ceil(L + 50)
     for x in range(x_start, x_finish, 50):
         p2 = [x, z_start]
         draw_line(p1, p2, acad)
         p3 = [x, z_start + 40]
         draw_line(p2, p3, acad)
-        p3 = [x - 20, z_start + 50]
-        add_text(p3, acad, 10, f'{x} км')
+        p3 = [x + 5, z_start + 50]
+        add_text(p3, acad, 20, f'{x} км')
         p1 = p2
+    p1 = [p1[0] + 50, p1[1] + H_plus]
+    p2 = [p1[0], p1[1] + second_kat]
+    draw_line(p1, p2, acad)
+    p3 = [p1[0] + 100, p1[1]]
+    draw_line(p1, p3, acad)
+    draw_line(p2, p3, acad)
+    p2 = [p1[0], p1[1] - 30]
+    p1 = [p1[0] - 10, p1[1]]
+    add_text(p1, acad, 20, f'1,02 * i * l = {second_kat} м')
+    add_text(p2, acad, 20, f'l = 100 км')
+    for text in acad.iter_objects_fast('Text'):
+        if 'км' in text.TextString and 'l' not in text.TextString:
+            text.Rotation = ANGLE
+        elif 'i' in text.TextString:
+            text.Rotation = ANGLE
+
 
 
 def drawing_plt(list_for_drawing):

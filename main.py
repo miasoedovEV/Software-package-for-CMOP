@@ -513,12 +513,14 @@ class MainWindow(QtWidgets.QMainWindow):
         list_index_main_nps = dict_value['list_index_main_nps']
         L = dict_value['L']
         delta_z = dict_value['delta_z']
+        second_kat = dict_value['second_kat']
         if self.ui.checkBox_2.isChecked():
             drawing_plt(list_for_drawing)
         if self.ui.checkBox.isChecked():
             self.dialog_graph_window = GraphDialogWindow()
             self.dialog_graph_window.exec()
-            drawing_autocad(list_for_drawing, list_coordinates_nps, H_for_calc_delta, list_index_main_nps, L, delta_z)
+            drawing_autocad(list_for_drawing, list_coordinates_nps, H_for_calc_delta, list_index_main_nps, L, delta_z,
+                            second_kat)
 
     def erase_data(self):
         for index, name in enumerate(LIST_WITH_NAME_VALUE_CHARACTIRISTIES):
