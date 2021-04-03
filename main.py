@@ -606,8 +606,10 @@ class MainWindow(QtWidgets.QMainWindow):
                 if number_section_object is None or length_section_object is None or category_section_object is None:
                     break
             length_section = self.check_value(length_section_object)
+            if length_section is None:
+                return None
             category_section = self.check_value(category_section_object)
-            if length_section is None or category_section is None:
+            if category_section is None:
                 return None
             if number_section_object is None:
                 self.show_error_enter()
