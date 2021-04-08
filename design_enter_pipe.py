@@ -137,6 +137,5 @@ class DnDialog(object):
         self.retry.setText(_translate("Dialog", "Сбросить"))
         self.cancel.setText(_translate("Dialog", "Отмена"))
         self.k_a_2.setText(_translate("Dialog", "Коэффициент условия работы, m"))
-        self.label.setText(_translate("Dialog", "Наружный диаметр трубы составил:"))
         self.choose.setText(_translate("Dialog", "Выбрать трубу "))
         self.choose_k.setText(_translate("Dialog", "Выбрать коэффициенты"))

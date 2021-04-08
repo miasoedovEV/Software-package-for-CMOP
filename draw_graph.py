@@ -9,7 +9,7 @@ import math
 from pyautocad import Autocad, APoint
 import matplotlib.pyplot as plt
 
-LINE_ELSE = 140
+LINE_ELSE = 170
 ANGLE = 1.57
 
 
@@ -164,5 +164,5 @@ def drawing_plt(list_for_drawing):
     for p1, p2 in list_for_drawing:
         x = [p1[0], p2[0]]
         y = [p1[1], p2[1]]
-        plt.plot(x, y, marker='o')
+        plt.plot(x, y)
     plt.show()
