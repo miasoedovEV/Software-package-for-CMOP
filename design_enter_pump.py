@@ -130,6 +130,7 @@ class PumpDialog(object):
         self.cancel = QtWidgets.QPushButton(Dialog)
         self.cancel.setGeometry(QtCore.QRect(370, 240, 93, 28))
         self.cancel.setObjectName("cancel")
+        self.cancel.setFont(font)
 
         self.retranslateUi(Dialog, var)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -137,18 +138,18 @@ class PumpDialog(object):
     def retranslateUi(self, Dialog, var):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Окно ввода магистрального насоса"))
-        self.label.setText(_translate("Dialog", "Часовая производительность трубопровода, кг/м3 = "))
+        self.label.setText(_translate("Dialog", "Часовая производительность трубопровода, кг/м\u00B3 = "))
         dict_value = get_source_dict(var)
-        self.label_2.setText(_translate("Dialog", f"{dict_value['Q_hour']} "))
+        self.label_2.setText(_translate("Dialog", f"{round(dict_value['Q_hour'], 2)} "))
         self.label_3.setText(_translate("Dialog",
                                         "Если хотите продолжить расчёт с пользовательским насосом, введите марку и параметры насоса."))
         self.label_4.setText(_translate("Dialog", "Марка насоса"))
         self.label_5.setText(_translate("Dialog", "Диаметр диска рабочего колеса"))
-        self.label_6.setText(_translate("Dialog", "Qном, кг/м3"))
+        self.label_6.setText(_translate("Dialog", "Qном, кг/м\u00B3"))
         self.label_7.setText(_translate("Dialog", "a"))
         self.label_8.setText(_translate("Dialog", "b"))
         self.label_9.setText(_translate("Dialog",
-                                        "Если хотете предоставить выбор насоса из списка предоставленных программе, нажмите пропустить."))
+                                        "Если хотите предоставить выбор насоса из списка предоставленных программе, нажмите пропустить."))
         self.next.setText(_translate("Dialog", "Пропустить"))
         self.enter.setText(_translate("Dialog", "Ввод"))
         self.retry.setText(_translate("Dialog", "Сбросить"))
