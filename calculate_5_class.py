@@ -540,5 +540,5 @@ def draw_graph_in_calculate(var):
             vis_T = value
         elif name == 'q_list':
             q_list = value
-    plot_show(T_k, vis_T, 'T,K', 'mm2/s', 'Вискограмма')
+    plot_show(T_k, vis_T, 'T,K', 'v,mm2/s', 'Вискограмма')
     many_plot(q_list, all_h, 'Q, м3/x', 'Н,м', labels, 'Совмещенная характеристика', COLORS)

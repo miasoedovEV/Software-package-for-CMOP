@@ -165,4 +165,7 @@ def drawing_plt(list_for_drawing):
         x = [p1[0], p2[0]]
         y = [p1[1], p2[1]]
         plt.plot(x, y)
+    plt.xlabel('L, км')
+    plt.ylabel('H, м')
+    plt.title('Расстановка ПС')
     plt.show()
