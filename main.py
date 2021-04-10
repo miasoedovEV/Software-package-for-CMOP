@@ -24,6 +24,7 @@ from settings import get_source_dict, update_dict_to_db, check_update_data_var_7
     LIST_WITH_TABLE_VALUE_CALC_7, LIST_WITH_NAME_SOURCE_VALUE_8, check_data, NUMBER_LOW_INDEX, HELP
 from calculate_8_class import CalculationModesNps
 from tab_ui import MyWindow
+import create_new_db
 
 
 class External(QThread):
