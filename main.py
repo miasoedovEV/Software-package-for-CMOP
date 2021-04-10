@@ -230,8 +230,8 @@ class MainWindow(QtWidgets.QMainWindow):
             value.setFlags(QtCore.Qt.ItemIsEnabled)
             self.ui.table_date_7.setItem(number_count - 1, 1, value)
             number_count += 1
-        self.ui.table_date_7.resizeColumnToContents(0)
-        self.ui.table_date_7.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+        self.ui.table_date_7.resizeColumnsToContents()
+        # self.ui.table_date_7.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
         self.ui.table_category_7.setRowCount(0)
         self.ui.table_category_7.clearContents()
         self.ui.table_delta_7.setRowCount(0)
