@@ -3,7 +3,6 @@ import os
 import pandas as pd
 import numpy as np
 import json
-import pprint
 
 FILE_NAME_XLS = 'source_data.xlsx'
 NAME_DATA_BASE = 'source_data.db'
@@ -29,9 +28,11 @@ class CreatorDataBase:
         df_source_data = xl_source_data.parse('data of main pumps')
         array_data_main_pumps = np.array(pd.DataFrame(df_source_data))  # Масив со списком насосов
         self.list_with_main_pumps = array_data_main_pumps.tolist()
+        self.list_with_main_pumps.sort(key=lambda k: k[5])
         df_source_data = xl_source_data.parse('data of support pumps')
         array_data_suport_pumps = np.array(pd.DataFrame(df_source_data))  # Масив со списком подпорных насосов
         self.list_with_suport_pumps = array_data_suport_pumps.tolist()
+        self.list_with_suport_pumps.sort(key=lambda k: k[4])
         df_source_data = xl_source_data.parse('coefficients')
         array_data_coefficients = np.array(pd.DataFrame(df_source_data))  # Масив со списком подпорных насосов
 
