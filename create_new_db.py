@@ -1,53 +1,92 @@
+import csv
+
 import peewee
 import os
-import pandas as pd
-import numpy as np
 import json
 
-FILE_NAME_XLS = 'source_data.xlsx'
+FILE_NAME_GRAPH_SPEED = 'graph_speed.csv'
+FILE_NAME_DATA_DN = 'data_Dn.csv'
+FILE_DATA_MAIN_PUMPS = 'data_main_pumps.csv'
+FILE_DATA_SUPPORT_PUMPS = 'data_support_pumps.csv'
+FILE_DATA_COEFFICIENTS = 'coefficients.csv'
 NAME_DATA_BASE = 'source_data.db'
+
+
+def check_comma(value):
+    if type(value) is str and ',' in value:
+        value = value.replace(',', '.')
+    return value
 
 
 class CreatorDataBase:
 
-    def __init__(self, file_name, db_name):
-        self.file_name = file_name
+    def __init__(self, db_name):
         self.db_name = db_name
 
     def load_data(self):
-        file_source_data = self.file_name
-        # Load spreadsheet
-        xl_source_data = pd.ExcelFile(file_source_data)
-        df_graph_speed = xl_source_data.parse('graph_speed')
-        array_graph_speed = np.array(pd.DataFrame(df_graph_speed))  # Масив с данными для графика скорости
-        self.Q_graph = list(array_graph_speed[:, 0])
-        self.w0_graph = list(array_graph_speed[:, 1])
-        df_data_Dn = xl_source_data.parse('data_Dn')
-        array_data_Dn = np.array(pd.DataFrame(df_data_Dn))  # Масив с данными о таблице диаметров
-        self.Dn_list = list(array_data_Dn[:, 2])
-        df_source_data = xl_source_data.parse('data of main pumps')
-        array_data_main_pumps = np.array(pd.DataFrame(df_source_data))  # Масив со списком насосов
-        self.list_with_main_pumps = array_data_main_pumps.tolist()
+        self.Q_graph = []
+        self.w0_graph = []
+        with open(FILE_NAME_GRAPH_SPEED, 'r') as csvfile:
+            reader = csv.DictReader(csvfile, delimiter=';')  # <csv.DictReader object at 0x03B11030>
+            for row in reader:
+                Q = row['Q']
+                w = row['v']
+                self.Q_graph.append(Q)
+                self.w0_graph.append(w)
+        self.Dn_list = []
+        with open(FILE_NAME_DATA_DN, 'r') as csvfile:
+            reader = csv.DictReader(csvfile, delimiter=';')  # <csv.DictReader object at 0x03B11030>
+            for row in reader:
+                Dn = row['Dn']
+                self.Dn_list.append(Dn)
+        self.list_with_main_pumps = []
+        with open(FILE_DATA_MAIN_PUMPS, 'r') as csvfile:
+            reader = csv.DictReader(csvfile, delimiter=';')  # <csv.DictReader object at 0x03B11030>
+            for row in reader:
+                brand = row['Brand']
+                rotor = row['Rotor']
+                impeller_diameter = row['Impeller diameter']
+                a = float(check_comma(row['a']))
+                b = float(check_comma(row['b']))
+                Q_nom = float(check_comma(row['Qnom']))
+                kaf = float(check_comma(row['k']))
+                self.list_with_main_pumps.append([brand, rotor, impeller_diameter, a, b, Q_nom, kaf])
         self.list_with_main_pumps.sort(key=lambda k: k[5])
-        df_source_data = xl_source_data.parse('data of support pumps')
-        array_data_suport_pumps = np.array(pd.DataFrame(df_source_data))  # Масив со списком подпорных насосов
-        self.list_with_suport_pumps = array_data_suport_pumps.tolist()
+        self.list_with_suport_pumps = []
+        with open(FILE_DATA_SUPPORT_PUMPS, 'r') as csvfile:
+            reader = csv.DictReader(csvfile, delimiter=';')  # <csv.DictReader object at 0x03B11030>
+            for row in reader:
+                brand = row['Brand']
+                impeller_diameter = row['Impeller diameter']
+                a = float(check_comma(row['a']))
+                b = float(check_comma(row['b']))
+                Q_nom = float(check_comma(row['Qnom']))
+                self.list_with_suport_pumps.append([brand, impeller_diameter, a, b, Q_nom])
         self.list_with_suport_pumps.sort(key=lambda k: k[4])
-        df_source_data = xl_source_data.parse('coefficients')
-        array_data_coefficients = np.array(pd.DataFrame(df_source_data))  # Масив со списком подпорных насосов
-
+        list_names = []
+        list_causes = []
+        list_values = []
+        with open(FILE_DATA_COEFFICIENTS, 'r') as csvfile:
+            reader = csv.DictReader(csvfile, delimiter=';')  # <csv.DictReader object at 0x03B11030>
+            for row in reader:
+                name = row['Name']
+                cause = row['Сause']
+                value = float(check_comma(row['Value']))
+                list_names.append(name)
+                list_causes.append(cause)
+                list_values.append(value)
         self.database = peewee.SqliteDatabase('source_data.db')
         self.dict_data_infor_kaf = {}
-        for index, kaf in enumerate(array_data_coefficients[:, 0]):
-            if kaf != kaf or array_data_coefficients[:, 1][index] != array_data_coefficients[:, 1][index] or \
-                    array_data_coefficients[:, 2][index] != array_data_coefficients[:, 2][index]:
+        for index, kaf in enumerate(list_names):
+            if kaf != kaf or list_causes[index] != list_causes[index] or \
+                    list_values[index] != list_values[index]:
                 continue
             if kaf not in self.dict_data_infor_kaf.keys():
                 self.dict_data_infor_kaf[kaf] = [
-                    [array_data_coefficients[:, 1][index], array_data_coefficients[:, 2][index]]]
+                    [list_causes[index], list_values[index]]]
             else:
                 self.dict_data_infor_kaf[kaf].append(
-                    [array_data_coefficients[:, 1][index], array_data_coefficients[:, 2][index]])
+                    [list_causes[index], list_values[index]])
 
     def create_data_base(self):
         self.database = peewee.SqliteDatabase(self.db_name)
@@ -172,5 +211,5 @@ class CreatorDataBase:
 
 
 if not os.path.exists(NAME_DATA_BASE):
-    creator_data_base = CreatorDataBase(FILE_NAME_XLS, NAME_DATA_BASE)
+    creator_data_base = CreatorDataBase(NAME_DATA_BASE)
     creator_data_base.run()

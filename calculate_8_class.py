@@ -4,11 +4,9 @@ Created on Wed Oct  7 19:13:20 2020
 
 @author: stinc
 """
-import numpy as np
 import math as mt
-from pprint import pprint
 from calculate_mode import calculate_mode_transportation
-from settings import get_source_dict, update_dict_to_db, get_info_table_list, check_update_table_list_8_to_db, \
+from settings import get_source_dict, get_info_table_list, check_update_table_list_8_to_db, \
     load_list_data_to_check_table
 from calculate_7_class import LIST_WITH_NAME_DATA_TABLE7
 

@@ -143,6 +143,7 @@ class AddPumpDialog(object):
             self.tableWidget_pump_enter.setItem(index, 1, rotor)
             impeller_diameter = QtWidgets.QTableWidgetItem(str(pump.impeller_diameter))
             impeller_diameter.setFont(font)
+            impeller_diameter.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
             self.tableWidget_pump_enter.setItem(index, 2, impeller_diameter)
             a = QtWidgets.QTableWidgetItem(str(pump.a))
             a.setFont(font)

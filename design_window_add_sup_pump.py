@@ -125,6 +125,7 @@ class AddSupPumpDialog(object):
             self.tableWidget_pump_enter.setItem(index, 0, brand)
             impeller_diameter = QtWidgets.QTableWidgetItem(str(pump.impeller_diameter))
             impeller_diameter.setFont(font)
+            impeller_diameter.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
             self.tableWidget_pump_enter.setItem(index, 1, impeller_diameter)
             a = QtWidgets.QTableWidgetItem(str(pump.a))
             a.setFont(font)
@@ -136,6 +137,7 @@ class AddSupPumpDialog(object):
             Qnom.setFont(font)
             self.tableWidget_pump_enter.setItem(index, 4, Qnom)
         self.tableWidget_pump_enter.resizeColumnsToContents()
+        self.tableWidget_pump_enter.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
