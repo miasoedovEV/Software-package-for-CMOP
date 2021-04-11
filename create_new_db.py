@@ -29,15 +29,15 @@ class CreatorDataBase:
         with open(FILE_NAME_GRAPH_SPEED, 'r') as csvfile:
             reader = csv.DictReader(csvfile, delimiter=';')  # <csv.DictReader object at 0x03B11030>
             for row in reader:
-                Q = row['Q']
-                w = row['v']
+                Q = float(check_comma(row['Q']))
+                w = float(check_comma(row['v']))
                 self.Q_graph.append(Q)
                 self.w0_graph.append(w)
         self.Dn_list = []
         with open(FILE_NAME_DATA_DN, 'r') as csvfile:
             reader = csv.DictReader(csvfile, delimiter=';')  # <csv.DictReader object at 0x03B11030>
             for row in reader:
-                Dn = row['Dn']
+                Dn = float(check_comma(row['Dn']))
                 self.Dn_list.append(Dn)
         self.list_with_main_pumps = []
         with open(FILE_DATA_MAIN_PUMPS, 'r') as csvfile:
