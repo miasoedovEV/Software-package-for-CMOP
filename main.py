@@ -163,12 +163,13 @@ class MainWindow(QtWidgets.QMainWindow):
                 add_count_row = 1
             index_table_widget = table.rowCount() + add_count_row
             table.setRowCount(index_table_widget)
-            item = QtWidgets.QTableWidgetItem(f'{index_table_widget}')
-            font = QtGui.QFont()
-            font.setFamily("Times New Roman")
-            font.setPointSize(10)
-            item.setFont(font)
-            table.setVerticalHeaderItem(index_table_widget - 1, item)
+            for i in range(index_table_widget):
+                item = QtWidgets.QTableWidgetItem(f'{i + 1}')
+                font = QtGui.QFont()
+                font.setFamily("Times New Roman")
+                font.setPointSize(10)
+                item.setFont(font)
+                table.setVerticalHeaderItem(i, item)
 
         return add_func
 
