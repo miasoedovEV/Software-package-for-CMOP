@@ -158,7 +158,9 @@ class MainWindow(QtWidgets.QMainWindow):
                 add_count_row = self.ui.lineEdit_2
                 add_count_row = self.check_value(add_count_row)
             if add_count_row is not None:
-                add_count_row = int(add_count_row)
+                if type(add_count_row) == str and ',' in add_count_row:
+                    add_count_row = add_count_row.replace(',', '.')
+                add_count_row = int(float(add_count_row))
             else:
                 add_count_row = 1
             index_table_widget = table.rowCount() + add_count_row
@@ -873,6 +875,8 @@ class MainWindow(QtWidgets.QMainWindow):
             table.clearContents()
         self.ui.lineEdit_a_.clear()
         self.ui.lineEdit_hmin_8.clear()
+        self.ui.lineEdit_2.clear()
+        self.ui.lineEdit.clear()
 
 
 if __name__ == '__main__':

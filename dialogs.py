@@ -265,7 +265,7 @@ class WindowChooseKaf(QtWidgets.QMainWindow):
             if name is None or cause is None or value is None:
                 continue
             if check_value_number(value) is None:
-                return
+                continue
             data = DataOddsTable(
                 name=name,
                 cause=cause,
