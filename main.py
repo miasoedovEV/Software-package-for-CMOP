@@ -114,6 +114,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def add_kaf(self):
         self.window_kafs = WindowChooseKaf(self, None, None, None, HELP)
         self.window_kafs.ui.tableWidget.setContextMenuPolicy(QtCore.Qt.NoContextMenu)
+        self.window_kafs.setWindowTitle('Окно добавления коэффициентов')
         self.window_kafs.show()
 
     def save_to_xls(self):
@@ -149,7 +150,18 @@ class MainWindow(QtWidgets.QMainWindow):
     def make_func_add_line_table(self, table):
 
         def add_func():
-            index_table_widget = table.rowCount() + 1
+            add_count_row = 1
+            if table.objectName() == 'table':
+                add_count_row = self.ui.lineEdit
+                add_count_row = self.check_value(add_count_row)
+            elif table.objectName() == 'table_category_7':
+                add_count_row = self.ui.lineEdit_2
+                add_count_row = self.check_value(add_count_row)
+            if add_count_row is not None:
+                add_count_row = int(add_count_row)
+            else:
+                add_count_row = 1
+            index_table_widget = table.rowCount() + add_count_row
             table.setRowCount(index_table_widget)
             item = QtWidgets.QTableWidgetItem(f'{index_table_widget}')
             font = QtGui.QFont()
