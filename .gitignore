@@ -1,0 +1,7 @@
+env/
+support_files/
+2truba.ico
+source_data.db
+.idea/
+__pycache__
+main.spec
