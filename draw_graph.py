@@ -131,7 +131,7 @@ def drawing_autocad(list_with_coordinates_for_drawing, list_coordinates_nps, H_f
         add_text(p3, acad, 20, f'{z} м')
         p1 = p2
     x_start += 200
-    z_start -= 155
+    z_start -= 175
     p1 = [x_start, z_start]
     x_finish = math.ceil(L + 50)
     for x in range(x_start, x_finish, 50):
@@ -150,7 +150,7 @@ def drawing_autocad(list_with_coordinates_for_drawing, list_coordinates_nps, H_f
     draw_line(p2, p3, acad)
     p2 = [p1[0], p1[1] - 30]
     p1 = [p1[0] - 10, p1[1]]
-    add_text(p1, acad, 20, f'1,02 * i * l = {second_kat} м')
+    add_text(p1, acad, 20, f'1,02 * i * l = {round(second_kat, 2)} м')
     add_text(p2, acad, 20, f'l = 100 км')
     for text in acad.iter_objects_fast('Text'):
         if 'км' in text.TextString and 'l' not in text.TextString:
