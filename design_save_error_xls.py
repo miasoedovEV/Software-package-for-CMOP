@@ -61,6 +61,7 @@ class ErrorXlsDialog(object):
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.pushButton = QtWidgets.QPushButton(self.Ok)
         self.pushButton.setObjectName("pushButton")
+        self.pushButton.setFont(font)
         self.gridLayout_2.addWidget(self.pushButton, 0, 0, 1, 1)
         self.verticalLayout.addWidget(self.Ok)
         self.gridLayout.addWidget(self.frame, 0, 0, 1, 1)
@@ -74,4 +75,4 @@ class ErrorXlsDialog(object):
         self.label_3.setText(_translate("Dialog", "Ошибка"))
         self.label_4.setText(_translate("Dialog", "Выбранный объект не является папкой."))
         self.label_5.setText(_translate("Dialog", "Выберете другой объект, являющийся папкой."))
-        self.pushButton.setText(_translate("Dialog", "Ok"))
+        self.pushButton.setText(_translate("Dialog", "Ок"))

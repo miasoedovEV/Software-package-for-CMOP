@@ -5,3 +5,4 @@ source_data.db
 .idea/
 __pycache__
 main.spec
+images_for_help/

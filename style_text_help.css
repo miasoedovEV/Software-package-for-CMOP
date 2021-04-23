@@ -1,0 +1,113 @@
+.paragraph_chapter {
+    margin-top:12px;
+    margin-bottom:18px;
+    margin-left:0px;
+    margin-right:0px;
+    -qt-block-indent:0;
+    text-indent:0px;
+    line-height: 1.5;
+    background-color:#232629;
+    font-family:'Times New Roman,serif';
+    font-size:14pt;
+    font-weight:600;
+    text-align: center;
+}
+.text {
+    -qt-block-indent:0;
+    line-height: 1.5;
+    font-family:'Times New Roman,serif';
+    text-indent:47px;
+    font-size:12pt;
+    text-align: justify;
+    margin:0;
+    padding:0;
+    border: 0;
+}
+.table_contents_level_1 {
+    margin-top:12px;
+    margin-bottom:12px;
+    margin-left:0px;
+    margin-right:0px;
+    -qt-block-indent:0;
+    text-indent:0px;
+    line-height: 1.5;
+    background-color:#232629;
+    font-family:'Times New Roman,serif';
+    font-size:12pt;
+    font-weight:600;
+    text-align: left;
+}
+.table_contents_level_2 {
+    margin-top:12px;
+    margin-bottom:12\px;
+    margin-left:0px;
+    margin-right:0px;
+    -qt-block-indent:0;
+    text-indent:47px;
+    line-height: 1.5;
+    background-color:#232629;
+    font-family:'Times New Roman,serif';
+    font-size:12pt;
+    font-weight:600;
+    text-align: left;
+}
+.table_contents_level_3 {
+    margin-top:12px;
+    margin-bottom:12px;
+    margin-left:0px;
+    margin-right:0px;
+    -qt-block-indent:0;
+    text-indent:76px;
+    line-height: 2;
+    background-color:#232629;
+    font-family:'Times New Roman,serif';
+    font-size:12pt;
+    font-weight:600;
+    text-align: left;
+}
+.list-course-items {
+    padding-left: 205.5px;
+    line-height: 35px;
+    color: #ffffff;
+    font-size: 32px;
+    list-style-type: none;
+}
+.element-list-ul{
+    color:  #ffffff;
+    font-family:'Times New Roman,serif';
+    font-size:12pt;
+    text-align: justify;
+}
+.container-img{
+  text-align: center;
+  margin:0px;
+}
+.site-img{
+  width=100 px;
+  height=100 px;
+  padding: 0px;
+  align: center;
+}
+.link_table_contents{
+  color:#ffffff;
+  text-decoration: none;
+}
+.link_text_contents{
+  color: #FF8C00;
+  text-decoration: none;
+  margin:0 px;
+  padding: 0 px;
+
+}
+.figure_signature{
+    line-height: 0.5;
+    font-family:'Times New Roman,serif';
+    font-size:12pt;
+    text-align: center;
+    margin-bottom:30px;
+    padding:0;
+    border: 0;
+}
+
+
+

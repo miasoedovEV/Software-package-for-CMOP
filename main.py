@@ -10,8 +10,8 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import QThread, QFile, QTextStream
 from dialogs import DnDialogWindow, PumpDialogWindow, GraphDialogWindow, SaveDialogWindow, DialogDeltaWindow, \
     DnDialogWindow_2, ChooseVarDialog, AddPumpDialogWindow, AddSupPumpDialogWindow, AddPipeDialogWindow, MyFileBrowser, \
-    ErrorDialogEnterWindow, ErrorEnterNumberDialogWindow, ErrorSaveDialogWindow, WindowChooseKaf, CopySelectedCellsAction, \
-    PastSelectedCellsAction
+    ErrorDialogEnterWindow, ErrorEnterNumberDialogWindow, ErrorSaveDialogWindow, WindowChooseKaf, \
+    CopySelectedCellsAction, PastSelectedCellsAction, HelpDialogWindow
 from models import MainPumpsTable, CoordinatesTable, SourceDataTable, ActionVarTable
 import json
 from calculate_5_class import Calculate5, draw_graph_in_calculate
@@ -85,6 +85,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.action_save.triggered.connect(self.save_var_calculate)
         self.ui.action_new_var.triggered.connect(self.start_new_var)
         self.ui.action_xls.triggered.connect(self.save_to_xls)
+        self.ui.action_5.triggered.connect(self.show_helper)
         for list_objects in self.ui.dict_menu_var.values():
             for index, object in enumerate(list_objects):
                 if index == 1:
@@ -95,6 +96,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.delete_func(FIRST_NAME_VAR)
         self.dict_action_table = {}
         self.add_copy_past_actions()
+
+    def show_helper(self):
+        self.help_window = HelpDialogWindow()
+        self.help_window.show()
 
     def start_new_var(self):
         self.clean_all()
@@ -535,8 +540,12 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.ui.checkBox.isChecked():
             self.dialog_graph_window = GraphDialogWindow()
             self.dialog_graph_window.exec()
-            drawing_autocad(list_for_drawing, list_coordinates_nps, H_for_calc_delta, list_index_main_nps, L, delta_z,
-                            second_kat)
+            try:
+                drawing_autocad(list_for_drawing, list_coordinates_nps, H_for_calc_delta, list_index_main_nps, L,
+                                delta_z,
+                                second_kat)
+            except Exception:
+                pass
 
     def erase_data(self):
         for index, name in enumerate(LIST_WITH_NAME_VALUE_CHARACTIRISTIES):

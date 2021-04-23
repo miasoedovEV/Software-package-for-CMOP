@@ -307,7 +307,6 @@ class Calculate5:
         m_min = self.m_pump - 1
         async_result = pool.apply_async(self.check_transfer_mode, (self.Q_hour, self.n_max, m_min, self.H, 0.001))
         self.Q2, H2 = self.check_transfer_mode(self.Q_hour, self.n_max, m_max, self.H, 0.001)
-        time.sleep(3)
         self.Q1, H1 = async_result.get()
         tau1 = 24 * self.Np * (self.Q2 - self.Q_hour) / (self.Q2 - self.Q1)
 

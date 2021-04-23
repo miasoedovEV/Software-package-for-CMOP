@@ -59,6 +59,8 @@ class ErrorSaveDialog(object):
         self.gridLayout_3.setObjectName("gridLayout_3")
         self.pushButton = QtWidgets.QPushButton(self.frame_2)
         self.pushButton.setObjectName("pushButton")
+        font.setPointSize(10)
+        self.pushButton.setFont(font)
         self.gridLayout_3.addWidget(self.pushButton, 0, 0, 1, 1)
         self.gridLayout_2.addLayout(self.gridLayout_3, 0, 0, 1, 1)
         self.verticalLayout.addWidget(self.frame_2)
@@ -77,5 +79,5 @@ class ErrorSaveDialog(object):
         self.label.setText(_translate("Dialog", "Ошибка!"))
         self.label_2.setText(_translate("Dialog", "Вы еще ничего не посчитали!"))
         self.label_3.setText(_translate("Dialog", "Остановитесь!!!"))
-        self.pushButton.setText(_translate("Dialog", "Ok"))
+        self.pushButton.setText(_translate("Dialog", "Ок"))
 

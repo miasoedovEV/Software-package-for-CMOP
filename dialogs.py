@@ -28,6 +28,7 @@ from design_error_enter_number_data import ErrorEnterNumberDialog
 from design_window_error_saving import ErrorSaveDialog
 from design_error_export_xsl import ErrorExportDialog
 from designer_window_list_kaf import WindowKafList
+from helper import HelpDialog
 
 HELPING = 'Кликните правой кнопкой кнопкой мыши по строчке, которую хотите удалить.'
 HELPING_FOR_KAF = 'Кликните правой кнопкой кнопкой мыши по строчке коэффициента, который хотите выбрать. '
@@ -884,3 +885,11 @@ class MyFileBrowser(Ui_MainWindow, QtWidgets.QMainWindow):
         self.file_path = self.model.filePath(index)
         self.file_type = self.model.fileInfo(index).isFile()
         self.lineEdit_2.setText(self.file_path)
+
+
+class HelpDialogWindow(HelpDialog, QtWidgets.QMainWindow):
+    def __init__(self):
+        super(HelpDialogWindow, self).__init__()
+        self.setWindowIcon(QtGui.QIcon('2truba.ico'))
+        self.setupUi(self)
+
