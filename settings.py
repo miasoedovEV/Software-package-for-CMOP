@@ -54,6 +54,7 @@ NUMBER_LOW_INDEX = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
 
 re_data = re.compile(r'[0-9]*[.,]?[0-9]+')
 HELP = 'Добавте строку и внесите новые данные или измените имеющиеся и нажмите кнопку "Внести изменения".'
+LIST_NOT_GIVE_ERROR = ['lineEdit', 'lineEdit_2']
 
 
 def check_data(string):

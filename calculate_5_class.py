@@ -4,8 +4,6 @@ Created on Wed Oct  7 19:13:20 2020
 
 @author: stinc
 """
-import time
-
 import matplotlib.pyplot as plt
 from decimal import getcontext, Decimal, ROUND_HALF_UP
 import numpy as np
@@ -14,8 +12,6 @@ from models import MainPumpsTable, SupportPumpsTable, GraphW0, DnTable
 from settings import get_source_dict, update_dict_to_db, get_list_coordinates
 import json
 from multiprocessing.pool import ThreadPool
-
-pool = ThreadPool(processes=1)
 
 COLORS = ['black', 'red', 'green', 'grey', 'blue']
 
@@ -303,6 +299,7 @@ class Calculate5:
         all_h = [self.N5_M3, self.N6_M3, self.N6_M2, self.Hs, self.Hs_with_looping]
         labels = [f'n{n_min} m3', f'n{self.n_max} m3', f'n{self.n_max} m2', 'С постоянным диаметром', 'С лупингом']
 
+        pool = ThreadPool(processes=1)
         m_max = self.m_pump
         m_min = self.m_pump - 1
         async_result = pool.apply_async(self.check_transfer_mode, (self.Q_hour, self.n_max, m_min, self.H, 0.001))
@@ -357,7 +354,8 @@ class Calculate5:
         hp = self.ap - self.bp * (Q / 2) ** 2
         Hst = hm * m_np
         H = Hst * n + hp * self.N_a
-        while H != H_tr:
+        measurement_error = 0.01
+        while H != H_tr and float(H) + measurement_error != H_tr and float(H) - measurement_error != H_tr:
             if H > H_tr:
                 while H > H_tr:
                     Q = Q + num
@@ -475,7 +473,7 @@ class Calculate5:
                 p1_hp_line = [p1[0], p1[1] + self.h_ost]
                 list_with_coordinates_for_drawing.append([p1, p1_hp_line])
                 for i, x2 in enumerate(xes):
-                    if x2 == xes[-1]:
+                    if i == len(xes) - 1:
                         break
                     p = calculate_index(p1[0], p1[1], x1, z1, x2, zes[i], xes[i + 1], zes[i + 1])
                     if p is not None:
@@ -486,7 +484,7 @@ class Calculate5:
                         list_with_coordinates_for_drawing.append([p1, p2])
                         list_with_coordinates_for_drawing.append([p1_hp_line, p2_hp_line])
                         break
-                    elif p is None and x2 == xes[-2]:
+                    elif p is None and i == len(xes) - 2:
                         x1 = xes[-1]
                         z1 = zes[-1]
                         p2 = [x1, z1]
@@ -505,7 +503,7 @@ class Calculate5:
                 p1_hp_line = [p1[0], p1[1] + hp]
                 list_with_coordinates_for_drawing.append([p1, p1_hp_line])
                 for i, x2 in enumerate(xes):
-                    if x2 == xes[-1]:
+                    if i == len(xes) - 1:
                         break
                     p = calculate_index(p1[0], p1[1], x1, z1, x2, zes[i], xes[i + 1], zes[i + 1])
                     if p is not None:
@@ -516,7 +514,7 @@ class Calculate5:
                         list_with_coordinates_for_drawing.append([p1, p2])
                         list_with_coordinates_for_drawing.append([p1_hp_line, p2_hp_line])
                         break
-                    elif p is None and x2 == xes[-2]:
+                    elif p is None and i == len(xes) - 2:
                         x1 = xes[-1]
                         z1 = zes[-1]
                         p2 = [x1, z1]

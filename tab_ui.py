@@ -12,7 +12,7 @@ from models import ActionVarTable
 from settings import SUP, SUP_2, SUP_3
 from json import loads
 
-TABLE_CHARACTIRISTICS_NAMES = ['Длина трассы, км', 'Длина участка, км', 'Рабочее давление, МПа',
+TABLE_CHARACTIRISTICS_NAMES = ['Длина трассы, км', 'Длина участка, км', 'Допустимое давление, МПа',
                                'G, м\u00B3', 'kнп', 'Температура перекачки, К', 'Остаточный напор, м',
                                'Количество насосов на станции',
                                'Число рабочих дней']

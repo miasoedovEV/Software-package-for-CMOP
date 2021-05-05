@@ -21,7 +21,7 @@ from settings import get_source_dict, update_dict_to_db, check_update_data_var_7
     update_list_coordinates_to_db, create_new_data_var_5, delete_data_7_8, check_list_late_source_data_8, delete_func, \
     load_update_var_state, get_state_var, update_var_table, LIST_WITH_NAME_VALUE_CHARACTIRISTIES, \
     LIST_WITH_NAME_VALUE_OIL_PROPERTIES, LIST_WITH_VALUE, LIST_WITH_NAME, FIRST_NAME_VAR, \
-    LIST_WITH_TABLE_VALUE_CALC_7, LIST_WITH_NAME_SOURCE_VALUE_8, check_data, NUMBER_LOW_INDEX, HELP
+    LIST_WITH_TABLE_VALUE_CALC_7, LIST_WITH_NAME_SOURCE_VALUE_8, check_data, NUMBER_LOW_INDEX, HELP, LIST_NOT_GIVE_ERROR
 from calculate_8_class import CalculationModesNps
 from tab_ui import MyWindow
 import create_new_db
@@ -357,6 +357,8 @@ class MainWindow(QtWidgets.QMainWindow):
             return None
         value = value_object.text()
         if value == '':
+            if value_object.objectName() in LIST_NOT_GIVE_ERROR:
+                return None
             self.show_error_enter()
             return None
         if check_data(value) is None:
