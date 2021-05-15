@@ -21,7 +21,7 @@ from settings import get_source_dict, update_dict_to_db, check_update_data_var_7
     update_list_coordinates_to_db, create_new_data_var_5, delete_data_7_8, check_list_late_source_data_8, delete_func, \
     load_update_var_state, get_state_var, update_var_table, LIST_WITH_NAME_VALUE_CHARACTIRISTIES, \
     LIST_WITH_NAME_VALUE_OIL_PROPERTIES, LIST_WITH_VALUE, LIST_WITH_NAME, FIRST_NAME_VAR, \
-    LIST_WITH_TABLE_VALUE_CALC_7, LIST_WITH_NAME_SOURCE_VALUE_8, check_data, NUMBER_LOW_INDEX, HELP
+    LIST_WITH_TABLE_VALUE_CALC_7, LIST_WITH_NAME_SOURCE_VALUE_8, check_data, NUMBER_LOW_INDEX, HELP, LIST_NOT_GIVE_ERROR
 from calculate_8_class import CalculationModesNps
 from tab_ui import MyWindow
 import create_new_db
@@ -357,6 +357,8 @@ class MainWindow(QtWidgets.QMainWindow):
             return None
         value = value_object.text()
         if value == '':
+            if value_object.objectName() in LIST_NOT_GIVE_ERROR:
+                return None
             self.show_error_enter()
             return None
         if check_data(value) is None:
@@ -535,15 +537,16 @@ class MainWindow(QtWidgets.QMainWindow):
         L = dict_value['L']
         delta_z = dict_value['delta_z']
         second_kat = dict_value['second_kat']
+        z_lowest = dict_value['z_lowest']
+        args = [list_for_drawing, list_coordinates_nps, H_for_calc_delta, list_index_main_nps, L,
+                delta_z, second_kat, z_lowest]
         if self.ui.checkBox_2.isChecked():
             drawing_plt(list_for_drawing)
         if self.ui.checkBox.isChecked():
             self.dialog_graph_window = GraphDialogWindow()
             self.dialog_graph_window.exec()
             try:
-                drawing_autocad(list_for_drawing, list_coordinates_nps, H_for_calc_delta, list_index_main_nps, L,
-                                delta_z,
-                                second_kat)
+                drawing_autocad(*args)
             except Exception:
                 pass
 
@@ -730,7 +733,7 @@ class MainWindow(QtWidgets.QMainWindow):
             calculator_7.calculate_with_deltas()
         load_update_var_state(self.var, 2)
         self.return_result_calc_7()
-        self.ui.tabWidget.insertTab(2, self.ui.tab_3, 'Режимы работы нефтепровода')
+        self.ui.tabWidget.insertTab(2, self.ui.tab_3, 'Режимы работы трубопровода')
         self.insert_values_8(self.var)
         if check_list_late_source_data_8(self.var, LIST_WITH_NAME_DATA_TABLE7[1],
                                          LIST_WITH_NAME_DATA_TABLE7[0]) is False:
@@ -859,13 +862,13 @@ class MainWindow(QtWidgets.QMainWindow):
             self.insert_values_calculate_7(var)
             self.ui.tabWidget.insertTab(1, self.ui.tab_2, 'Перерасчёт стенки трубы')
             self.insert_values_8(var)
-            self.ui.tabWidget.insertTab(2, self.ui.tab_3, 'Режимы работы нефтепровода')
+            self.ui.tabWidget.insertTab(2, self.ui.tab_3, 'Режимы работы трубопровода')
         else:
             self.insert_values_calculate_5(var)
             self.insert_values_calculate_7(var)
             self.ui.tabWidget.insertTab(1, self.ui.tab_2, 'Перерасчёт стенки трубы')
             self.insert_values_8(var)
-            self.ui.tabWidget.insertTab(2, self.ui.tab_3, 'Режимы работы нефтепровода')
+            self.ui.tabWidget.insertTab(2, self.ui.tab_3, 'Режимы работы трубопровода')
 
     def clean_all(self):
         self.ui.tabWidget.removeTab(2)

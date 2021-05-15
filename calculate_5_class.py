@@ -4,8 +4,6 @@ Created on Wed Oct  7 19:13:20 2020
 
 @author: stinc
 """
-import time
-
 import matplotlib.pyplot as plt
 from decimal import getcontext, Decimal, ROUND_HALF_UP
 import numpy as np
@@ -14,8 +12,6 @@ from models import MainPumpsTable, SupportPumpsTable, GraphW0, DnTable
 from settings import get_source_dict, update_dict_to_db, get_list_coordinates
 import json
 from multiprocessing.pool import ThreadPool
-
-pool = ThreadPool(processes=1)
 
 COLORS = ['black', 'red', 'green', 'grey', 'blue']
 
@@ -84,8 +80,7 @@ class Calculate5:
         getcontext().prec = 50
         ksi = 1.825 - 0.001315 * self.density  # температурная поправка
         self.density_t = self.density + ksi * (293 - self.Tr)  # расч плотность
-        B = np.log10(np.log10(self.vis_2 + 0.8) / np.log10(self.vis_1 + 0.8)) / (
-                np.log10(self.T2) - np.log10(self.T1))
+        B = np.log10(np.log10(self.vis_2 + 0.8) / np.log10(self.vis_1 + 0.8)) / (np.log10(self.T2) - np.log10(self.T1))
 
         At = ((self.Tr / self.T1) ** B) * np.log10(self.vis_1 + 0.8)
         self.vis_t = (10 ** At) - 0.8
@@ -246,7 +241,7 @@ class Calculate5:
         self.h_t = lambda_ * (self.L * 10 ** 3 * w ** 2) / (self.Dvn * 10 ** (-3) * 2 * self.G)
 
         # Суммарные потери напора
-        self.N_a = round(self.L / self.section_length)
+        self.N_a = math.ceil(self.L / self.section_length)
 
         self.H = 1.02 * self.h_t + self.delta_z + self.N_a * self.h_ost
 
@@ -303,6 +298,7 @@ class Calculate5:
         all_h = [self.N5_M3, self.N6_M3, self.N6_M2, self.Hs, self.Hs_with_looping]
         labels = [f'n{n_min} m3', f'n{self.n_max} m3', f'n{self.n_max} m2', 'С постоянным диаметром', 'С лупингом']
 
+        pool = ThreadPool(processes=1)
         m_max = self.m_pump
         m_min = self.m_pump - 1
         async_result = pool.apply_async(self.check_transfer_mode, (self.Q_hour, self.n_max, m_min, self.H, 0.001))
@@ -314,12 +310,13 @@ class Calculate5:
         hm = self.a_m - self.b_m * self.Q2 ** 2
         H_n_max_m_pump = hm * self.m_pump
         n_nps_first_section = math.ceil(self.n_max / self.N_a)
+        l_l = l_l * 10 ** (-3)
         list_with_value = [['delta', delta_n], ['Dvn', self.Dvn], ['Re1', self.Re1], ['Re2', self.Re2],
                            ['Re', self.Re], ['h_tr', self.h_t], ['i', self.i], ['H', self.H], ['n0', n0],
                            ['n_min', n_min], ['n_max', self.n_max], ['Q2', self.Q2], ['Q1', self.Q1],
                            ['H_n_max_m_pump', H_n_max_m_pump], ['n_nps_first_section', n_nps_first_section],
                            ['tau1', tau1], ['tau2', tau2], ['list_all_h', all_h], ['list_labels', labels],
-                           ['q_list', self.q_list]]
+                           ['q_list', self.q_list], ['l_l', l_l]]
 
         for name, value in list_with_value:
             self.dict_value[name] = value
@@ -357,7 +354,8 @@ class Calculate5:
         hp = self.ap - self.bp * (Q / 2) ** 2
         Hst = hm * m_np
         H = Hst * n + hp * self.N_a
-        while H != H_tr:
+        measurement_error = 0.01
+        while H != H_tr and float(H) + measurement_error != H_tr and float(H) - measurement_error != H_tr:
             if H > H_tr:
                 while H > H_tr:
                     Q = Q + num
@@ -392,6 +390,7 @@ class Calculate5:
         h_t = lambda_ * (self.L * 10 ** 3 * w ** 2) / (self.Dvn * 10 ** (-3) * 2 * self.G)
         # Гидравлический уклон
         i_2 = h_t / (self.L * 10 ** 3)
+        H = 1.02 * h_t + self.delta_z + self.N_a * self.h_ost
         first_kat = 100
         second_kat = 1.02 * i_2 * first_kat * 1000
         tag = first_kat / second_kat
@@ -400,7 +399,7 @@ class Calculate5:
         for x, y in coordinates:
             xes.append(x)
             zes.append(y)
-        list_with_coordinates_for_drawing, list_with_coordinates_nps, list_index_main_nps = self.calculate_draw_coordinates(
+        list_with_coordinates_for_drawing, list_with_coordinates_nps, list_index_main_nps, z_lowest = self.calculate_draw_coordinates(
             hp, Hst, tag,
             xes, zes)
 
@@ -408,7 +407,8 @@ class Calculate5:
                            ['list_coordinates_nps', list_with_coordinates_nps],
                            ['H_for_calc_delta', H_for_calc_delta],
                            ['list_index_main_nps', list_index_main_nps],
-                           ['second_kat', second_kat]]
+                           ['second_kat', second_kat],
+                           ['h_tr', h_t], ['i', i_2], ['H', H], ['z_lowest', z_lowest]]
 
         for name, value in list_with_value:
             self.dict_value[name] = value
@@ -417,13 +417,16 @@ class Calculate5:
     def calculate_draw_coordinates(self, hp, Hst, tag, xes, zes):
         list_with_coordinates_for_drawing = []
         list_with_coordinates_nps = []
+        z_lowest = 10 ** 5
+        for z in zes:
+            if z_lowest > z:
+                z_lowest = z
 
-        p1 = [xes[0], zes[0]]
-        p2 = [xes[-1], zes[0]]
-        list_with_coordinates_for_drawing.append([p1, p2])
-        p1 = [xes[-1], zes[0]]
-        p2 = [xes[-1], zes[-1]]
-        list_with_coordinates_for_drawing.append([p1, p2])
+        list_p1 = [[xes[0], z_lowest], [xes[0], z_lowest], [xes[-1], z_lowest]]
+        list_p2 = [[xes[0], zes[0]], [xes[-1], z_lowest], [xes[-1], zes[-1]]]
+        for index, p1 in enumerate(list_p1):
+            p2 = list_p2[index]
+            list_with_coordinates_for_drawing.append([p1, p2])
 
         for i, x in enumerate(xes):
             if x == xes[-1]:
@@ -475,7 +478,7 @@ class Calculate5:
                 p1_hp_line = [p1[0], p1[1] + self.h_ost]
                 list_with_coordinates_for_drawing.append([p1, p1_hp_line])
                 for i, x2 in enumerate(xes):
-                    if x2 == xes[-1]:
+                    if i == len(xes) - 1:
                         break
                     p = calculate_index(p1[0], p1[1], x1, z1, x2, zes[i], xes[i + 1], zes[i + 1])
                     if p is not None:
@@ -486,7 +489,7 @@ class Calculate5:
                         list_with_coordinates_for_drawing.append([p1, p2])
                         list_with_coordinates_for_drawing.append([p1_hp_line, p2_hp_line])
                         break
-                    elif p is None and x2 == xes[-2]:
+                    elif p is None and i == len(xes) - 2:
                         x1 = xes[-1]
                         z1 = zes[-1]
                         p2 = [x1, z1]
@@ -505,7 +508,7 @@ class Calculate5:
                 p1_hp_line = [p1[0], p1[1] + hp]
                 list_with_coordinates_for_drawing.append([p1, p1_hp_line])
                 for i, x2 in enumerate(xes):
-                    if x2 == xes[-1]:
+                    if i == len(xes) - 1:
                         break
                     p = calculate_index(p1[0], p1[1], x1, z1, x2, zes[i], xes[i + 1], zes[i + 1])
                     if p is not None:
@@ -516,14 +519,14 @@ class Calculate5:
                         list_with_coordinates_for_drawing.append([p1, p2])
                         list_with_coordinates_for_drawing.append([p1_hp_line, p2_hp_line])
                         break
-                    elif p is None and x2 == xes[-2]:
+                    elif p is None and i == len(xes) - 2:
                         x1 = xes[-1]
                         z1 = zes[-1]
                         p2 = [x1, z1]
                         p2_hp_line = [p2[0], p2[1] + hp]
                         list_with_coordinates_for_drawing.append([p1, p2])
                         list_with_coordinates_for_drawing.append([p1_hp_line, p2_hp_line])
-        return list_with_coordinates_for_drawing, list_with_coordinates_nps, list_index_main_nps
+        return list_with_coordinates_for_drawing, list_with_coordinates_nps, list_index_main_nps, z_lowest
 
 
 def draw_graph_in_calculate(var):
@@ -539,5 +542,5 @@ def draw_graph_in_calculate(var):
             vis_T = value
         elif name == 'q_list':
             q_list = value
-    plot_show(T_k, vis_T, 'T,K', 'v,mm2/s', 'Вискограмма')
-    many_plot(q_list, all_h, 'Q, м3/x', 'Н,м', labels, 'Совмещенная характеристика', COLORS)
+    plot_show(T_k, vis_T, 'T,K', 'v,мм\u00B2/с', 'Вискограмма')
+    many_plot(q_list, all_h, 'Q,м\u00B3/ч', 'Н,м', labels, 'Совмещенная характеристика', COLORS)

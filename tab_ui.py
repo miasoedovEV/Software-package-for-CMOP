@@ -12,7 +12,7 @@ from models import ActionVarTable
 from settings import SUP, SUP_2, SUP_3
 from json import loads
 
-TABLE_CHARACTIRISTICS_NAMES = ['Длина трассы, км', 'Длина участка, км', 'Рабочее давление, МПа',
+TABLE_CHARACTIRISTICS_NAMES = ['Длина трассы, км', 'Длина участка, км', 'Допустимое давление, МПа',
                                'G, м\u00B3', 'kнп', 'Температура перекачки, К', 'Остаточный напор, м',
                                'Количество насосов на станции',
                                'Число рабочих дней']
@@ -1066,7 +1066,7 @@ class MyWindow(object):
         item.setText(_translate("MainWindow", "Имя "))
         item = self.tableWidget_charactiristics.horizontalHeaderItem(1)
         item.setText(_translate("MainWindow", "Значение"))
-        self.label_3.setText(_translate("MainWindow", "Свойства нефти"))
+        self.label_3.setText(_translate("MainWindow", "Свойства жидкости"))
         item = self.tableWidget_oil_properties.verticalHeaderItem(0)
         item.setText(_translate("MainWindow", "1"))
         item = self.tableWidget_oil_properties.verticalHeaderItem(1)
@@ -1096,7 +1096,7 @@ class MyWindow(object):
         self.pushButton_2.setText(_translate("MainWindow", "Сбросить"))
         self.checkBox_2.setText(_translate("MainWindow", "Показать эпюру в отдельном окне приложеня"))
         self.checkBox.setText(_translate("MainWindow", "Произвести построение в AutoCAD"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Расстановка НПС"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Расстановка ПС"))
         self.label_calc_var_7.setText(_translate("MainWindow", "Название варианта: Новый"))
         self.label_calculated_data_7.setText(_translate("MainWindow", "Расчётные данные"))
         self.label_category_7.setText(_translate("MainWindow", " Уточненные категории участков и коэффициенты "))
