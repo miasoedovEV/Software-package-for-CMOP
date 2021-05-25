@@ -8,8 +8,8 @@ import matplotlib.pyplot as plt
 from decimal import getcontext, Decimal, ROUND_HALF_UP
 import numpy as np
 import math
-from models import MainPumpsTable, SupportPumpsTable, GraphW0, DnTable
-from settings import get_source_dict, update_dict_to_db, get_list_coordinates
+from database.models import MainPumpsTable, SupportPumpsTable, GraphW0, DnTable
+from logic_modules.settings import get_source_dict, update_dict_to_db, get_list_coordinates
 import json
 from multiprocessing.pool import ThreadPool
 
@@ -355,7 +355,7 @@ class Calculate5:
         Hst = hm * m_np
         H = Hst * n + hp * self.N_a
         measurement_error = 0.01
-        while H != H_tr and float(H) + measurement_error != H_tr and float(H) - measurement_error != H_tr:
+        while H != H_tr and float(H) + measurement_error != float(H_tr) and float(H) - measurement_error != float(H_tr):
             if H > H_tr:
                 while H > H_tr:
                     Q = Q + num

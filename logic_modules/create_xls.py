@@ -7,10 +7,11 @@
 # WARNING! All changes made in this file will be lost!
 
 import xlwt
-from settings import get_source_dict, get_info_table_list, get_table_list_8, LIST_NAME_DATA_TABLE7, LIST_WITH_NAME, \
-    LIST_WITH_VALUE
+from logic_modules.settings import get_source_dict, get_info_table_list, get_table_list_8, LIST_NAME_DATA_TABLE7, \
+    LIST_WITH_NAME, LIST_WITH_VALUE
 
 LIST_WITH_TITLE_COLUMNS_7 = ['Категоря участка', 'Толщина стенки, мм', 'R1, МПа', 'Hmax, м', 'Hпс, м', 'Соответствие']
+
 from os import path
 
 

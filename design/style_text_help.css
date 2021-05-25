@@ -37,6 +37,7 @@
     font-weight:600;
     text-align: left;
 }
+
 .table_contents_level_2 {
     margin-top:12px;
     margin-bottom:12\px;
@@ -98,7 +99,6 @@
   text-decoration: none;
   margin:0 px;
   padding: 0 px;
-
 }
 .figure_signature{
     line-height: 0.5;

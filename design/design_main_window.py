@@ -5,12 +5,10 @@
 # Created by: PyQt5 UI code generator 5.9.2
 #
 # WARNING! All changes made in this file will be lost!
-import json
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from models import ActionVarTable
-from settings import SUP, SUP_2, SUP_3
-from json import loads
+from database.models import ActionVarTable
+from logic_modules.settings import SUP, SUP_2, SUP_3
 
 TABLE_CHARACTIRISTICS_NAMES = ['Длина трассы, км', 'Длина участка, км', 'Допустимое давление, МПа',
                                'G, м\u00B3', 'kнп', 'Температура перекачки, К', 'Остаточный напор, м',

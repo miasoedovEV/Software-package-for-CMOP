@@ -4,9 +4,9 @@ Created on Wed Oct  7 19:13:20 2020
 
 @author: stinc
 """
-from decimal import getcontext, Decimal, ROUND_HALF_UP
-from models import InformationDeltaTable, SourceDataTable
-from settings import get_source_dict, update_dict_to_db, check_update_data_var_7, get_info_table_list
+from decimal import Decimal
+from logic_modules.settings import get_source_dict, check_update_data_var_7, get_info_table_list
+
 LIST_WITH_NAME_DATA_TABLE7 = ['list_with_data_category', 'finish_data_list', 'list_with_data_delta']
 MODE_CALCULATE_7 = ['without_delta', 'with_delta']
 G = Decimal('9.81')
@@ -81,8 +81,8 @@ class Calculate7:
             if self.Hps > hmax:
                 conformity = 'нет'
             list_parcels_recalculation.append(
-                [str(self.list_with_data_categories[2][index]), self.list_data_deltas[index], float(self.list_R1[index]),
+                [str(self.list_with_data_categories[2][index]), self.list_data_deltas[index],
+                 float(self.list_R1[index]),
                  float(hmax), float(self.Hps), conformity])
             conformity = 'да'
         check_update_data_var_7(self.var, LIST_WITH_NAME_DATA_TABLE7[1], list_parcels_recalculation)
-

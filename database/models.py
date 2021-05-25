@@ -1,20 +1,18 @@
 import peewee
 from playhouse.sqlite_ext import SqliteExtDatabase
 
-database = SqliteExtDatabase('source_data.db', regexp_function=True, timeout=3,
+database = SqliteExtDatabase('database\\source_data.db', regexp_function=True, timeout=3,
                              pragmas={'journal_mode': 'wal'})
 
 
 class BaseTable(peewee.Model):
-    # В подклассе Meta указываем подключение к той или иной базе данных
     class Meta:
         database = database
 
 
-# Чтобы создать таблицу в нашей БД, нам нужно создать класс
 class GraphW0(BaseTable):
     json_w0 = peewee.CharField()
-    json_Q = peewee.CharField()  # от типа столбца зависит тип данных, который мы сможем в него записать
+    json_Q = peewee.CharField()
 
 
 class DnTable(BaseTable):

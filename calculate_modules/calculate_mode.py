@@ -38,4 +38,3 @@ def calculate_mode_transportation(number_nps, number_pump):
             list_finish_res.append(comb)
 
     return list_finish_res
-

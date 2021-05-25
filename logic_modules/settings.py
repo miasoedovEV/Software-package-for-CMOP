@@ -6,7 +6,7 @@ Created on Thu Oct  8 21:35:52 2020
 """
 
 from json import dumps, loads
-from models import SourceDataTable, InformationDeltaTable, ModeInformationDeltaTable, CoordinatesTable, \
+from database.models import SourceDataTable, InformationDeltaTable, ModeInformationDeltaTable, CoordinatesTable, \
     CheckInformationDeltaTable, OptionStateTable, ActionVarTable, MainPumpsTable, SupportPumpsTable, PipeTable, \
     DataOddsTable
 import re

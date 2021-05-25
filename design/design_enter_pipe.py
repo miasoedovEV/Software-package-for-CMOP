@@ -7,7 +7,7 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from settings import get_source_dict
+from logic_modules.settings import get_source_dict
 
 
 class DnDialog(object):

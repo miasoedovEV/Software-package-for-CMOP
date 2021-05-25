@@ -3,13 +3,12 @@ import csv
 import peewee
 import os
 import json
-
-FILE_NAME_GRAPH_SPEED = 'graph_speed.csv'
-FILE_NAME_DATA_DN = 'data_Dn.csv'
-FILE_DATA_MAIN_PUMPS = 'data_main_pumps.csv'
-FILE_DATA_SUPPORT_PUMPS = 'data_support_pumps.csv'
-FILE_DATA_COEFFICIENTS = 'coefficients.csv'
-NAME_DATA_BASE = 'source_data.db'
+FILE_NAME_GRAPH_SPEED = 'support_files\\graph_speed.csv'
+FILE_NAME_DATA_DN = 'support_files\\data_Dn.csv'
+FILE_DATA_MAIN_PUMPS = 'support_files\\data_main_pumps.csv'
+FILE_DATA_SUPPORT_PUMPS = 'support_files\\data_support_pumps.csv'
+FILE_DATA_COEFFICIENTS = 'support_files\\coefficients.csv'
+NAME_DATA_BASE = 'database\\source_data.db'
 
 
 def check_comma(value):

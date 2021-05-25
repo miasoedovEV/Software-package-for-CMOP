@@ -8,6 +8,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -62,7 +63,7 @@ class Ui_MainWindow(object):
         font.setFamily("Times New Roman")
         font.setPointSize(10)
         self.label.setFont(font)
-        self.label.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.label.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignTrailing | QtCore.Qt.AlignVCenter)
         self.label.setObjectName("label")
         self.verticalLayout_3.addWidget(self.label)
         self.label_2 = QtWidgets.QLabel(self.frame_5)
@@ -70,7 +71,7 @@ class Ui_MainWindow(object):
         font.setFamily("Times New Roman")
         font.setPointSize(10)
         self.label_2.setFont(font)
-        self.label_2.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.label_2.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignTrailing | QtCore.Qt.AlignVCenter)
         self.label_2.setObjectName("label_2")
         self.verticalLayout_3.addWidget(self.label_2)
         self.horizontalLayout.addWidget(self.frame_5)
@@ -162,4 +163,3 @@ class Ui_MainWindow(object):
         self.label_2.setText(_translate("MainWindow", "Путь к файлу:"))
         self.save_2.setText(_translate("MainWindow", "Сохранить"))
         self.cancel_2.setText(_translate("MainWindow", "Отмена"))
-

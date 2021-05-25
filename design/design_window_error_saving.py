@@ -8,6 +8,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+
 class ErrorSaveDialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
@@ -80,4 +81,3 @@ class ErrorSaveDialog(object):
         self.label_2.setText(_translate("Dialog", "Вы еще ничего не посчитали!"))
         self.label_3.setText(_translate("Dialog", "Остановитесь!!!"))
         self.pushButton.setText(_translate("Dialog", "Ок"))
-

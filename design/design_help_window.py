@@ -43,8 +43,6 @@ class HelpDialog(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Справка"))
-        self.textBrowser.setSource(QtCore.QUrl.fromLocalFile("text_help.html"))
-        file = QtCore.QFile(":/style_text_help.css")
-        file.open(QtCore.QFile.ReadOnly | QtCore.QFile.Text)
-        stream = QtCore.QTextStream(file)
-        self.textBrowser.setStyleSheet(stream.readAll())
+        with open("design\\text_help.html", 'r', encoding='utf-8') as file:
+            html = file.read()
+        self.textBrowser.setHtml(html)

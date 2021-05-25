@@ -4,27 +4,30 @@ Created on Wed Oct  7 19:13:20 2020
 
 @author: stinc
 """
+
+import database.create_new_db
 import time
-import breeze_resources
+import design.breeze_resources
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import QThread, QFile, QTextStream
-from dialogs import DnDialogWindow, PumpDialogWindow, GraphDialogWindow, SaveDialogWindow, DialogDeltaWindow, \
+from logic_modules.dialogs import DnDialogWindow, PumpDialogWindow, GraphDialogWindow, SaveDialogWindow, \
+    DialogDeltaWindow, \
     DnDialogWindow_2, ChooseVarDialog, AddPumpDialogWindow, AddSupPumpDialogWindow, AddPipeDialogWindow, MyFileBrowser, \
     ErrorDialogEnterWindow, ErrorEnterNumberDialogWindow, ErrorSaveDialogWindow, WindowChooseKaf, \
-    CopySelectedCellsAction, PastSelectedCellsAction, HelpDialogWindow
-from models import MainPumpsTable, CoordinatesTable, SourceDataTable, ActionVarTable
+    CopySelectedCellsAction, PastSelectedCellsAction, HelpDialogWindow, ICON
+from database.models import MainPumpsTable, CoordinatesTable, SourceDataTable, ActionVarTable
 import json
-from calculate_5_class import Calculate5, draw_graph_in_calculate
-from draw_graph import drawing_autocad, drawing_plt
-from calculate_7_class import Calculate7, LIST_WITH_NAME_DATA_TABLE7, MODE_CALCULATE_7
-from settings import get_source_dict, update_dict_to_db, check_update_data_var_7, get_info_table_list, get_table_list_8, \
+from calculate_modules.calculate_5_class import Calculate5, draw_graph_in_calculate
+from logic_modules.draw_graph import drawing_autocad, drawing_plt
+from calculate_modules.calculate_7_class import Calculate7, LIST_WITH_NAME_DATA_TABLE7, MODE_CALCULATE_7
+from logic_modules.settings import get_source_dict, update_dict_to_db, check_update_data_var_7, get_info_table_list, \
+    get_table_list_8, \
     update_list_coordinates_to_db, create_new_data_var_5, delete_data_7_8, check_list_late_source_data_8, delete_func, \
     load_update_var_state, get_state_var, update_var_table, LIST_WITH_NAME_VALUE_CHARACTIRISTIES, \
     LIST_WITH_NAME_VALUE_OIL_PROPERTIES, LIST_WITH_VALUE, LIST_WITH_NAME, FIRST_NAME_VAR, \
     LIST_WITH_TABLE_VALUE_CALC_7, LIST_WITH_NAME_SOURCE_VALUE_8, check_data, NUMBER_LOW_INDEX, HELP, LIST_NOT_GIVE_ERROR
-from calculate_8_class import CalculationModesNps
-from tab_ui import MyWindow
-import create_new_db
+from calculate_modules.calculate_8_class import CalculationModesNps
+from design.design_main_window import MyWindow
 
 
 class External(QThread):
@@ -61,7 +64,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
         super(MainWindow, self).__init__()
-        self.setWindowIcon(QtGui.QIcon('2truba.ico'))
+        self.setWindowIcon(QtGui.QIcon(ICON))
         self.ui = MyWindow()
         self.ui.setupUi(self, MainPumpsTable)
         self.ui.pushButton_1.clicked.connect(self.calculate_5)
@@ -159,9 +162,11 @@ class MainWindow(QtWidgets.QMainWindow):
             if table.objectName() == 'table':
                 add_count_row = self.ui.lineEdit
                 add_count_row = self.check_value(add_count_row)
+                self.ui.lineEdit.clear()
             elif table.objectName() == 'table_category_7':
                 add_count_row = self.ui.lineEdit_2
                 add_count_row = self.check_value(add_count_row)
+                self.ui.lineEdit_2.clear()
             if add_count_row is not None:
                 if type(add_count_row) == str and ',' in add_count_row:
                     add_count_row = add_count_row.replace(',', '.')
@@ -251,7 +256,6 @@ class MainWindow(QtWidgets.QMainWindow):
             self.ui.table_date_7.setItem(number_count - 1, 1, value)
             number_count += 1
         self.ui.table_date_7.resizeColumnsToContents()
-        # self.ui.table_date_7.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
         self.ui.table_category_7.setRowCount(0)
         self.ui.table_category_7.clearContents()
         self.ui.table_delta_7.setRowCount(0)
