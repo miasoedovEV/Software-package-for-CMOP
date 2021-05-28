@@ -28,6 +28,7 @@ from logic_modules.settings import get_source_dict, update_dict_to_db, check_upd
     LIST_WITH_TABLE_VALUE_CALC_7, LIST_WITH_NAME_SOURCE_VALUE_8, check_data, NUMBER_LOW_INDEX, HELP, LIST_NOT_GIVE_ERROR
 from calculate_modules.calculate_8_class import CalculationModesNps
 from design.design_main_window import MyWindow
+from multiprocessing import Process
 
 
 class External(QThread):
@@ -477,8 +478,11 @@ class MainWindow(QtWidgets.QMainWindow):
             if self.dn_dialog.get_decision() is None:
                 self.show_buttons_calc(True)
                 return
-            self.calc = External(self)
-            self.calc.start()
+            try:
+                self.calc = External(self)
+                self.calc.start()
+            except Exception:
+                pass
 
     def return_result_5(self, var):
         dict_value = get_source_dict(var)
@@ -550,9 +554,10 @@ class MainWindow(QtWidgets.QMainWindow):
             self.dialog_graph_window = GraphDialogWindow()
             self.dialog_graph_window.exec()
             try:
-                drawing_autocad(*args)
-            except Exception:
-                pass
+                proc = Process(target=drawing_autocad, args=args)
+                proc.start()
+            except Exception as exp:
+                print(exp)
 
     def erase_data(self):
         for index, name in enumerate(LIST_WITH_NAME_VALUE_CHARACTIRISTIES):
